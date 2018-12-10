@@ -9,9 +9,14 @@
         "rootDir": "./"
     },
     "files": [
+        "src/core/assets.ts",
         "src/core/scene.ts",
         "src/core/graphics.ts",
         "src/core/application.ts",
+
+        "src/game/game.ts",
+        "src/global.ts",
+
         "src/main.ts"
     ]
 }
