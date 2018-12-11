@@ -9,28 +9,27 @@ class Game implements Scene {
 
     // Reference to global objects
     private ass : Assets;
+    private vpad : Vpad;
 
     // TEMP
-    private pos : number;
+    private pos = {x: 80, y: 72}
 
 
     // Initialize
-    public init(ass : Assets) {
+    public init(ass : Assets, vpad: Vpad) {
 
         // Store references
         this.ass = ass;
-
-        // ...
-        this.pos = 0.0;
+        this.vpad = vpad;
     }
 
 
     // Update
     public update(tm: number) {      
 
-         // ...
-         this.pos += 2.0 * tm;
-         this.pos %= 160;
+        let s = this.vpad.getStick();
+        this.pos.x += s.x * 2 * tm;
+        this.pos.y += s.y * 2 * tm;
     }
 
 
@@ -42,8 +41,7 @@ class Game implements Scene {
 
         // Draw moving red rectangle
         g.setColor(255, 0, 0, 1.0);
-        g.fillRect(this.pos,16,64,48);
-        g.fillRect(this.pos - 160,16,64,48);
+        g.fillRect(this.pos.x-16,this.pos.y-16,32,32);
 
         // Hello world!
         g.drawText(this.ass.getBitmap("font"), "Hello world!",

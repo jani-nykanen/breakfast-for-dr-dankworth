@@ -13,6 +13,8 @@
         "src/core/scene.ts",
         "src/core/graphics.ts",
         "src/core/application.ts",
+        "src/core/input.ts",
+        "src/core/vpad.ts",
 
         "src/game/game.ts",
         "src/global.ts",

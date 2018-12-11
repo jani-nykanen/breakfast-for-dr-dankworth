@@ -21,6 +21,25 @@ let assetInfo = {
 };
 
 
+// Gamepad
+let gamePad = {
+
+    keys: [
+        90,
+        88,
+        13,
+        16
+    ],
+    names: [
+        "fire1",
+        "fire2",
+        "start",
+        "select"
+    ]
+
+}
+
+
 // Main function
 function main() {
 
@@ -31,6 +50,8 @@ function main() {
     app.addScene(new Global(), true, false);
     app.addScene(new Game(), false, true);
 
+    // Create gamepad
+    app.createVirtualGamepad(gamePad.keys, gamePad.names);
     // Set assets loading
     app.loadAssets(assetInfo);
 

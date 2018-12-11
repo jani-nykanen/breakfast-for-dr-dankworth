@@ -14,6 +14,10 @@ class Application {
     private graph : Graphics;
     // Assets
     private ass : Assets;
+    // Input manager
+    private input : InputManager;
+    // Virtual gamepad
+    private vpad : Vpad;
 
     // Old time
     private oldTime : number;
@@ -42,6 +46,7 @@ class Application {
         // Create components
         this.graph = new Graphics();
         this.scenes = new Array<Scene> ();
+        this.input = new InputManager();
 
         // Set defaults
         this.oldTime = 0.0;
@@ -81,6 +86,11 @@ class Application {
 
             this.activeScene.update(tm);
         }
+
+        // Update input
+        this.input.update();
+        // Update virtual gamepad
+        this.vpad.update();
     }
 
 
@@ -204,7 +214,8 @@ class Application {
 
         // Initialize every scene
         this.scenes.forEach(e => {
-            e.init(this.ass);
+            
+            e.init(this.ass, this.vpad);
         });
 
         // Start main loop
@@ -220,6 +231,13 @@ class Application {
 
         this.ass = new Assets(assetInfo.bitmaps, assetInfo.bitmapPath,
             assetInfo.audio, assetInfo.audioPath);
+    }
+
+
+    // Create a virtual gamepad
+    public createVirtualGamepad(keys : Array<number>, names : Array<string>) {
+
+        this.vpad = new Vpad(keys, names, this.input);
     }
 
 
