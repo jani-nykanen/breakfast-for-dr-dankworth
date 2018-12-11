@@ -27,6 +27,8 @@ class Vpad {
     private oldStick = { x: 0, y: 0 };
     // Stick delta
     private delta = { x: 0, y: 0 };
+    // Stick "length"
+    private len : number;
 
     // Buttons
     private buttons : Array<VpadButton>;
@@ -37,6 +39,7 @@ class Vpad {
         input : InputManager) {
 
         this.input = input;
+        this.len = 0;
 
         // Check minimum size
         let size = Math.min(keys.length, names.length) | 0;
@@ -53,7 +56,7 @@ class Vpad {
     // Update
     public update() {
 
-        const DELTA = 0.01;
+        const DELTA = 0.90;
 
         // Update stick
         this.oldStick.x = this.stick.x;
@@ -85,13 +88,13 @@ class Vpad {
         }
 
         // Calculate length & restrict to a unit sphere (plus 0)
-        let len = Math.sqrt(this.stick.x*this.stick.x+ this.stick.y*this.stick.y);
-        if(len > DELTA) {
+        this.len = Math.sqrt(this.stick.x*this.stick.x+ this.stick.y*this.stick.y);
+        if(this.len > DELTA) {
         
-            this.stick.x /= len;
-            this.stick.y /= len;
+            this.stick.x /= this.len;
+            this.stick.y /= this.len;
         }
-
+        
         // Calculate delta
         this.delta.x = this.stick.x - this.oldStick.x;
         this.delta.y = this.stick.y - this.oldStick.y;
@@ -124,5 +127,12 @@ class Vpad {
     public getStickDelta() : {x: number, y: number} {
 
         return this.delta;
+    }
+
+
+    // Get stick distance
+    public getStickDistance() : number {
+
+        return this.len;
     }
 }

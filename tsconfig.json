@@ -15,8 +15,15 @@
         "src/core/application.ts",
         "src/core/input.ts",
         "src/core/vpad.ts",
+        "src/core/sprite.ts",
+        "src/core/vec2.ts",
+
 
         "src/game/game.ts",
+        "src/game/gameobject.ts",
+        "src/game/objman.ts",
+        "src/game/player.ts",
+
         "src/global.ts",
 
         "src/main.ts"

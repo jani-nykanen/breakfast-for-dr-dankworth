@@ -149,8 +149,8 @@ class Application {
         // at the same time (e.g. if player has minified
         // the window)
         const MAX_UPDATES = 5;
-        // We want things to run 30 frames per second. For
-        // reasons.
+        // Affects only the game logic, not the rendering.
+        // No reason to set to 60 in a GBC-like game.
         const FRAME_RATE = 30.0;
     
         // Update time sum if assets are loaded
@@ -159,7 +159,6 @@ class Application {
         if(this.ass.hasLoaded())
             this.timeSum += delta / 1000.0;
 
-        let redraw = false;
         let updateCount = 0;
     
         // If loading, draw loading & skip the rest
@@ -177,7 +176,6 @@ class Application {
 
                 // Update time sum
                 this.timeSum -= target;
-                redraw = true;
 
                 // Check if update count does not go 
                 // too big
@@ -189,14 +187,7 @@ class Application {
             }
         
             // Draw the frame
-            // TODO: We might have to call this every frame?
-            if(redraw) {
-        
-                redraw = false;
-
-                // Draw scene
-                this.draw(this.graph)
-            }
+            this.draw(this.graph)
         
             this.oldTime = ts;
         }

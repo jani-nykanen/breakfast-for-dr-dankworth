@@ -12,6 +12,7 @@ let assetInfo = {
     bitmaps: {
 
         font: "font.png",
+        player: "player.png",
     },
 
     audioPath: "assets/audio/",

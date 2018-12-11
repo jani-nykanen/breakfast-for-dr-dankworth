@@ -11,8 +11,15 @@ class Game implements Scene {
     private ass : Assets;
     private vpad : Vpad;
 
-    // TEMP
-    private pos = {x: 80, y: 72}
+    // Game object manager
+    private objMan : ObjectManager;
+
+
+    // Reset game
+    private reset() {
+
+        this.objMan = new ObjectManager();
+    }
 
 
     // Initialize
@@ -21,15 +28,17 @@ class Game implements Scene {
         // Store references
         this.ass = ass;
         this.vpad = vpad;
+
+        // (Re)set stuff
+        this.reset();
     }
 
 
     // Update
     public update(tm: number) {      
 
-        let s = this.vpad.getStick();
-        this.pos.x += s.x * 2 * tm;
-        this.pos.y += s.y * 2 * tm;
+        // Update player
+        this.objMan.update(this.vpad, tm);
     }
 
 
@@ -39,13 +48,12 @@ class Game implements Scene {
         // Clear screen
         g.clearScreen(170, 170, 170);
 
-        // Draw moving red rectangle
-        g.setColor(255, 0, 0, 1.0);
-        g.fillRect(this.pos.x-16,this.pos.y-16,32,32);
+        // Draw player
+        this.objMan.draw(g, this.ass);
 
         // Hello world!
         g.drawText(this.ass.getBitmap("font"), "Hello world!",
-            16, 16, 0, 0,false);
+            2, 2, 0, 0,false);
     }
 
 
