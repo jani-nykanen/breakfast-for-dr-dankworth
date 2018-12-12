@@ -47,6 +47,7 @@ class Player extends GameObject {
         this.attacking = false;
         this.spinLoad = 0.0;
         this.loadingSpin = false;
+        this.spinTimer = 0.0;
     }
 
 
@@ -66,7 +67,8 @@ class Player extends GameObject {
         }
 
         // Get direction
-        if(!this.attacking &&  vpad.getStickDistance() > DELTA)  {
+        if(!this.loadingSpin && this.spinTimer <= 0.0
+            && !this.attacking &&  vpad.getStickDistance() > DELTA)  {
 
             let angle = Math.atan2(s.y, s.x) + PI;
             this.flip = Flip.None;
@@ -143,6 +145,7 @@ class Player extends GameObject {
         if(this.loadingSpin) {
 
             this.spinLoad += 1.0 * tm;
+            this.sprSword.setFrame(this.dir, 4);
         }
 
         // If spinning
@@ -276,12 +279,14 @@ class Player extends GameObject {
         if(this.loadingSpin && Math.floor(this.spinLoad / 4) % 2 == 0)
             frameSkip = 4;
         
-            // Draw sprite
+        // Draw sprite
         this.spr.draw(g, ass.getBitmap("player"), 
             this.pos.x-8, this.pos.y-16, this.flip, frameSkip);
 
         // Draw sword
-        if(this.attacking || this.spinTimer > 0.0) {
+        if(this.attacking 
+            || this.loadingSpin 
+            || this.spinTimer > 0.0) {
 
             this.drawSword(g, ass);
         }
