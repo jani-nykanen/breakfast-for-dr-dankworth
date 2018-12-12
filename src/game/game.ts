@@ -13,12 +13,22 @@ class Game implements Scene {
 
     // Game object manager
     private objMan : ObjectManager;
+    // HUD
+    private hud : HUD;
+    // Camera
+    private cam : Camera;
 
 
     // Reset game
     private reset() {
 
+        // (Re)create objects
         this.objMan = new ObjectManager();
+
+        // Create HUD
+        this.hud = new HUD();
+        // Create camera
+        this.cam = new Camera(0, 0);
     }
 
 
@@ -37,8 +47,14 @@ class Game implements Scene {
     // Update
     public update(tm: number) {      
 
-        // Update player
-        this.objMan.update(this.vpad, tm);
+        // Update objects
+        this.objMan.update(this.vpad, this.cam, tm);
+
+        // Update camera
+        this.cam.update(tm);
+
+        // Update hud
+        this.hud.update(tm);
     }
 
 
@@ -48,12 +64,13 @@ class Game implements Scene {
         // Clear screen
         g.clearScreen(170, 170, 170);
 
-        // Draw player
+        // Draw objects
+        this.cam.useCamera(g);
         this.objMan.draw(g, this.ass);
 
-        // Hello world!
-        g.drawText(this.ass.getBitmap("font"), "Hello world!",
-            2, 2, 0, 0,false);
+        // Draw hud
+        g.translate();
+        this.hud.draw(g, this.ass);
     }
 
 

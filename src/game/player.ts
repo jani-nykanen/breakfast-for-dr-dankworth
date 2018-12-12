@@ -95,7 +95,7 @@ class Player extends GameObject {
 
         let s1 = vpad.getButton("fire1");
         // Spin released
-        if(this.loadingSpin && s1 == State.Released) {
+        if(this.loadingSpin && s1 == State.Up) {
 
             this.loadingSpin = false;
             this.spinLoad = 0.0;
@@ -215,8 +215,62 @@ class Player extends GameObject {
     }
 
 
+    // Check camera
+    private checkCamera(cam : Camera, tm : number) {
+
+        let p = cam.getVirtualPos();
+
+        // Left
+        if(this.pos.x-8 < p.x) {
+
+            cam.move(-1, 0);
+        }
+        // Right
+        else if(this.pos.x+8 > 160+p.x) {
+
+            cam.move(1, 0);
+        }
+        // Top
+        else if(this.pos.y-16 < p.y) {
+
+            cam.move(0, -1);
+        }
+        // Bottom
+        else if(this.pos.y > 144+p.y -16) {
+
+            cam.move(0, 1);
+        }
+    }
+
+
+    // Update camera moving event
+    public camMoveEvent(cam: Camera, tm: number) {
+
+        const MOVE_AMOUNT = 16;
+
+        let s = cam.getMoveSpeed() * (MOVE_AMOUNT/60);
+        let tx = cam.getTranslation().x * s;
+        let ty = cam.getTranslation().y * s;
+
+        this.pos.x += tx * tm;
+        this.pos.y += ty * tm;
+    }
+
+
     // Update
-    public update(vpad : Vpad, tm : number) {
+    public update(vpad : Vpad, cam: Camera, tm : number) {
+
+        // Check camera
+        this.checkCamera(cam, tm);
+
+        // Camera move event, ignore the rest (but still
+        // animate!)
+        if(cam.isMoving()) {
+
+            this.camMoveEvent(cam, tm);
+            this.animate(tm);
+            return;
+        }
 
         // Control
         this.control(vpad, tm);
@@ -224,6 +278,7 @@ class Player extends GameObject {
         this.move(tm);
         // Animate
         this.animate(tm);
+
     }
 
 

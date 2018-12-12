@@ -20,10 +20,10 @@ class ObjectManager {
 
 
     // Update
-    public update(vpad : Vpad, tm : number) {
+    public update(vpad : Vpad, cam : Camera, tm : number) {
 
         // Update player
-        this.player.update(vpad, tm);
+        this.player.update(vpad, cam, tm);
     }
 
 

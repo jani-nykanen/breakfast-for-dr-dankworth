@@ -23,6 +23,9 @@ class Graphics {
     // filling rectangles
     private color = {r: 255, g: 255, b: 255, a: 1.0};
 
+    // Translation
+    private tr : Vec2;
+
 
     // Constructor
     constructor() {
@@ -31,6 +34,9 @@ class Graphics {
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
         this.ctx.imageSmoothingEnabled = false;
+
+        // Set defaults
+        this.tr = new Vec2(0, 0);
     }
 
 
@@ -124,6 +130,10 @@ class Graphics {
 
         flip = flip | Flip.None;
         let c = this.ctx;
+
+        // Translate
+        dx += this.tr.x;
+        dy += this.tr.y;
 
         // If flipping, save the current transformations
         // state
@@ -238,5 +248,13 @@ class Graphics {
         this.canvas.style.width = String(width | 0) + "px";
         this.canvas.style.top = String(y | 0) + "px";
         this.canvas.style.left = String(x | 0) + "px";
+    }
+
+
+    // Translate
+    public translate(x = 0, y = 0) {
+
+        this.tr.x = x;
+        this.tr.y = y;
     }
 }

@@ -14,6 +14,7 @@ let assetInfo = {
         font: "font.png",
         player: "player.png",
         sword: "sword.png",
+        hud: "hud.png",
     },
 
     audioPath: "assets/audio/",
