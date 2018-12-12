@@ -85,9 +85,9 @@ class Sprite {
 
 
     // Draw
-    public draw(g : Graphics, bmp : any, dx : number, dy : number, flip = Flip.None) {
+    public draw(g : Graphics, bmp : any, dx : number, dy : number, flip = Flip.None, frameSkip = 0) {
 
-        g.drawBitmapRegion(bmp, this.width * this.frame,
+        g.drawBitmapRegion(bmp, this.width * (this.frame+frameSkip),
             this.height * this.row, this.width, this.height, dx, dy, flip);
     }
 
@@ -96,5 +96,19 @@ class Sprite {
     public getFrame() : number {
 
         return this.frame;
+    }
+
+
+    // Set frame
+    public setFrame(row : number, frame : number) {
+
+        this.animate(row, frame, frame, 0, 0);
+    }
+
+
+    // Get frame timer
+    public getFrameTimer() : number {
+
+        return this.count;
     }
 }

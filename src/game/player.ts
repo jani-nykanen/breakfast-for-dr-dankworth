@@ -7,6 +7,10 @@
 // Player class
 class Player extends GameObject {
 
+    // Constants
+    private readonly ATTACK_SPEED = 5;
+    private readonly SPIN_TIME = 28.0;
+
     // Sprite
     private spr : Sprite;
     // Sword sprite
@@ -18,6 +22,15 @@ class Player extends GameObject {
     private dir : number;
     // Is attacking
     private attacking : boolean;
+    // Spin load timer
+    private spinLoad : number;
+    // Is loading spin
+    private loadingSpin : boolean;
+    // Spin timer
+    private spinTimer : number;
+    // Starting row for spinning
+    private startRow : number;
+
 
     // Constructor
     public constructor(x : number, y: number) {
@@ -32,6 +45,8 @@ class Player extends GameObject {
         this.dir = 0;
         this.acceleration = 0.2;
         this.attacking = false;
+        this.spinLoad = 0.0;
+        this.loadingSpin = false;
     }
 
 
@@ -44,7 +59,7 @@ class Player extends GameObject {
 
         // Movement
         let s = vpad.getStick();
-        if(!this.attacking) {
+        if(!this.attacking && this.spinTimer <= 0.0) {
 
             this.target.x = SPEED * s.x;
             this.target.y = SPEED * s.y;
@@ -76,8 +91,25 @@ class Player extends GameObject {
             }
         }
 
+        let s1 = vpad.getButton("fire1");
+        // Spin released
+        if(this.loadingSpin && s1 == State.Released) {
+
+            this.loadingSpin = false;
+            this.spinLoad = 0.0;
+
+            this.spinTimer = this.SPIN_TIME;
+
+            this.target.x = 0;
+            this.target.y = 0;
+
+            // Determine starting row/direction
+            this.startRow = [0, 2, 3] [this.dir];
+            if(this.flip == Flip.Horizontal)
+                this.startRow = 1;
+        }
         // Attack
-        if(!this.attacking && vpad.getButton("fire1") == State.Pressed) {
+        else if(!this.attacking && s1 == State.Pressed) {
 
             this.attacking = true;
             // TODO: "setFrame" to sprite?
@@ -87,6 +119,16 @@ class Player extends GameObject {
             this.target.x = 0,
             this.target.y = 0;
         }
+        // Release attack
+        else if(this.attacking 
+            && s1 == State.Up
+            && this.spr.getFrame() == 3 
+            && this.spr.getFrameTimer() >= this.ATTACK_SPEED ) {
+
+            this.spr.setFrame(this.dir, 0);
+            this.attacking = false;
+        }
+        
     }
 
 
@@ -94,20 +136,61 @@ class Player extends GameObject {
     private animate(tm : number) {
 
         const DELTA = 0.01;
-        const ATTACK_SPEED = 5;
-        
+        const RELEASE_ATTACK_TIME = 18;
+        const SPIN_CHANGE = 3;
+
+        // Update "spin loading"
+        if(this.loadingSpin) {
+
+            this.spinLoad += 1.0 * tm;
+        }
+
+        // If spinning
+        if(this.spinTimer > 0.0) {
+
+            this.spinTimer -= 1.0 * tm;
+            // If time is out, reset row
+            if(this.spinTimer <= 0.0) {
+
+                this.dir = [0, 2, 1, 2] [this.startRow];
+                if(this.startRow == 1) 
+                    this.flip = Flip.Horizontal;
+                else
+                    this.flip = Flip.None;
+            }
+            else {
+
+                // Compute row & direction
+                let row = (this.startRow +
+                    (( (this.SPIN_TIME-this.spinTimer) / SPIN_CHANGE) | 0)) % 4;
+                this.dir = [0, 2, 1, 2] [row];
+                if(row == 1) 
+                    this.flip = Flip.Horizontal;
+                else
+                    this.flip = Flip.None;
+
+                this.spr.setFrame(3+this.dir, 3);
+                this.sprSword.setFrame(this.dir, 2); 
+            }
+        }
         // Attacking
-        if(this.attacking) {
+        else if(this.attacking) {
+
+            let t = this.spr.getFrame() == 3 ? 
+                RELEASE_ATTACK_TIME : this.ATTACK_SPEED;
 
             // Animate attacking
-            this.spr.animate(3+ this.dir, 0, 4, ATTACK_SPEED, tm);
+            this.spr.animate(3+ this.dir, 0, 4, t, tm);
             // Animate sword
-            this.sprSword.animate(this.dir, 0, 4, ATTACK_SPEED, tm);
+            this.sprSword.animate(this.dir, 0, 4, t, tm);
 
             if(this.spr.getFrame() == 4) {
 
-                this.spr.animate(this.dir, 0, 0, 0,tm);
+                this.spr.setFrame(this.dir, 0);
                 this.attacking = false;
+
+                this.spinLoad = 0.0;
+                this.loadingSpin = true;
             }
 
         }
@@ -147,38 +230,58 @@ class Player extends GameObject {
         let bx = 0;
         let by = 0;
 
+        let flip = this.flip;
         if(this.dir == 0) {
 
             bx = -12 -4;
             by -= 8;
+
+            if(this.spinTimer > 0) {
+
+                flip = Flip.Horizontal;
+            }
         }
         else if(this.dir == 1) {
 
             bx = -7;
             by -= 32;
+
+            if(this.spinTimer > 0) {
+
+                flip = Flip.Horizontal;
+            }
         }
         else if(this.dir == 2) {
             
             if(this.flip == Flip.Horizontal) {
                 bx -= 24;
             }
+            else if(this.spinTimer > 0) {
+
+                flip = Flip.Vertical;
+            }
             by = -20+1;
         }
 
         this.sprSword.draw(g, ass.getBitmap("sword"), 
-                this.pos.x + bx, this.pos.y+by, this.flip);
+                this.pos.x + bx, this.pos.y+by, flip);
     }
 
 
     // Draw
     public draw(g : Graphics, ass : Assets) {
 
-        // Draw sprite
+        // Determine frameskip
+        let frameSkip = 0;
+        if(this.loadingSpin && Math.floor(this.spinLoad / 4) % 2 == 0)
+            frameSkip = 4;
+        
+            // Draw sprite
         this.spr.draw(g, ass.getBitmap("player"), 
-            this.pos.x-8, this.pos.y-16, this.flip);
+            this.pos.x-8, this.pos.y-16, this.flip, frameSkip);
 
         // Draw sword
-        if(this.attacking) {
+        if(this.attacking || this.spinTimer > 0.0) {
 
             this.drawSword(g, ass);
         }
