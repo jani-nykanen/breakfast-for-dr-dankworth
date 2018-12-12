@@ -87,10 +87,10 @@ class Application {
             this.activeScene.update(tm);
         }
 
-        // Update input
-        this.input.update();
         // Update virtual gamepad
         this.vpad.update();
+        // Update input
+        this.input.update();
     }
 
 

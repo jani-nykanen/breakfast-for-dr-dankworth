@@ -90,4 +90,11 @@ class Sprite {
         g.drawBitmapRegion(bmp, this.width * this.frame,
             this.height * this.row, this.width, this.height, dx, dy, flip);
     }
+
+
+    // Get frame
+    public getFrame() : number {
+
+        return this.frame;
+    }
 }

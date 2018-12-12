@@ -9,12 +9,15 @@ class Player extends GameObject {
 
     // Sprite
     private spr : Sprite;
+    // Sword sprite
+    private sprSword : Sprite;
     // Flip
     private flip : Flip;
 
     // Direction
     private dir : number;
-
+    // Is attacking
+    private attacking : boolean;
 
     // Constructor
     public constructor(x : number, y: number) {
@@ -23,10 +26,12 @@ class Player extends GameObject {
 
         // Create components 
         this.spr = new Sprite(16, 16);
+        this.sprSword = new Sprite(24, 24);
 
         // Set defaults
         this.dir = 0;
         this.acceleration = 0.2;
+        this.attacking = false;
     }
 
 
@@ -39,11 +44,14 @@ class Player extends GameObject {
 
         // Movement
         let s = vpad.getStick();
-        this.target.x = SPEED * s.x;
-        this.target.y = SPEED * s.y;
+        if(!this.attacking) {
+
+            this.target.x = SPEED * s.x;
+            this.target.y = SPEED * s.y;
+        }
 
         // Get direction
-        if(vpad.getStickDistance() > DELTA)  {
+        if(!this.attacking &&  vpad.getStickDistance() > DELTA)  {
 
             let angle = Math.atan2(s.y, s.x) + PI;
             this.flip = Flip.None;
@@ -67,6 +75,18 @@ class Player extends GameObject {
                 this.dir = 2;
             }
         }
+
+        // Attack
+        if(!this.attacking && vpad.getButton("fire1") == State.Pressed) {
+
+            this.attacking = true;
+            // TODO: "setFrame" to sprite?
+            this.spr.animate(3 + this.dir, 0, 0, 0, 0);
+            this.sprSword.animate(this.dir,0,0,0,0);
+
+            this.target.x = 0,
+            this.target.y = 0;
+        }
     }
 
 
@@ -74,18 +94,38 @@ class Player extends GameObject {
     private animate(tm : number) {
 
         const DELTA = 0.01;
+        const ATTACK_SPEED = 5;
         
-        // Not moving
-        if(this.totalSpeed < DELTA) {
+        // Attacking
+        if(this.attacking) {
 
-            this.spr.animate(this.dir,0,0,0,tm);
+            // Animate attacking
+            this.spr.animate(3+ this.dir, 0, 4, ATTACK_SPEED, tm);
+            // Animate sword
+            this.sprSword.animate(this.dir, 0, 4, ATTACK_SPEED, tm);
+
+            if(this.spr.getFrame() == 4) {
+
+                this.spr.animate(this.dir, 0, 0, 0,tm);
+                this.attacking = false;
+            }
+
         }
-        // Moving
         else {
 
-            let s = 10.0 - this.totalSpeed*3;
-            this.spr.animate(this.dir, 0, 3, s, tm);
+            // Not moving
+            if(this.totalSpeed < DELTA) {
+
+                this.spr.animate(this.dir,0,0,0,tm);
+            }
+            // Moving
+            else {
+
+                let s = 10.0 - this.totalSpeed*3;
+                this.spr.animate(this.dir, 0, 3, s, tm);
+            }
         }
+
     }
 
 
@@ -101,12 +141,47 @@ class Player extends GameObject {
     }
 
 
+    // Draw sword
+    private drawSword(g: Graphics, ass: Assets) {
+
+        let bx = 0;
+        let by = 0;
+
+        if(this.dir == 0) {
+
+            bx = -12 -4;
+            by -= 8;
+        }
+        else if(this.dir == 1) {
+
+            bx = -7;
+            by -= 32;
+        }
+        else if(this.dir == 2) {
+            
+            if(this.flip == Flip.Horizontal) {
+                bx -= 24;
+            }
+            by = -20+1;
+        }
+
+        this.sprSword.draw(g, ass.getBitmap("sword"), 
+                this.pos.x + bx, this.pos.y+by, this.flip);
+    }
+
+
     // Draw
     public draw(g : Graphics, ass : Assets) {
 
         // Draw sprite
         this.spr.draw(g, ass.getBitmap("player"), 
-            this.pos.x-8, this.pos.y-16, this.flip)
+            this.pos.x-8, this.pos.y-16, this.flip);
+
+        // Draw sword
+        if(this.attacking) {
+
+            this.drawSword(g, ass);
+        }
     }
 
 }

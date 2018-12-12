@@ -105,13 +105,15 @@ class Vpad {
     public getButton(name : string) : State {
 
         // Find a corresponding button
-        this.buttons.forEach(e => {
+        let e : VpadButton;
+        for(let i = 0; i < this.buttons.length; ++ i) {
             
+            e = this.buttons[i];
             if(e.name == name) {
 
                 return this.input.getKey(e.key);
             }
-        });
+        };
         return State.Up;
     }
 
