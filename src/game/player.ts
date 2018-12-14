@@ -4,6 +4,14 @@
  * (c) 2018 Jani Nykänen
  */
 
+
+ // Attack type
+enum AtkType {
+    Sword = 0,
+    Bow = 1
+};
+
+
 // Player class
 class Player extends GameObject {
 
@@ -15,6 +23,8 @@ class Player extends GameObject {
     private spr : Sprite;
     // Sword sprite
     private sprSword : Sprite;
+    // Bow sprite
+    private sprBow : Sprite;
     // Flip
     private flip : Flip;
 
@@ -30,6 +40,8 @@ class Player extends GameObject {
     private spinTimer : number;
     // Starting row for spinning
     private startRow : number;
+    // Attack type
+    private atk : AtkType;
 
 
     // Constructor
@@ -37,9 +49,10 @@ class Player extends GameObject {
 
         super(x, y);
 
-        // Create components 
+        // Create sprites
         this.spr = new Sprite(16, 16);
         this.sprSword = new Sprite(24, 24);
+        this.sprBow = new Sprite(16, 16);
 
         // Set defaults
         this.dir = 0;
@@ -48,6 +61,7 @@ class Player extends GameObject {
         this.spinLoad = 0.0;
         this.loadingSpin = false;
         this.spinTimer = 0.0;
+        this.atk = AtkType.Sword;
     }
 
 
@@ -64,6 +78,11 @@ class Player extends GameObject {
 
             this.target.x = SPEED * s.x;
             this.target.y = SPEED * s.y;
+        }
+        else {
+
+            this.target.x = 0,
+            this.target.y = 0;
         }
 
         // Get direction
@@ -94,6 +113,8 @@ class Player extends GameObject {
         }
 
         let s1 = vpad.getButton("fire1");
+        let s2 = vpad.getButton("fire2");
+
         // Spin released
         if(this.loadingSpin && s1 == State.Up) {
 
@@ -101,9 +122,6 @@ class Player extends GameObject {
             this.spinLoad = 0.0;
 
             this.spinTimer = this.SPIN_TIME;
-
-            this.target.x = 0;
-            this.target.y = 0;
 
             // Determine starting row/direction
             this.startRow = [0, 2, 3] [this.dir];
@@ -114,12 +132,10 @@ class Player extends GameObject {
         else if(!this.attacking && s1 == State.Pressed) {
 
             this.attacking = true;
-            // TODO: "setFrame" to sprite?
-            this.spr.animate(3 + this.dir, 0, 0, 0, 0);
-            this.sprSword.animate(this.dir,0,0,0,0);
+            this.atk = AtkType.Sword;
 
-            this.target.x = 0,
-            this.target.y = 0;
+            this.spr.setFrame(3 + this.dir, 0);
+            this.sprSword.setFrame(this.dir,0);
         }
         // Release attack
         else if(this.attacking 
@@ -129,6 +145,18 @@ class Player extends GameObject {
 
             this.spr.setFrame(this.dir, 0);
             this.attacking = false;
+        }
+        // Check bow
+        else if(!this.attacking 
+            && !this.loadingSpin 
+            && this.spinTimer <= 0.0 
+            && s2 == State.Pressed) {
+
+            this.attacking = true;
+            this.atk = AtkType.Bow;
+
+            this.spr.setFrame(6, this.dir);
+            this.sprBow.setFrame(0, this.dir);
         }
         
     }
@@ -140,6 +168,7 @@ class Player extends GameObject {
         const DELTA = 0.01;
         const RELEASE_ATTACK_TIME = 18;
         const SPIN_CHANGE = 3;
+        const BOW_TIME = 30;
 
         // Update "spin loading"
         if(this.loadingSpin) {
@@ -179,21 +208,37 @@ class Player extends GameObject {
         // Attacking
         else if(this.attacking) {
 
-            let t = this.spr.getFrame() == 3 ? 
-                RELEASE_ATTACK_TIME : this.ATTACK_SPEED;
+            // Bow
+            if(this.atk == AtkType.Bow) {
 
-            // Animate attacking
-            this.spr.animate(3+ this.dir, 0, 4, t, tm);
-            // Animate sword
-            this.sprSword.animate(this.dir, 0, 4, t, tm);
+                this.spr.animate(6, this.dir, this.dir+1, BOW_TIME, tm);
+                if(this.spr.getFrame() == this.dir+1) {
 
-            if(this.spr.getFrame() == 4) {
+                    this.spr.setFrame(this.dir, 0);
+                    this.attacking = false;
+                }
+            }
+            // Sword
+            else {
 
-                this.spr.setFrame(this.dir, 0);
-                this.attacking = false;
+                let t = this.spr.getFrame() == 3 ? 
+                    RELEASE_ATTACK_TIME : this.ATTACK_SPEED;
 
-                this.spinLoad = 0.0;
-                this.loadingSpin = true;
+                // Animate attacking
+                this.spr.animate(3+ this.dir, 0, 4, t, tm);
+                // Animate sword
+                this.sprSword.animate(this.dir, 0, 4, t, tm);
+
+                // Stop
+                if(this.spr.getFrame() == 4) {
+
+                    this.spr.setFrame(this.dir, 0);
+                    this.attacking = false;
+
+                    this.spinLoad = 0.0;
+                    this.loadingSpin = true;
+                }
+
             }
 
         }
@@ -326,6 +371,36 @@ class Player extends GameObject {
     }
 
 
+    // Draw bow
+    public drawBow(g : Graphics, ass: Assets) {
+
+        let bx = 0;
+        let by = 0;
+
+        if(this.dir == 0) {
+
+            bx = -8;
+        }
+        else if(this.dir == 1) {
+
+            bx = -8;
+            by = -32;
+        }
+        else if(this.dir == 2) {
+            
+            if(this.flip == Flip.Horizontal) 
+                bx -= 16+8;
+            else
+                bx += 8;
+
+            by -= 16;
+        }
+
+        this.sprBow.draw(g, ass.getBitmap("bow"), 
+                this.pos.x + bx, this.pos.y+by, this.flip);
+    }
+
+
     // Draw
     public draw(g : Graphics, ass : Assets) {
 
@@ -338,12 +413,18 @@ class Player extends GameObject {
         this.spr.draw(g, ass.getBitmap("player"), 
             this.pos.x-8, this.pos.y-16, this.flip, frameSkip);
 
-        // Draw sword
+        // Draw weapon
         if(this.attacking 
             || this.loadingSpin 
             || this.spinTimer > 0.0) {
 
-            this.drawSword(g, ass);
+            // Sword
+            if(this.atk == AtkType.Sword)
+                this.drawSword(g, ass);
+
+            // Bow
+            else if(this.atk == AtkType.Bow)
+                this.drawBow(g, ass);
         }
     }
 
