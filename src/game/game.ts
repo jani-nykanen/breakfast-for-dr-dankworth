@@ -48,7 +48,7 @@ class Game implements Scene {
     public update(tm: number) {      
 
         // Update objects
-        this.objMan.update(this.vpad, this.cam, tm);
+        this.objMan.update(this.vpad, this.cam, this.hud, tm);
 
         // Update camera
         this.cam.update(tm);

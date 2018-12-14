@@ -27,6 +27,17 @@ class HUD {
     }
 
 
+    // Special int to str conversion
+    // (adds 0 in the beginning if too short)
+    private spcIntToStr(num : number, dec = 10) : string {
+
+        let s = String(num);
+        if(num < dec)
+            s = "0" + s;
+
+        return s;
+    }
+
     // Update
     public update(tm : number) {
 
@@ -42,11 +53,21 @@ class HUD {
         const YOFF = -15;
 
         let sx = 0;
-        for(let i = 0; i < this.maxLife; ++ i) {
 
-            sx = i >= this.life ? 16 : 0;
+        // Draw "integral" hearts
+        let intg = Math.floor(this.life/2.0);
+        for(let i = 0; i < Math.floor(this.maxLife/2.0); ++ i) {
+
+            sx = i >= intg ? 16 : 0;
             g.drawBitmapRegion(b, sx, 16, 16, 16, 
                 XPOS+ i*(16+XOFF), 144+YOFF);
+        }
+        
+        // Draw half hearts, if any
+        if(intg*2 < this.life) {
+
+            g.drawBitmapRegion(b, 0, 16, 8, 16, 
+                XPOS+ intg*(16+XOFF), 144+YOFF);
         }
     }
 
@@ -65,7 +86,8 @@ class HUD {
         g.drawBitmapRegion(b, 32,16, 16, 16, ICON_X, ICON_Y);
 
         // Draw text
-        g.drawText(f, "#" + String(this.arrows), TEXT_X, TEXT_Y, XOFF, 0);
+        g.drawText(f, "#" + this.spcIntToStr(this.arrows), 
+            TEXT_X, TEXT_Y, XOFF, 0);
     }
 
 
@@ -84,7 +106,8 @@ class HUD {
         g.drawBitmapRegion(b, 48,16, 16, 16, ICON_X, ICON_Y);
 
         // Draw text
-        g.drawText(f, "#" + String(this.gems), TEXT_X, TEXT_Y, XOFF, 0);
+        g.drawText(f, "#" + this.spcIntToStr(this.gems), 
+            TEXT_X, TEXT_Y, XOFF, 0);
     }
 
 
@@ -103,5 +126,16 @@ class HUD {
         this.drawArrows(g, b, f);
         // Draw gems
         this.drawGems(g, b, f);
+    }
+
+
+    // Update data
+    public updateData(life : number, maxLife : number, 
+        arrows: number, gems: number) {
+
+        this.life = life;
+        this.maxLife = maxLife;
+        this.arrows = arrows;
+        this.gems = gems;
     }
 }

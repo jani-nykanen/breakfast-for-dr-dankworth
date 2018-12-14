@@ -18,6 +18,8 @@ class Player extends GameObject {
     // Constants
     private readonly ATTACK_SPEED = 5;
     private readonly SPIN_TIME = 28.0;
+    private readonly MAX_LIFE = 6;
+    private readonly ARROW_MAX = 20;
 
     // Sprite
     private spr : Sprite;
@@ -43,6 +45,13 @@ class Player extends GameObject {
     // Attack type
     private atk : AtkType;
 
+    // Life
+    private life : number;
+    // Arrow count
+    private arrowCount : number;
+    // Gem count
+    private gemCount : number;
+
 
     // Constructor
     public constructor(x : number, y: number) {
@@ -62,6 +71,10 @@ class Player extends GameObject {
         this.loadingSpin = false;
         this.spinTimer = 0.0;
         this.atk = AtkType.Sword;
+
+        this.life = this.MAX_LIFE;
+        this.arrowCount = this.ARROW_MAX;
+        this.gemCount = 0;
     }
 
 
@@ -203,7 +216,8 @@ class Player extends GameObject {
         else if(!this.attacking 
             && !this.loadingSpin 
             && this.spinTimer <= 0.0 
-            && s2 == State.Pressed) {
+            && s2 == State.Pressed
+            && this.arrowCount > 0) {
 
             this.attacking = true;
             this.atk = AtkType.Bow;
@@ -213,6 +227,7 @@ class Player extends GameObject {
 
             // Shoot arrow
             this.shootArrow(arrows);
+            -- this.arrowCount;
         }
         
     }
@@ -482,6 +497,14 @@ class Player extends GameObject {
             else if(this.atk == AtkType.Bow)
                 this.drawBow(g, ass);
         }
+    }
+
+
+    // Update HUD data
+    public updateHUDData(h : HUD) {
+
+        h.updateData(this.life, this.MAX_LIFE,
+            this.arrowCount, this.gemCount);
     }
 
 }

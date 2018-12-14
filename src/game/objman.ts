@@ -33,10 +33,12 @@ class ObjectManager {
 
 
     // Update
-    public update(vpad : Vpad, cam : Camera, tm : number) {
+    public update(vpad : Vpad, cam : Camera, hud : HUD, tm : number) {
 
         // Update player
         this.player.update(vpad, cam, this.arrows, tm);
+        // Pass data to HUD
+        this.player.updateHUDData(hud);
 
         // Update arrows
         for(let i = 0; i < this.ARROW_COUNT; ++ i) {
