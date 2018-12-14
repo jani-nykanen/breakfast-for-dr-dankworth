@@ -11,6 +11,10 @@ class HUD {
     private life : number;
     // Max life
     private maxLife : number;
+    // Arrows
+    private arrows : number;
+    // Gems
+    private gems : number;
 
 
     // Constructor
@@ -18,6 +22,8 @@ class HUD {
 
         this.life = 2;
         this.maxLife = 3;
+        this.arrows = 10;
+        this.gems = 0;
     }
 
 
@@ -45,15 +51,57 @@ class HUD {
     }
 
 
+    // Draw arrows
+    private drawArrows(g: Graphics, b : any,  f : any) {
+
+        const ICON_X = 64;
+        const ICON_Y = 144-15;
+
+        const TEXT_X = 76;
+        const TEXT_Y = 144-13;
+        const XOFF = -9;
+
+        // Draw icon
+        g.drawBitmapRegion(b, 32,16, 16, 16, ICON_X, ICON_Y);
+
+        // Draw text
+        g.drawText(f, "#" + String(this.arrows), TEXT_X, TEXT_Y, XOFF, 0);
+    }
+
+
+    // Draw gems
+    // TODO: Merge with the above?
+    private drawGems(g: Graphics, b : any,  f : any) {
+
+        const ICON_X = 120;
+        const ICON_Y = 144-15;
+
+        const TEXT_X = 132;
+        const TEXT_Y = 144-13;
+        const XOFF = -9;
+
+        // Draw icon
+        g.drawBitmapRegion(b, 48,16, 16, 16, ICON_X, ICON_Y);
+
+        // Draw text
+        g.drawText(f, "#" + String(this.gems), TEXT_X, TEXT_Y, XOFF, 0);
+    }
+
+
     // Draw
     public draw(g : Graphics, ass : Assets) {
 
         let b = ass.getBitmap("hud");
+        let f = ass.getBitmap("font");
 
         // Draw bottom bar
         g.drawBitmapRegion(b, 0,0, 160, 16, 0, 144-16);
 
         // Draw hearts
         this.drawHearts(g, b);
+        // Draw arrow
+        this.drawArrows(g, b, f);
+        // Draw gems
+        this.drawGems(g, b, f);
     }
 }

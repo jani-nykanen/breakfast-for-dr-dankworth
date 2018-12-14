@@ -65,8 +65,61 @@ class Player extends GameObject {
     }
 
 
+    // Shoot an arrow
+    private shootArrow(arrows : Array<Arrow>) {
+
+        const SPEED = 4;
+
+        // Find the first non-existent arrow
+        let a : Arrow;
+        a = null;
+        for(let i = 0; i < arrows.length; ++ i) {
+
+            a = arrows[i];
+            if(!a.DoesExist) {
+                break;
+            }
+        }
+        if(a == null) return;
+
+        // Check creation position & speed
+        let x = this.pos.x;
+        let y = this.pos.y-8;
+        let sx = 0;
+        let sy = 0;
+
+        // TODO: switch
+        if(this.dir == 0) {
+
+            y += 16;
+            sy = 1;
+        }
+        else if(this.dir == 1) {
+
+            y -= 16;
+            sy = -1;
+        }
+        else if(this.dir == 2) {
+
+            if(this.flip == Flip.Horizontal) {
+
+                x -= 16;
+                sx = -1;
+            }
+            else {
+
+                x += 16;
+                sx = 1;
+            }
+        }
+
+        // Create arrow
+        a.createSelf(x, y, sx*SPEED, sy*SPEED, this.dir, this.flip);
+    }
+
+
     // Control
-    private control(vpad : Vpad, tm : number) {
+    private control(vpad : Vpad, arrows : Array<Arrow>, tm : number) {
 
         const DELTA = 0.01;
         const SPEED = 1.0;
@@ -128,7 +181,7 @@ class Player extends GameObject {
             if(this.flip == Flip.Horizontal)
                 this.startRow = 1;
         }
-        // Attack
+        // Check sword attack
         else if(!this.attacking && s1 == State.Pressed) {
 
             this.attacking = true;
@@ -146,7 +199,7 @@ class Player extends GameObject {
             this.spr.setFrame(this.dir, 0);
             this.attacking = false;
         }
-        // Check bow
+        // Check bow attack
         else if(!this.attacking 
             && !this.loadingSpin 
             && this.spinTimer <= 0.0 
@@ -157,6 +210,9 @@ class Player extends GameObject {
 
             this.spr.setFrame(6, this.dir);
             this.sprBow.setFrame(0, this.dir);
+
+            // Shoot arrow
+            this.shootArrow(arrows);
         }
         
     }
@@ -303,7 +359,7 @@ class Player extends GameObject {
 
 
     // Update
-    public update(vpad : Vpad, cam: Camera, tm : number) {
+    public update(vpad : Vpad, cam: Camera, arrows : Array<Arrow>, tm : number) {
 
         // Check camera
         this.checkCamera(cam, tm);
@@ -318,7 +374,7 @@ class Player extends GameObject {
         }
 
         // Control
-        this.control(vpad, tm);
+        this.control(vpad, arrows, tm);
         // Move
         this.move(tm);
         // Animate

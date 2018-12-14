@@ -19,6 +19,9 @@ class GameObject {
     // Acceleration
     protected acceleration =0.2;
 
+    // Does exist
+    protected exist : boolean;
+
 
     // Constructor
     public constructor(x: number, y: number) {
@@ -26,6 +29,8 @@ class GameObject {
         this.pos = new Vec2(x, y);
         this.speed = new Vec2();
         this.target = new Vec2();
+
+        this.exist = true;
     }
 
 
@@ -68,5 +73,12 @@ class GameObject {
         // Move
         this.pos.x += this.speed.x * tm;
         this.pos.y += this.speed.y * tm;
+    }
+
+
+    // Does exist
+    public DoesExist() : boolean {
+
+        return this.exist;
     }
 }

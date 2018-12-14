@@ -9,8 +9,9 @@ class Camera {
 
     // Constants
     private readonly MOVE_TIME = 60.0;
-    private readonly WIDTH = 160;
-    private readonly HEIGHT = 144-16;
+    // Laziness
+    public readonly WIDTH = 160;
+    public readonly HEIGHT = 144-16;
 
     // Grid position
     private pos : Vec2;

@@ -24,6 +24,7 @@
         "src/game/objman.ts",
         "src/game/player.ts",
         "src/game/camera.ts",
+        "src/game/arrow.ts",
 
         "src/global.ts",
 
