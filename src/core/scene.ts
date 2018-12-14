@@ -11,6 +11,7 @@ interface Scene {
     update(tm: number): any
     draw(g : Graphics) : any
     changeTo?(): any
+    onLoaded?() : any
 
     getName(): string
 }

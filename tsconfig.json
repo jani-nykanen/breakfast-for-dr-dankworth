@@ -25,6 +25,7 @@
         "src/game/player.ts",
         "src/game/camera.ts",
         "src/game/arrow.ts",
+        "src/game/stage.ts",
 
         "src/global.ts",
 

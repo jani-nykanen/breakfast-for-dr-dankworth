@@ -31,6 +31,9 @@ class Application {
     // Global scene
     private globalScene : Scene;
 
+    // Has loaded
+    private loaded : boolean;
+
 
     // Constructor
     constructor() { 
@@ -53,6 +56,7 @@ class Application {
         this.timeSum = 0.0;
         this.activeScene = null;
         this.globalScene = null;
+        this.loaded = false;
 
         // Set event listeners
         _appRef = this;
@@ -141,6 +145,17 @@ class Application {
     }
 
 
+    // On loaded
+    private onLoaded() {
+
+        this.scenes.forEach(e => {
+            
+            if(typeof(e.onLoaded) == "function")
+                e.onLoaded();
+        });
+    }    
+
+
     // Loop
     public loop(ts : number) {
 
@@ -167,6 +182,13 @@ class Application {
             this.drawLoading(this.graph);
         }
         else {
+
+            // Call "onLoad"
+            if(!this.loaded) {
+
+                this.onLoaded();
+                this.loaded = true;
+            }
 
             // If enough time has passed, update frame
             while(this.timeSum >= target) {

@@ -17,6 +17,8 @@ class Game implements Scene {
     private hud : HUD;
     // Camera
     private cam : Camera;
+    // Stage
+    private stage : Stage;
 
 
     // Reset game
@@ -24,11 +26,20 @@ class Game implements Scene {
 
         // (Re)create objects
         this.objMan = new ObjectManager();
+        // Create stage
+        this.stage = new Stage();
 
         // Create HUD
         this.hud = new HUD();
         // Create camera
         this.cam = new Camera(0, 0);
+    }
+
+
+    // On loaded
+    public onLoaded() {
+
+        this.stage.setMap(this.ass);
     }
 
 
@@ -47,6 +58,12 @@ class Game implements Scene {
     // Update
     public update(tm: number) {      
 
+        if(!this.cam.isMoving()) {
+            
+            // Update stage
+            this.stage.update(tm);
+        }
+
         // Update objects
         this.objMan.update(this.vpad, this.cam, this.hud, tm);
 
@@ -64,8 +81,13 @@ class Game implements Scene {
         // Clear screen
         g.clearScreen(170, 170, 170);
 
-        // Draw objects
+        // Use camera
         this.cam.useCamera(g);
+
+        // Draw stage
+        this.stage.draw(g, this.ass, this.cam);
+
+        // Draw objects
         this.objMan.draw(g, this.ass);
 
         // Draw hud

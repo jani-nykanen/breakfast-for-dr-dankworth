@@ -98,10 +98,12 @@ class Assets {
         // When loaded
         xobj.onreadystatechange = function () {
 
-            if (xobj.readyState == 4 
-                && String(xobj.status) == "200") {
+            if (xobj.readyState == 4 ) {
+
+                if(String(xobj.status) == "200") {
                 
-                _assRef.addDocument(name, xobj.responseText);
+                    _assRef.addDocument(name, xobj.responseText);
+                }
             }
             _assRef.increaseLoaded();
         };
@@ -113,7 +115,6 @@ class Assets {
     public addDocument(name : string, text : string) {
 
         this.docs[name] = JSON.parse(text);
-        console.log(this.docs[name]);
     }
 
     // Increase loaded count
@@ -143,5 +144,12 @@ class Assets {
     public getBitmap(name : string) : any {
 
         return this.bitmaps[name];
+    }
+
+
+    // Get document
+    public getDocument(name : string) : any {
+
+        return this.docs[name];
     }
 }

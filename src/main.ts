@@ -16,6 +16,8 @@ let assetInfo = {
         sword: "sword.png",
         hud: "hud.png",
         bow: "bow.png",
+        tileset: "tileset.png",
+        water: "water.png",
     },
 
     audioPath: "assets/audio/",
