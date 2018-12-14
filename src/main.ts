@@ -22,6 +22,11 @@ let assetInfo = {
     audio: {
         // ...
     },
+
+    docPath: "assets/tilemaps/",
+    docs: {
+        map: "map.json",
+    }
 };
 
 

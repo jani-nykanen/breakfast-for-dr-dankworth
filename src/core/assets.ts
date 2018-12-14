@@ -22,13 +22,16 @@ class Assets {
     private total : number;
     // Bitmaps
     private bitmaps = {} as StringIndexed;
+    // JSON documents
+    private docs = {} as StringIndexed;
     // Audio
     private samples = {} as StringIndexed;
 
 
     // Constructor
     public constructor(bmpList : Array<any>, bmpPath : Array<string>,
-            sampleList : Array<any>, samplePath : Array<string>) {
+            sampleList : Array<any>, samplePath : Array<string>,
+            docList : Array<any>, docPath: Array<String>) {
 
         // Set reference to self
         _assRef = this;
@@ -47,6 +50,12 @@ class Assets {
         for(let k in sampleList) {
 
             this.loadSample(k, samplePath + "/" + sampleList[k]);
+        }
+
+        // Set documents to be loaded
+        for(let k in docList) {
+
+            this.loadJSON(k, docPath + "/" + docList[k]);
         }
     }
 
@@ -76,6 +85,36 @@ class Assets {
         this.samples[name] = null;
     }
 
+
+    // Load a JSON document
+    private loadJSON(name : string, url: string) {
+
+        ++ this.total;
+
+        var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+        xobj.open("GET", url, true);
+
+        // When loaded
+        xobj.onreadystatechange = function () {
+
+            if (xobj.readyState == 4 
+                && String(xobj.status) == "200") {
+                
+                _assRef.addDocument(name, xobj.responseText);
+            }
+            _assRef.increaseLoaded();
+        };
+        xobj.send(null);  
+    }
+
+
+    // Push a document
+    public addDocument(name : string, text : string) {
+
+        this.docs[name] = JSON.parse(text);
+        console.log(this.docs[name]);
+    }
 
     // Increase loaded count
     public increaseLoaded() {

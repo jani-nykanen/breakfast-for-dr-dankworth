@@ -221,7 +221,8 @@ class Application {
     public loadAssets(assetInfo : any) {
 
         this.ass = new Assets(assetInfo.bitmaps, assetInfo.bitmapPath,
-            assetInfo.audio, assetInfo.audioPath);
+            assetInfo.audio, assetInfo.audioPath,
+            assetInfo.docs, assetInfo.docPath);
     }
 
 
