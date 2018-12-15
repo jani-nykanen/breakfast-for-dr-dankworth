@@ -87,8 +87,14 @@ class GameObject {
     }
 
 
+    // Collision event
+    protected collisionEvent?(x : number, y: number, dir : number) : any;
+
+
     // Wall collision
     public getWallCollision(x : number, y : number, d : number, dir : number, tm : number) {
+
+        if(!this.exist) return;
 
         const MARGIN1 = 0.0;
         const MARGIN2 = 2.0;
@@ -105,7 +111,7 @@ class GameObject {
         let hcheck = px+w >= x && px-w <= x+d;
         let vcheck = py+h >= y && py-h <= y+d;
 
-        // TODO: Custom collision events
+        let collided = false;
         switch(dir) {
 
         // Top
@@ -116,6 +122,7 @@ class GameObject {
 
                 this.pos.y = y-h + cy;
                 this.speed.y = 0.0;
+                collided = true;
             }
         
             break;
@@ -128,6 +135,7 @@ class GameObject {
 
                 this.pos.y = y+h + cy;
                 this.speed.y = 0.0;
+                collided = true;
             }
         
             break;
@@ -140,6 +148,7 @@ class GameObject {
 
                 this.pos.x = x-w + cx;
                 this.speed.x = 0.0;
+                collided = true;
             }
         
             break;
@@ -152,6 +161,7 @@ class GameObject {
 
                 this.pos.x = x+w + cx;
                 this.speed.x = 0.0;
+                collided = true;
             }
         
             break;
@@ -159,6 +169,12 @@ class GameObject {
 
         default:
             break;
+        }
+        
+        // Custom collision event
+        if(collided && this.collisionEvent != null) {
+
+            this.collisionEvent(x, y, dir);
         }
     }
 

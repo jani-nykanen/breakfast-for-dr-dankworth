@@ -45,6 +45,7 @@ class ObjectManager {
         // Update arrows
         for(let i = 0; i < this.ARROW_COUNT; ++ i) {
 
+            stage.getCollision(this.arrows[i], tm);
             this.arrows[i].update(cam, tm);
         }
     }

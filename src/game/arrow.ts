@@ -22,6 +22,7 @@ class Arrow extends GameObject {
 
         super(0, 0);
         this.exist = false;
+        this.canSwim = true;
 
         // Big enough
         this.acceleration = 10;
@@ -63,6 +64,13 @@ class Arrow extends GameObject {
 
             this.exist = false;
         }
+    }
+
+
+    // Collision event
+    protected collisionEvent(x : number, y : number, dir : number) {
+
+        this.exist = false;
     }
 
 
