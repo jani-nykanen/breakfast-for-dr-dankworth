@@ -44,8 +44,17 @@ class Player extends GameObject {
     private startRow : number;
     // Attack type
     private atk : AtkType;
+
     // Is swimming
     private swimming : boolean;
+    // Is climbing stairs
+    private stairs : boolean;
+    // Is jumping
+    private jumping : boolean;
+    // Jump target
+    private jumpTarget : number;
+    // Gravity
+    private gravity : number;
 
     // Life
     private life : number;
@@ -79,7 +88,10 @@ class Player extends GameObject {
         this.atk = AtkType.Sword;
 
         this.swimmingSkill = 1;
+
         this.swimming = false;
+        this.stairs = false;
+        this.jumping = false;
 
         this.life = this.MAX_LIFE;
         this.arrowCount = this.ARROW_MAX;
@@ -146,6 +158,7 @@ class Player extends GameObject {
         const DELTA = 0.01;
         const SPEED = 1.0;
         const SWIM_MOD = 0.5;
+        const STAIR_MOD = 0.33;
         const PI = Math.PI;
 
         // Movement
@@ -195,6 +208,12 @@ class Player extends GameObject {
             this.target.y *= SWIM_MOD;
 
             return;
+        }
+
+        // If on stairs
+        if(this.stairs) {
+
+            this.target.y *= STAIR_MOD;
         }
 
         let s1 = vpad.getButton("fire1");
@@ -259,6 +278,7 @@ class Player extends GameObject {
         const RELEASE_ATTACK_TIME = 18;
         const SPIN_CHANGE = 3;
         const BOW_TIME = 30;
+        const SWIM_SPEED = 10;
 
         // Update "spin loading"
         if(this.loadingSpin) {
@@ -270,7 +290,10 @@ class Player extends GameObject {
         // If swimming
         if(this.swimming) {
 
-            this.spr.setFrame(7, this.dir);
+            if(this.totalSpeed < DELTA)
+            this.spr.animate(7 + this.dir, 0, 0, 0, tm);
+            else
+                this.spr.animate(7 + this.dir, 0, 1, SWIM_SPEED, tm);
         }
         // If spinning
         else if(this.spinTimer > 0.0) {
@@ -384,7 +407,7 @@ class Player extends GameObject {
 
 
     // Update camera moving event
-    public camMoveEvent(cam: Camera, tm: number) {
+    private camMoveEvent(cam: Camera, tm: number) {
 
         const MOVE_AMOUNT = 16;
 
@@ -394,6 +417,44 @@ class Player extends GameObject {
 
         this.pos.x += tx * tm;
         this.pos.y += ty * tm;
+    }
+
+
+    // Jump
+    private jump(tm : number) {
+
+        const GRAV_DELTA = 0.1;
+        const MAX_GRAV = 2.0;
+
+        // Animate
+        this.spr.setFrame(6, 3);
+        
+        // Disable attacking
+        this.attacking = false;
+        this.loadingSpin = false;
+        this.spinTimer = 0.0;
+
+        // Set speed to zero
+        this.speed.x = 0;
+        this.speed.y = 0;
+        this.target.x = 0;
+        this.target.y = 0;
+
+        // Update gravity
+        if(this.gravity < MAX_GRAV) {
+            
+            this.gravity += GRAV_DELTA * tm;
+            if(this.gravity > MAX_GRAV)
+                this.gravity = MAX_GRAV;
+        }
+        this.pos.y += this.gravity * tm;
+
+        // Check if target reached
+        if(this.pos.y > this.jumpTarget) {
+
+            this.pos.y = this.jumpTarget;
+            this.jumping = false;
+        }
     }
 
 
@@ -412,6 +473,13 @@ class Player extends GameObject {
             return;
         }
 
+        // Jump
+        if(this.jumping) {
+
+            this.jump(tm);
+            return;
+        }
+
         // Control
         this.control(vpad, arrows, tm);
         // Move
@@ -421,11 +489,13 @@ class Player extends GameObject {
 
         // Not swimming!
         this.swimming = false;
+        // And not climbing stairs
+        this.stairs = false;
     }
 
 
-    // Water collision
-    public getWaterCollision(x : number, y : number, w : number, h : number) {
+    // Get collision that slows down
+    public getSlowingCollision(x : number, y : number, w : number, h : number, stairs = false) {
 
         let px = this.pos.x-this.center.x;
         let py = this.pos.y-this.center.y;
@@ -435,7 +505,33 @@ class Player extends GameObject {
         if(px + dw >= x && px - dw <= x+w
         && py + dh >= y && py - dh <= y+h) {
 
-            this.setToSwimming();
+            if(stairs)
+                this.setToStairs();
+            else
+                this.setToSwimming();
+        }
+    }
+
+
+    // Get jump (=ledge) collision
+    public getJumpCollision(x : number, y : number, w : number, h : number) {
+
+        if(this.jumping) return;
+
+        const JUMP = 1.25;
+
+        let px = this.pos.x-this.center.x;
+        let py = this.pos.y-this.center.y;
+        let dw = this.dim.x/2;
+        let dh = this.dim.y/2;
+
+        if(this.speed.y > 0.0 && px + dw >= x && px - dw <= x+w
+        && py + dh >= y && py - dh <= y+h) {
+
+            // Set jumping
+            this.jumpTarget = this.pos.y+ (32 - (this.pos.y%16));
+            this.gravity = -JUMP;
+            this.jumping = true;
         }
     }
 
@@ -514,6 +610,33 @@ class Player extends GameObject {
     }
 
 
+    // Draw shadow
+    public drawShadow(g : Graphics, ass : Assets) {
+
+        let b = ass.getBitmap("player");
+
+        // Determine position & size
+        let x = this.pos.x-8;
+        let y = this.pos.y-7;
+        let frame = 0;
+        if(!this.jumping) {
+
+            frame = this.flip == Flip.Horizontal ? 3 : 4;
+        }
+        else {
+
+            y = this.jumpTarget-7;
+
+            let dif = this.jumpTarget - this.pos.y;
+            frame = Math.max(0, 4 - ((dif / 8)|0));
+        }
+
+        // Draw shadow
+        g.drawBitmapRegion(b, frame*16, 160, 16, 16,
+            x,y);
+    }
+
+
     // Draw
     public draw(g : Graphics, ass : Assets) {
 
@@ -559,6 +682,13 @@ class Player extends GameObject {
         this.attacking = false;
         this.loadingSpin = false;
         this.spinTimer = 0.0;
+    }
+
+
+    // Set to climbing stairs
+    public setToStairs() {
+
+        this.stairs = true;
     }
 
 }

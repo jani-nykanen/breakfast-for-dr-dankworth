@@ -89,6 +89,7 @@ class Stage {
 
         const MARGIN = 2;
         const WATER_MARGIN = 4;
+        const LEDGE_MARGIN = 8;
 
         if(!o.doesExist()) return;
 
@@ -133,13 +134,21 @@ class Stage {
                         o.getWallCollision(x*16+16, y*16, 16, 3, tm);
                     }
                 }
-                // Check if water
-                else if(s == 2 || s == 3) {
+                // Check if water or stairs
+                else if(s == 2 || s == 3 || s == 4) {
 
-                    if(o.getWaterCollision != null) {
+                    if(o.getSlowingCollision != null) {
                         
-                        o.getWaterCollision(x*16 + WATER_MARGIN, y*16 + WATER_MARGIN, 
-                            16-WATER_MARGIN*2, 16-WATER_MARGIN*2);
+                        o.getSlowingCollision(x*16 + WATER_MARGIN, y*16 + WATER_MARGIN, 
+                            16-WATER_MARGIN*2, 16-WATER_MARGIN*2, s == 4);
+                    }
+                }
+                // Check jump collision (=ledge)
+                else if(s == 5) {
+
+                    if(o.getJumpCollision != null) {
+
+                        o.getJumpCollision(x*16, y*16+LEDGE_MARGIN, 16, 16-LEDGE_MARGIN);
                     }
                 }
             }

@@ -20,7 +20,7 @@ class ObjectManager {
     public constructor() {
 
         // Create player
-        this.player = new Player(80, 72);
+        this.player = new Player(96, 80);
 
         // Create an array of arrows
         if(this.arrows == null)
@@ -53,6 +53,9 @@ class ObjectManager {
 
     // Draw
     public draw(g : Graphics, ass : Assets) {
+
+        // Draw player shadow before other objects
+        this.player.drawShadow(g, ass);
 
         // Draw player
         this.player.draw(g, ass);

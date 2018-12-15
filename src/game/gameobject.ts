@@ -89,8 +89,11 @@ class GameObject {
 
     // Collision event
     protected collisionEvent?(x : number, y: number, dir : number) : any;
-    // Water collision
-    public getWaterCollision?(x : number, y : number, w : number, h : number) : any;
+    // Slowing collision
+    public getSlowingCollision?(x : number, y : number, 
+        w : number, h : number, stairs : boolean) : any;
+    // Jump collision
+    public getJumpCollision?(x : number, y : number, w : number, h : number) : any;
 
 
     // Wall collision
