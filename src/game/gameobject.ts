@@ -13,12 +13,18 @@ class GameObject {
     protected speed : Vec2;
     // Target speed
     protected target : Vec2;
-    // protected length, "total speed"
+    // Speed length, "total speed"
     protected totalSpeed : number;
+    // Dimensions
+    protected dim : Vec2;
+    // Center
+    protected center : Vec2;
 
     // Acceleration
     protected acceleration =0.2;
 
+    // Can swim
+    protected canSwim : boolean;
     // Does exist
     protected exist : boolean;
 
@@ -30,7 +36,12 @@ class GameObject {
         this.speed = new Vec2();
         this.target = new Vec2();
 
+        this.canSwim = false;
         this.exist = true;
+
+        // Set default dimensions
+        this.dim = new Vec2(0, 0);
+        this.center = new Vec2(0, 0);
     }
 
 
@@ -76,9 +87,99 @@ class GameObject {
     }
 
 
+    // Wall collision
+    public getWallCollision(x : number, y : number, d : number, dir : number, tm : number) {
+
+        const MARGIN1 = 0.0;
+        const MARGIN2 = 2.0;
+
+        dir |= 0;
+
+        let cx = this.center.x;
+        let cy = this.center.y;
+        let px = this.pos.x - cx;
+        let py = this.pos.y - cy;
+        let w = this.dim.x/2;
+        let h = this.dim.y/2;
+
+        let hcheck = px+w >= x && px-w <= x+d;
+        let vcheck = py+h >= y && py-h <= y+d;
+
+        // TODO: Custom collision events
+        switch(dir) {
+
+        // Top
+        case 0:
+
+            if(this.speed.y > 0.0 && hcheck && 
+               py+h >= y-MARGIN1*tm && py+h <= y+(this.speed.y+MARGIN2)*tm ) {
+
+                this.pos.y = y-h + cy;
+                this.speed.y = 0.0;
+            }
+        
+            break;
+
+        // Bottom
+        case 1:
+
+            if(this.speed.y < 0.0 && hcheck && 
+            py-h <= y+MARGIN1*tm && py-h >= y+(this.speed.y-MARGIN2)*tm ) {
+
+                this.pos.y = y+h + cy;
+                this.speed.y = 0.0;
+            }
+        
+            break;
+
+        // Left
+        case 2:
+
+            if(this.speed.x > 0.0 && vcheck && 
+               px+w >= x-MARGIN1*tm && px+w <= x+(this.speed.x+MARGIN2)*tm ) {
+
+                this.pos.x = x-w + cx;
+                this.speed.x = 0.0;
+            }
+        
+            break;
+
+        // Right
+        case 3:
+
+            if(this.speed.x < 0.0 && vcheck && 
+               px-w <= x+MARGIN1*tm && px-w >= x+(this.speed.x-MARGIN2)*tm ) {
+
+                this.pos.x = x+w + cx;
+                this.speed.x = 0.0;
+            }
+        
+            break;
+
+
+        default:
+            break;
+        }
+    }
+
+
     // Does exist
-    public DoesExist() : boolean {
+    public doesExist() : boolean {
 
         return this.exist;
+    }
+
+
+    // Get position
+    public getPos() : Vec2 {
+
+        return this.pos;
+    }
+
+
+    // Can the object swim
+    public hasSwimmingSkill() : boolean {
+
+        return this.canSwim;
     }
 }

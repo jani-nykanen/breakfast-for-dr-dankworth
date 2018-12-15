@@ -63,6 +63,10 @@ class Player extends GameObject {
         this.sprSword = new Sprite(24, 24);
         this.sprBow = new Sprite(16, 16);
 
+        // Dimensions
+        this.dim = new Vec2(8, 10);
+        this.center = new Vec2(0, -3);
+
         // Set defaults
         this.dir = 0;
         this.acceleration = 0.2;
@@ -71,6 +75,7 @@ class Player extends GameObject {
         this.loadingSpin = false;
         this.spinTimer = 0.0;
         this.atk = AtkType.Sword;
+        this.canSwim = false;
 
         this.life = this.MAX_LIFE;
         this.arrowCount = this.ARROW_MAX;
@@ -89,7 +94,7 @@ class Player extends GameObject {
         for(let i = 0; i < arrows.length; ++ i) {
 
             a = arrows[i];
-            if(!a.DoesExist) {
+            if(!a.doesExist()) {
                 break;
             }
         }
@@ -97,7 +102,7 @@ class Player extends GameObject {
 
         // Check creation position & speed
         let x = this.pos.x;
-        let y = this.pos.y-8;
+        let y = this.pos.y;
         let sx = 0;
         let sy = 0;
 
@@ -347,12 +352,12 @@ class Player extends GameObject {
             cam.move(1, 0);
         }
         // Top
-        else if(this.pos.y-16 < p.y) {
+        else if(this.pos.y-8 < p.y) {
 
             cam.move(0, -1);
         }
         // Bottom
-        else if(this.pos.y > 144+p.y -16) {
+        else if(this.pos.y+8 > 144+p.y -16) {
 
             cam.move(0, 1);
         }
@@ -438,7 +443,7 @@ class Player extends GameObject {
         }
 
         this.sprSword.draw(g, ass.getBitmap("sword"), 
-                this.pos.x + bx, this.pos.y+by, flip);
+                this.pos.x + bx, this.pos.y+8 +by, flip);
     }
 
 
@@ -468,7 +473,7 @@ class Player extends GameObject {
         }
 
         this.sprBow.draw(g, ass.getBitmap("bow"), 
-                this.pos.x + bx, this.pos.y+by, this.flip);
+                this.pos.x + bx, this.pos.y+8+by, this.flip);
     }
 
 
@@ -482,7 +487,7 @@ class Player extends GameObject {
         
         // Draw sprite
         this.spr.draw(g, ass.getBitmap("player"), 
-            this.pos.x-8, this.pos.y-16, this.flip, frameSkip);
+            this.pos.x-8, this.pos.y-8, this.flip, frameSkip);
 
         // Draw weapon
         if(this.attacking 

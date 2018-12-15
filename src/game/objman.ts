@@ -33,10 +33,12 @@ class ObjectManager {
 
 
     // Update
-    public update(vpad : Vpad, cam : Camera, hud : HUD, tm : number) {
+    public update(vpad : Vpad, cam : Camera, stage : Stage, hud : HUD, tm : number) {
 
         // Update player
         this.player.update(vpad, cam, this.arrows, tm);
+        // Player collision
+        stage.getCollision(this.player, tm);
         // Pass data to HUD
         this.player.updateHUDData(hud);
 

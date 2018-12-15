@@ -28,6 +28,7 @@ let assetInfo = {
     docPath: "assets/tilemaps/",
     docs: {
         map: "map.json",
+        solid: "solid.json",
     }
 };
 
