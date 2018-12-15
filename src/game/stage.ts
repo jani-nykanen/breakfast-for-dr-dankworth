@@ -52,7 +52,11 @@ class Stage {
 
         // Get solid info
         let s = this.solidData[t -1];
-        if(s == 2 && !o.hasSwimmingSkill()) s = 1;
+        // If water and cannot swim, consider solid
+        if( (s == 2 || s == 3) && o != null && 
+            o.getSwimmingSkill() < s-1) 
+            s = 1;
+
         return s;
     }
 
@@ -84,6 +88,7 @@ class Stage {
     public getCollision(o : GameObject, tm : number) {
 
         const MARGIN = 2;
+        const WATER_MARGIN = 4;
 
         if(!o.doesExist()) return;
 
@@ -128,6 +133,15 @@ class Stage {
                         o.getWallCollision(x*16+16, y*16, 16, 3, tm);
                     }
                 }
+                // Check if water
+                else if(s == 2 || s == 3) {
+
+                    if(o.getWaterCollision != null) {
+                        
+                        o.getWaterCollision(x*16 + WATER_MARGIN, y*16 + WATER_MARGIN, 
+                            16-WATER_MARGIN*2, 16-WATER_MARGIN*2);
+                    }
+                }
             }
         }
     }
@@ -140,6 +154,10 @@ class Stage {
 
         let bmpTiles = ass.getBitmap("tileset");
         let bmpWater = ass.getBitmap("water");
+
+        // Get dimensions
+        let w = this.baseMap.width;
+        let h = this.baseMap.height;
 
         // TODO: To a sub-method
         // Get starting & ending position
@@ -158,6 +176,7 @@ class Stage {
         let tile = 0;
         let sx = 0;
         let sy = 0;
+        let s = 0;
         for(let y = starty; y <= ey; ++ y) {
 
             for(let x = startx; x <= ex; ++ x) {
@@ -165,10 +184,12 @@ class Stage {
                 tile = this.getTile(x, y);
                 if(tile <= 0) continue;
 
+                s = this.solidData[tile-1];
                 // If water
-                if(tile == 26) {
+                if(s == 2 || s == 3) {
 
-                    g.drawBitmapRegion(bmpWater, wp, wp, 16, 16, x*16, y*16);
+                    g.drawBitmapRegion(bmpWater, wp + (s == 2 ? 0 : 32), wp, 
+                        16, 16, x*16, y*16);
                 }
                 else {
 

@@ -22,7 +22,7 @@ class Arrow extends GameObject {
 
         super(0, 0);
         this.exist = false;
-        this.canSwim = true;
+        this.swimmingSkill = 2;
 
         // Big enough
         this.acceleration = 10;

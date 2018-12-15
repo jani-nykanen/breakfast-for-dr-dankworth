@@ -72,7 +72,7 @@ class Camera {
     // Use camera
     public useCamera(g : Graphics) {
 
-        g.translate(-this.vpos.x, -this.vpos.y);
+        g.translate(-this.vpos.x|0, -this.vpos.y|0);
     }
 
 

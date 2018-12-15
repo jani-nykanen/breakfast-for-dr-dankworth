@@ -23,8 +23,8 @@ class GameObject {
     // Acceleration
     protected acceleration =0.2;
 
-    // Can swim
-    protected canSwim : boolean;
+    // Swimming skill
+    protected swimmingSkill : number;
     // Does exist
     protected exist : boolean;
 
@@ -36,7 +36,7 @@ class GameObject {
         this.speed = new Vec2();
         this.target = new Vec2();
 
-        this.canSwim = false;
+        this.swimmingSkill = 0;
         this.exist = true;
 
         // Set default dimensions
@@ -89,6 +89,8 @@ class GameObject {
 
     // Collision event
     protected collisionEvent?(x : number, y: number, dir : number) : any;
+    // Water collision
+    public getWaterCollision?(x : number, y : number, w : number, h : number) : any;
 
 
     // Wall collision
@@ -194,8 +196,8 @@ class GameObject {
 
 
     // Can the object swim
-    public hasSwimmingSkill() : boolean {
+    public getSwimmingSkill() : number {
 
-        return this.canSwim;
+        return this.swimmingSkill;
     }
 }

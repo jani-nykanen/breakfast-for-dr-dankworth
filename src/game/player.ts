@@ -44,6 +44,8 @@ class Player extends GameObject {
     private startRow : number;
     // Attack type
     private atk : AtkType;
+    // Is swimming
+    private swimming : boolean;
 
     // Life
     private life : number;
@@ -75,7 +77,9 @@ class Player extends GameObject {
         this.loadingSpin = false;
         this.spinTimer = 0.0;
         this.atk = AtkType.Sword;
-        this.canSwim = false;
+
+        this.swimmingSkill = 1;
+        this.swimming = false;
 
         this.life = this.MAX_LIFE;
         this.arrowCount = this.ARROW_MAX;
@@ -141,6 +145,7 @@ class Player extends GameObject {
 
         const DELTA = 0.01;
         const SPEED = 1.0;
+        const SWIM_MOD = 0.5;
         const PI = Math.PI;
 
         // Movement
@@ -181,6 +186,15 @@ class Player extends GameObject {
                 this.flip = Flip.Horizontal;
                 this.dir = 2;
             }
+        }
+
+        // Swimming
+        if(this.swimming) {
+
+            this.target.x *= SWIM_MOD;
+            this.target.y *= SWIM_MOD;
+
+            return;
         }
 
         let s1 = vpad.getButton("fire1");
@@ -253,8 +267,13 @@ class Player extends GameObject {
             this.sprSword.setFrame(this.dir, 4);
         }
 
+        // If swimming
+        if(this.swimming) {
+
+            this.spr.setFrame(7, this.dir);
+        }
         // If spinning
-        if(this.spinTimer > 0.0) {
+        else if(this.spinTimer > 0.0) {
 
             this.spinTimer -= 1.0 * tm;
             // If time is out, reset row
@@ -400,6 +419,24 @@ class Player extends GameObject {
         // Animate
         this.animate(tm);
 
+        // Not swimming!
+        this.swimming = false;
+    }
+
+
+    // Water collision
+    public getWaterCollision(x : number, y : number, w : number, h : number) {
+
+        let px = this.pos.x-this.center.x;
+        let py = this.pos.y-this.center.y;
+        let dw = this.dim.x/2;
+        let dh = this.dim.y/2;
+
+        if(px + dw >= x && px - dw <= x+w
+        && py + dh >= y && py - dh <= y+h) {
+
+            this.setToSwimming();
+        }
     }
 
 
@@ -510,6 +547,18 @@ class Player extends GameObject {
 
         h.updateData(this.life, this.MAX_LIFE,
             this.arrowCount, this.gemCount);
+    }
+
+
+    // Set to swimming
+    public setToSwimming() {
+
+        this.swimming = true;
+
+        // Disable attacking
+        this.attacking = false;
+        this.loadingSpin = false;
+        this.spinTimer = 0.0;
     }
 
 }
