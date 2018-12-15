@@ -103,6 +103,7 @@ class Sprite {
     public setFrame(row : number, frame : number) {
 
         this.animate(row, frame, frame, 0, 0);
+        this.count = 0;
     }
 
 

@@ -7,6 +7,9 @@
 // Stage
 class Stage {
 
+    // Constants
+    private readonly ENV_COUNT = 16;
+
     // Map
     private baseMap : any;
     // Map data
@@ -17,12 +20,37 @@ class Stage {
     // Water position
     private waterPos : number;
 
+    // Env.death animations
+    private envAnim : Array<EnvDeath>;
+
 
     // Constructor
     public constructor() {
 
         // Set defaults
         this.waterPos = 0.0;
+
+        // Create env.death animation objects
+        this.envAnim = new Array<EnvDeath> (this.ENV_COUNT);
+        for(let i = 0; i < this.ENV_COUNT; ++ i) {
+
+            this.envAnim[i] = new EnvDeath();
+        }
+    }
+
+
+    // Create env.death object
+    private createEnvDeath(x : number, y : number, id : number) {
+
+        // Get the first non-existent object
+        for(let i = 0; i < this.envAnim.length; ++ i) {
+
+            if(this.envAnim[i].doesExist() == false) {
+
+                this.envAnim[i].createSelf(x, y, id);
+                break;
+            }
+        }
     }
 
 
@@ -79,8 +107,15 @@ class Stage {
 
         const WATER_SPEED = 0.1;
 
+        // Update water
         this.waterPos += WATER_SPEED * tm;
         this.waterPos %= 16;
+
+        // Update environmental deaths
+        for(let i = 0; i < this.envAnim.length; ++ i) {
+
+            this.envAnim[i].update(tm);
+        }
     }
 
 
@@ -100,6 +135,11 @@ class Stage {
         let ex = sx + MARGIN*2 +1;
         let ey = sy + MARGIN*2 +1;
 
+        // Get hitbox if exist
+        let hbox = null;
+        if(o.getHitbox != null)
+            hbox = o.getHitbox();
+
         // Check collisions
         let s = 0;
         for(let y = sy; y <= ey; ++ y) {
@@ -110,8 +150,24 @@ class Stage {
                 
                 if(s <= 0) continue;
 
-                // Check if solid
-                if(s == 1) {
+                // Check plant collision
+                // TODO: Own method for this?
+                if(s == 6 && hbox != null && hbox.doesExist()) {
+
+                    // If hitbox collides with the plant, destroy
+                    if(hbox.doesOverlay(x*16,y*16, 16, 16)) {
+
+                        let tile = this.getTile(x, y);
+                        // Set underlying tile
+                        this.mapData[y*this.baseMap.width+x] = (tile == 18 ? 1 : 49);
+                        // Create death animation
+                        this.createEnvDeath(x*16, y*16, tile == 18 ? 0 : 1);
+                    }
+                }
+
+
+                // Check if solid (or plant)
+                if(s == 1 || s == 6) {
 
                     // If the upper tile not solid
                     if(this.getSolidData(x, y-1, o) != 1) {
@@ -156,8 +212,8 @@ class Stage {
     }
 
 
-    // Draw
-    public draw(g: Graphics, ass : Assets, cam : Camera) {
+    // Draw the map
+    public drawMap(g: Graphics, ass : Assets, cam : Camera) {
 
         const WATER_DIV = 2;
 
@@ -211,4 +267,18 @@ class Stage {
             }
         }
     } 
+
+
+    // Draw
+    public draw(g: Graphics, ass : Assets, cam : Camera) {
+
+        // Draw map
+        this.drawMap(g, ass, cam);
+
+        // Draw environmental deaths
+        for(let i = 0; i < this.envAnim.length; ++ i) {
+
+            this.envAnim[i].draw(g, ass);
+        }
+    }
 }

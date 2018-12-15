@@ -26,6 +26,8 @@
         "src/game/camera.ts",
         "src/game/arrow.ts",
         "src/game/stage.ts",
+        "src/game/hitbox.ts",
+        "src/game/envdeath.ts",
 
         "src/global.ts",
 

@@ -94,6 +94,8 @@ class GameObject {
         w : number, h : number, stairs : boolean) : any;
     // Jump collision
     public getJumpCollision?(x : number, y : number, w : number, h : number) : any;
+    // Get hitbox
+    public getHitbox?() : Hitbox;
 
 
     // Wall collision
@@ -114,7 +116,7 @@ class GameObject {
         let h = this.dim.y/2;
 
         let hcheck = px+w >= x && px-w <= x+d;
-        let vcheck = py+h >= y && py-h <= y+d;
+        let vcheck = py+h > y && py-h < y+d;
 
         let collided = false;
         switch(dir) {

@@ -63,6 +63,9 @@ class Player extends GameObject {
     // Gem count
     private gemCount : number;
 
+    // Hitbox
+    private hbox : Hitbox;
+
 
     // Constructor
     public constructor(x : number, y: number) {
@@ -73,6 +76,9 @@ class Player extends GameObject {
         this.spr = new Sprite(16, 16);
         this.sprSword = new Sprite(24, 24);
         this.sprBow = new Sprite(16, 16);
+
+        // Create hitbox
+        this.hbox = new Hitbox();
 
         // Dimensions
         this.dim = new Vec2(8, 10);
@@ -458,6 +464,78 @@ class Player extends GameObject {
     }
 
 
+    // Update hitbox
+    private updateHitbox() {
+
+        const SPIN_WIDTH = 32;
+        const SPIN_HEIGHT = 32;
+
+        const SWORD_WIDTH = 24;
+        const SWORD_HEIGHT = 12;
+        const SWORD_MARGIN = 4;
+
+        if(!this.attacking && this.spinTimer <= 0.0) {
+
+            this.hbox.terminate();
+            return;
+        }
+
+        // If hitbox is already in the game, do not
+        // recreate it
+        if(this.hbox.doesExist())   
+            return;
+
+        // Spinning
+        if(this.spinTimer > 0.0) {
+
+            this.hbox.createSelf(
+                this.pos.x-SPIN_WIDTH/2, this.pos.y-SPIN_HEIGHT/2,
+                SPIN_WIDTH, SPIN_HEIGHT);
+        }
+        // Sword attack
+        else if(this.attacking && this.atk == AtkType.Sword) {
+
+            let x = 0, y = 0, w = 0, h = 0;
+            // Down
+            if(this.dir == 0) {
+
+                x = this.pos.x-SWORD_WIDTH/2;
+                y = this.pos.y+8 + SWORD_MARGIN;
+
+                w = SWORD_WIDTH;
+                h = SWORD_HEIGHT;
+            }
+            // Up
+            else if(this.dir == 1) {
+
+                x = this.pos.x-SWORD_WIDTH/2;
+                y = this.pos.y-8-SWORD_HEIGHT-SWORD_MARGIN;
+
+                w = SWORD_WIDTH;
+                h = SWORD_HEIGHT;
+            }
+            // Left & right
+            else if(this.dir == 2) {
+
+                y = this.pos.y-8 - SWORD_WIDTH/2;
+                if(this.flip == Flip.Horizontal) {
+
+                    x = this.pos.x-8 - SWORD_HEIGHT-SWORD_MARGIN;
+                }
+                else {
+
+                    x = this.pos.x+8+SWORD_MARGIN;
+                }
+
+                w = SWORD_HEIGHT;
+                h = SWORD_WIDTH;
+            }
+
+            this.hbox.createSelf(x, y, w, h);
+        }
+    }
+
+
     // Update
     public update(vpad : Vpad, cam: Camera, arrows : Array<Arrow>, tm : number) {
 
@@ -486,6 +564,9 @@ class Player extends GameObject {
         this.move(tm);
         // Animate
         this.animate(tm);
+
+        // Update hitbox
+        this.updateHitbox();
 
         // Not swimming!
         this.swimming = false;
@@ -613,6 +694,8 @@ class Player extends GameObject {
     // Draw shadow
     public drawShadow(g : Graphics, ass : Assets) {
 
+        if(this.swimming) return;
+
         let b = ass.getBitmap("player");
 
         // Determine position & size
@@ -691,4 +774,10 @@ class Player extends GameObject {
         this.stairs = true;
     }
 
+
+    // Get hitbox
+    public getHitbox() : Hitbox {
+
+        return this.hbox;
+    }
 }
