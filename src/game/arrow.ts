@@ -8,10 +8,15 @@
 // Arrow class
 class Arrow extends GameObject {
 
+    // Constants
+    private readonly SIZE = 8;
+
     // Direction
     private dir : number;
     // Flip
     private flip : Flip;
+    // Hitbox
+    private hbox : Hitbox;
 
     // Sprite
     private spr : Sprite;
@@ -24,6 +29,7 @@ class Arrow extends GameObject {
         this.exist = false;
         this.swimmingSkill = 2;
         this.inCamera = true;
+        this.hbox = new Hitbox();
 
         // Big enough
         this.acceleration = 10;
@@ -45,6 +51,11 @@ class Arrow extends GameObject {
         this.target = this.speed.copy();
 
         this.exist = true;
+
+        // Create hitbox
+        this.hbox.createSelf(this.pos.x-this.SIZE/2, 
+            this.pos.y-this.SIZE/2,
+            this.SIZE, this.SIZE, 1);
     } 
 
 
@@ -54,6 +65,11 @@ class Arrow extends GameObject {
         if(!this.exist) return;
 
         this.move(tm);
+
+        // Set hitbox
+        this.hbox.setHitbox(this.pos.x-this.SIZE/2, 
+            this.pos.y-this.SIZE/2,
+            this.SIZE, this.SIZE);
 
         // Check if outside the camera
         let cx = cam.getVirtualPos().x;
@@ -83,6 +99,20 @@ class Arrow extends GameObject {
         // Draw sprite
         this.spr.draw(g, ass.getBitmap("bow"), 
             this.pos.x-8, this.pos.y-8, this.flip);
+    }
+
+
+    // Get hitbox
+    public getHitbox() : Hitbox {
+
+        return this.hbox;
+    }
+
+
+    // Kill
+    public kill() {
+
+        this.exist = false;
     }
 
 }

@@ -27,6 +27,7 @@ class Elephant extends Enemy {
         this.moveTimer = this.WAIT_TIME;
 
         this.acceleration = 0.1;
+        this.health = 2;
     }
 
 
@@ -35,6 +36,7 @@ class Elephant extends Enemy {
 
         const SPEED = 0.5;
         const ANIM_SPEED = 6;
+        const DELTA = 0.01;
 
         // Update move timer
         if((this.moveTimer -= 1.0 * tm) <= 0.0) {
@@ -56,12 +58,12 @@ class Elephant extends Enemy {
             this.target.y = 0;
 
             // Stand
-            this.spr.setFrame(0, 0);
+            this.spr.setFrame(1, 0);
         }
-        else {
+        else if(this.totalSpeed >= DELTA) {
 
             // Animate
-            this.spr.animate(0, 0, 3, ANIM_SPEED, tm);
+            this.spr.animate(1, 0, 3, ANIM_SPEED, tm);
 
             this.flip = this.speed.x >= 0 ? Flip.None : Flip.Horizontal;
         }
@@ -80,15 +82,21 @@ class Elephant extends Enemy {
     // Collision event
     protected collisionEvent(x : number, y : number, dir : number) {
 
+        let mul = -1;
+        if(this.hurtTimer > 0.0) {
+
+            mul = 0;
+        }
+
         if(dir == 0 || dir == 1) {
 
-            this.speed.y *= -1;
-            this.target.y *= -1;
+            this.speed.y *= mul;
+            this.target.y *= mul;
         }
         else {
 
-            this.speed.x *= -1;
-            this.target.x *= -1;
+            this.speed.x *= mul;
+            this.target.x *= mul;
         }
     }
 }

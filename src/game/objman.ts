@@ -57,18 +57,32 @@ class ObjectManager {
         if(!cam.isMoving()) {
 
             // Update enemies
+            let e : Enemy;
             for(let i = 0; i < this.enemies.length; ++ i) {
 
-                this.enemies[i].update(cam, tm);
-                this.enemies[i].onPlayerCollision(this.player, tm);
-                stage.getCollision(this.enemies[i], tm);
+                e = this.enemies[i];
+                if(e.doesExist() == false || e.isInCamera() == false)
+                    continue;
 
-                // Enemy-to-enemy collisions
-                for(let j = 0; j < this.enemies.length; ++ j) {
+                e.update(cam, tm);
+                e.onPlayerCollision(this.player, tm);
+                stage.getCollision(e, tm);
 
-                    if(i == j) continue;
+                if(!e.isDying()) {
 
-                    this.enemies[i].onEnemyCollision(this.enemies[j]);
+                    // Enemy-to-enemy collisions
+                    for(let j = 0; j < this.enemies.length; ++ j) {
+
+                        if(i == j) continue;
+
+                        e.onEnemyCollision(this.enemies[j]);
+                    }
+
+                    // Enemy-to-arrow collisions
+                    for(let j = 0; j < this.ARROW_COUNT; ++ j) {
+
+                        e.arrowCollision(this.arrows[j]);
+                    }
                 }
             }
         }

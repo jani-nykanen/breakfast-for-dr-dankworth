@@ -162,6 +162,10 @@ class Stage {
                         this.mapData[y*this.baseMap.width+x] = (tile == 18 ? 1 : 49);
                         // Create death animation
                         this.createEnvDeath(x*16, y*16, tile == 18 ? 0 : 1);
+
+                        // Kill if a projectile
+                        if(o.kill != null) 
+                            o.kill();
                     }
                 }
 

@@ -4,6 +4,10 @@
  * (c) 2018 Jani Nykänen
  */
 
+// Hit ID
+let _hitID = -1;
+
+
 // Hitbox class
 class Hitbox {
 
@@ -13,6 +17,8 @@ class Hitbox {
     private w : number;
     private h : number;
 
+    // Damange
+    private dmg : number;
     // ID
     private id : number;
     // Does exist
@@ -24,18 +30,22 @@ class Hitbox {
 
         this.exist = false;
         this.id = -1;
+        this.dmg = 1;
     }
 
     
     // Create
-    public createSelf(x : number, y : number, w : number, h : number) {
+    public createSelf(x : number, y : number, w : number, h : number, dmg = 1) {
 
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
 
-        ++ this.id;
+        this.dmg = dmg;
+
+        ++ _hitID;
+        this.id = _hitID;
 
         this.exist = true;
     }
@@ -67,5 +77,22 @@ class Hitbox {
 
         return x+w >= this.x && x <= this.x+this.w &&
             y+h >= this.y && y <= this.y+this.h;
+    }
+
+
+    // Get damage
+    public getDamage() : number {
+
+        return this.dmg;
+    }
+
+
+    // Set hitbox
+    public setHitbox(x : number, y : number, w : number, h : number) {
+
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
     }
 }

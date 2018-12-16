@@ -44,6 +44,8 @@ class Player extends GameObject {
     private startRow : number;
     // Attack type
     private atk : AtkType;
+    // Hurt timer
+    private hurtTimer : number;
 
     // Is swimming
     private swimming : boolean;
@@ -86,12 +88,13 @@ class Player extends GameObject {
 
         // Set defaults
         this.dir = 0;
-        this.acceleration = 0.2;
+        this.acceleration = 0.15;
         this.attacking = false;
         this.spinLoad = 0.0;
         this.loadingSpin = false;
         this.spinTimer = 0.0;
         this.atk = AtkType.Sword;
+        this.hurtTimer = 0.0;
 
         this.swimmingSkill = 1;
 
@@ -469,8 +472,8 @@ class Player extends GameObject {
     // Update hitbox
     private updateHitbox() {
 
-        const SPIN_WIDTH = 32;
-        const SPIN_HEIGHT = 32;
+        const SPIN_WIDTH = 34;
+        const SPIN_HEIGHT = 34;
 
         const SWORD_WIDTH = 24;
         const SWORD_HEIGHT = 12;
@@ -492,7 +495,8 @@ class Player extends GameObject {
 
             this.hbox.createSelf(
                 this.pos.x-SPIN_WIDTH/2, this.pos.y-SPIN_HEIGHT/2,
-                SPIN_WIDTH, SPIN_HEIGHT);
+                SPIN_WIDTH, SPIN_HEIGHT, 
+                2); // Double damage
         }
         // Sword attack
         else if(this.attacking && this.atk == AtkType.Sword) {
@@ -553,6 +557,10 @@ class Player extends GameObject {
             return;
         }
 
+        // Update hurt timer
+        if(this.hurtTimer > 0.0)
+            this.hurtTimer -= 1.0 * tm;
+
         // Jump
         if(this.jumping) {
 
@@ -588,6 +596,7 @@ class Player extends GameObject {
 
 
     // Get collision that slows down
+    // TODO: Method for "does overlay/intersect"
     public getSlowingCollision(x : number, y : number, w : number, h : number, stairs = false) {
 
         let px = this.pos.x-this.center.x;
@@ -625,6 +634,37 @@ class Player extends GameObject {
             this.jumpTarget = this.pos.y+ (32 - (this.pos.y%16));
             this.gravity = -JUMP;
             this.jumping = true;
+        }
+    }
+
+
+    // Get collision that slows down
+    public getHurtCollision(x : number, y : number, w : number, h : number, dmg = 1) {
+
+        const HURT_TIME = 60.0;
+        const KNOCKBACK = 3.75;
+
+        if(this.hurtTimer > 0.0)
+            return;
+
+        let px = this.pos.x-this.center.x;
+        let py = this.pos.y-this.center.y;
+        let dw = this.dim.x/2;
+        let dh = this.dim.y/2;
+
+        if(px + dw >= x && px - dw <= x+w
+        && py + dh >= y && py - dh <= y+h) {
+
+            this.life -= dmg;
+            this.hurtTimer = HURT_TIME;
+
+            // Knockback
+            let cx = this.pos.x - (x+w/2);
+            let cy = this.pos.y - (y+h/2);
+            let angle = Math.atan2(cy, cx);
+
+            this.speed.x += Math.cos(angle) * KNOCKBACK;
+            this.speed.y += Math.sin(angle) * KNOCKBACK;
         }
     }
 
@@ -737,7 +777,11 @@ class Player extends GameObject {
 
         // Determine frameskip
         let frameSkip = 0;
-        if(this.loadingSpin && Math.floor(this.spinLoad / 4) % 2 == 0)
+        // Hurt
+        if(this.hurtTimer > 0.0 && Math.floor(this.hurtTimer / 4) % 2 == 0)
+            frameSkip = 8;
+        // Loading spin
+        else if(this.loadingSpin && Math.floor(this.spinLoad / 4) % 2 == 0)
             frameSkip = 4;
         
         // Draw sprite

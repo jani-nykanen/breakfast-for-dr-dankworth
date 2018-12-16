@@ -99,6 +99,8 @@ class GameObject {
     public getJumpCollision?(x : number, y : number, w : number, h : number) : any;
     // Get hitbox
     public getHitbox?() : Hitbox;
+    // Kill
+    public kill?() : any;
 
 
     // Wall collision
