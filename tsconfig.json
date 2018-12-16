@@ -29,6 +29,9 @@
         "src/game/hitbox.ts",
         "src/game/envdeath.ts",
 
+        "src/game/enemies/enemy.ts",
+        "src/game/enemies/elephant.ts",
+
         "src/global.ts",
 
         "src/main.ts"

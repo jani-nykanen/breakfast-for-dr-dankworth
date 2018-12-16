@@ -14,6 +14,8 @@ class ObjectManager {
     private player : Player;
     // Arrows
     private arrows : Array<Arrow>;
+    // Enemies
+    private enemies : Array<Enemy>;
 
 
     // Constructor
@@ -29,6 +31,9 @@ class ObjectManager {
 
             this.arrows[i] = new Arrow();
         }
+
+        // Create an empty array for enemies
+        this.enemies = new Array<Enemy> ();
     }
 
 
@@ -41,6 +46,32 @@ class ObjectManager {
         stage.getCollision(this.player, tm);
         // Pass data to HUD
         this.player.updateHUDData(hud);
+
+
+        // Do camera check for enemies
+        for(let i = 0; i < this.enemies.length; ++ i) {
+
+            this.enemies[i].cameraCheck(cam);
+        }
+
+        if(!cam.isMoving()) {
+
+            // Update enemies
+            for(let i = 0; i < this.enemies.length; ++ i) {
+
+                this.enemies[i].update(cam, tm);
+                this.enemies[i].onPlayerCollision(this.player, tm);
+                stage.getCollision(this.enemies[i], tm);
+
+                // Enemy-to-enemy collisions
+                for(let j = 0; j < this.enemies.length; ++ j) {
+
+                    if(i == j) continue;
+
+                    this.enemies[i].onEnemyCollision(this.enemies[j]);
+                }
+            }
+        }
 
         // Update arrows
         for(let i = 0; i < this.ARROW_COUNT; ++ i) {
@@ -57,6 +88,12 @@ class ObjectManager {
         // Draw player shadow before other objects
         this.player.drawShadow(g, ass);
 
+        // Draw enemies
+        for(let i = 0; i < this.enemies.length; ++ i) {
+
+            this.enemies[i].draw(g, ass);
+        }
+
         // Draw player
         this.player.draw(g, ass);
 
@@ -65,5 +102,19 @@ class ObjectManager {
 
             this.arrows[i].draw(g, ass);
         }
+    }
+
+
+    // Add an enemy
+    public addEnemy(e : Enemy) {
+
+        this.enemies.push(e);
+    }
+
+
+    // Set player location
+    public setPlayerLocation(x : number, y : number) {
+
+        this.player.setPos(x, y);
     }
 }

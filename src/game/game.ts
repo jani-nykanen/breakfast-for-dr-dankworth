@@ -39,7 +39,10 @@ class Game implements Scene {
     // On loaded
     public onLoaded() {
 
+        // Set map
         this.stage.setMap(this.ass);
+        // Parse objects
+        this.stage.parseObjects(this.objMan);
     }
 
 

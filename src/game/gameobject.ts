@@ -27,6 +27,8 @@ class GameObject {
     protected swimmingSkill : number;
     // Does exist
     protected exist : boolean;
+    // Is in camera
+    protected inCamera : boolean;
 
 
     // Constructor
@@ -38,6 +40,7 @@ class GameObject {
 
         this.swimmingSkill = 0;
         this.exist = true;
+        this.inCamera = false;
 
         // Set default dimensions
         this.dim = new Vec2(0, 0);
@@ -128,7 +131,6 @@ class GameObject {
                py+h >= y-MARGIN1*tm && py+h <= y+(this.speed.y+MARGIN2)*tm ) {
 
                 this.pos.y = y-h + cy;
-                this.speed.y = 0.0;
                 collided = true;
             }
         
@@ -141,7 +143,6 @@ class GameObject {
             py-h <= y+MARGIN1*tm && py-h >= y+(this.speed.y-MARGIN2)*tm ) {
 
                 this.pos.y = y+h + cy;
-                this.speed.y = 0.0;
                 collided = true;
             }
         
@@ -154,7 +155,6 @@ class GameObject {
                px+w >= x-MARGIN1*tm && px+w <= x+(this.speed.x+MARGIN2)*tm ) {
 
                 this.pos.x = x-w + cx;
-                this.speed.x = 0.0;
                 collided = true;
             }
         
@@ -167,7 +167,6 @@ class GameObject {
                px-w <= x+MARGIN1*tm && px-w >= x+(this.speed.x-MARGIN2)*tm ) {
 
                 this.pos.x = x+w + cx;
-                this.speed.x = 0.0;
                 collided = true;
             }
         
@@ -200,9 +199,24 @@ class GameObject {
     }
 
 
+    // Set position
+    public setPos(x : number, y : number) {
+
+        this.pos.x = x;
+        this.pos.y = y;
+    }
+
+
     // Can the object swim
     public getSwimmingSkill() : number {
 
         return this.swimmingSkill;
+    }
+
+
+    // Is in camera
+    public isInCamera() : boolean {
+
+        return this.inCamera;
     }
 }

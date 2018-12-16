@@ -126,7 +126,7 @@ class Stage {
         const WATER_MARGIN = 4;
         const LEDGE_MARGIN = 8;
 
-        if(!o.doesExist()) return;
+        if(!o.doesExist() || !o.isInCamera()) return;
 
         // Get position in grid
         let p = o.getPos();
@@ -279,6 +279,44 @@ class Stage {
         for(let i = 0; i < this.envAnim.length; ++ i) {
 
             this.envAnim[i].draw(g, ass);
+        }
+    }
+
+
+    // Parse objects
+    public parseObjects(objman : ObjectManager) {
+
+        let data = this.baseMap.layers[1].data;
+        let w = this.baseMap.width;
+        let h = this.baseMap.height;
+
+        let id = 0;
+        let p : Vec2;
+        for(let y = 0; y < h; ++ y) {
+
+            for(let x = 0; x < w; ++ x) {
+
+                id = data[y*w+x] - 256;
+                if(id <= 0) continue;
+
+                p = new Vec2(x*16+8, y*16+8);
+
+                switch(id) {
+                
+                // Player
+                case 1:
+                    objman.setPlayerLocation(p.x, p.y);
+                    break;
+
+                // Elephant
+                case 2:
+                    objman.addEnemy(new Elephant(p.x, p.y));
+                    break;
+
+                default:
+                    break;
+                }
+            }
         }
     }
 }

@@ -19,6 +19,7 @@ let assetInfo = {
         tileset: "tileset.png",
         water: "water.png",
         envdeath: "envdeath.png",
+        enemies: "enemies.png",
     },
 
     audioPath: "assets/audio/",

@@ -102,6 +102,8 @@ class Player extends GameObject {
         this.life = this.MAX_LIFE;
         this.arrowCount = this.ARROW_MAX;
         this.gemCount = 0;
+
+        this.inCamera = true;
     }
 
 
@@ -572,6 +574,16 @@ class Player extends GameObject {
         this.swimming = false;
         // And not climbing stairs
         this.stairs = false;
+    }
+
+
+    // Collision event
+    protected collisionEvent(x : number, y : number, dir : number) {
+
+        if(dir == 0 || dir == 1)
+            this.speed.y = 0;
+        else
+            this.speed.x = 0;
     }
 
 
