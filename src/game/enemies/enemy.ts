@@ -40,7 +40,7 @@ class Enemy extends GameObject {
     // Custom events
     protected updateAI?(tm : number) : any;
     protected playerEvent?(pl : Player, tm : number) : any;
-    protected enemyCollisionEvent?() : any;
+    protected enemyCollisionEvent?(angle : number) : any;
     protected respawn?() : any;
 
 
@@ -298,10 +298,10 @@ class Enemy extends GameObject {
 
             // Call custom collision events
             if(this.enemyCollisionEvent != null)
-                this.enemyCollisionEvent();
+                this.enemyCollisionEvent(angle);
 
             if(e.enemyCollisionEvent != null)
-                e.enemyCollisionEvent();
+                e.enemyCollisionEvent(angle);
         }
     }
 

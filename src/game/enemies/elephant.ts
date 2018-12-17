@@ -70,12 +70,12 @@ class Elephant extends Enemy {
             this.target.y = 0;
 
             // Stand
-            this.spr.setFrame(1, 0);
+            this.spr.setFrame(this.id+1, 0);
         }
         else if(this.totalSpeed >= DELTA) {
 
             // Animate
-            this.spr.animate(1, 0, 3, ANIM_SPEED, tm);
+            this.spr.animate(this.id+1, 0, 3, ANIM_SPEED, tm);
 
             this.flip = this.speed.x >= 0 ? Flip.None : Flip.Horizontal;
         }

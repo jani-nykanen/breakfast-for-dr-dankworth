@@ -322,6 +322,11 @@ class Stage {
                     objman.addEnemy(new Snake(p.x, p.y));
                     break;
 
+                // Chicken
+                case 4:
+                    objman.addEnemy(new Chicken(p.x, p.y));
+                    break;
+
 
                 default:
                     break;

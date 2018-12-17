@@ -221,4 +221,11 @@ class GameObject {
 
         return this.inCamera;
     }
+
+
+    // Get total speed
+    public getTotalSpeed() : number {
+
+        return this.totalSpeed;
+    }
 }
