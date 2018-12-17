@@ -28,6 +28,8 @@ class Elephant extends Enemy {
 
         this.acceleration = 0.1;
         this.health = 2;
+
+        this.spr.setFrame(this.id+1, 0);
     }
 
 
