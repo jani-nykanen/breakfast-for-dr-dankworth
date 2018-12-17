@@ -23,7 +23,9 @@ class Snake extends Enemy {
         this.id = 1;
 
         this.acceleration = 0.1;
-        this.health = 2;
+        
+        this.maxHealth = 2;
+        this.health = this.maxHealth;
 
         this.spr.setFrame(this.id+1, 0);
     

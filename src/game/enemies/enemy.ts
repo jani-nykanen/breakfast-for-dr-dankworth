@@ -26,20 +26,32 @@ class Enemy extends GameObject {
 
     // Health
     protected health : number;
+    // Max health
+    protected maxHealth : number;
     // Damage hitbox
     protected dhbox : Vec2;
+
+    // Start pos
+    protected startPos : Vec2;
+    // If repositioned
+    protected repositioned : boolean;
 
 
     // Custom events
     protected updateAI?(tm : number) : any;
     protected playerEvent?(pl : Player, tm : number) : any;
     protected enemyCollisionEvent?() : any;
+    protected respawn?() : any;
 
 
     // Constructor
     public constructor(x : number, y : number) {
 
         super(x, y);
+
+        // Store starting position
+        this.startPos = new Vec2(x, y);
+        this.repositioned = false;
 
         // Dimensions
         this.dim.x = 12;
@@ -50,10 +62,11 @@ class Enemy extends GameObject {
         // Set defaults
         this.spr = new Sprite(16, 16);
         this.id = 0;
-        this.spr.setFrame(this.id+1, 0);
+       // this.spr.setFrame(this.id+1, 0);
         this.flip = Flip.None;
         this.hurtID = -2;
         this.health = 1;
+        this.maxHealth = 2;
 
         this.dying = false;
         this.exist = true;
@@ -63,13 +76,36 @@ class Enemy extends GameObject {
     // Perform camera check
     public cameraCheck(cam : Camera) {
 
-        if(!this.exist) return;
+        if(!this.exist && this.repositioned) return;
 
         let p = cam.getVirtualPos();
 
         // Check if in camera
         this.inCamera = this.pos.x+8 >= p.x && this.pos.x-8 <= p.x+cam.WIDTH
             && this.pos.y+8 >= p.y && this.pos.y-8 <= p.y+cam.HEIGHT;
+
+        // Move back to the original position if outside the camera
+        // (and camera not moving!)
+        if(!cam.isMoving() && !this.inCamera && !this.repositioned) {
+
+            this.pos.x = this.startPos.x;
+            this.pos.y = this.startPos.y;
+
+            this.repositioned = true;
+
+            // Respawn
+            this.exist = true;
+            this.spr.setFrame(this.id+1, 0);
+            this.dying = false;
+            this.health = this.maxHealth;
+            this.hurtTimer = 0;
+            this.hurtID = -1;
+            this.speed.x = 0;
+            this.speed.y = 0;
+
+            if(this.respawn != null) 
+                this.respawn();
+        }
     }
 
 
@@ -93,6 +129,8 @@ class Enemy extends GameObject {
     public update(cam : Camera, tm : number) {
 
         if(!this.exist || !this.inCamera) return;
+
+        this.repositioned = false;
 
         // Die if dying
         if(this.dying) {

@@ -17,6 +17,14 @@ class Elephant extends Enemy {
     private waiting : boolean;
 
 
+    // Respawn
+    protected respawn() {
+
+        this.waiting = true;
+        this.moveTimer = this.WAIT_TIME;
+    }
+
+
     // Constructor
     public constructor(x : number, y : number) {
 
@@ -27,7 +35,9 @@ class Elephant extends Enemy {
         this.moveTimer = this.WAIT_TIME;
 
         this.acceleration = 0.1;
-        this.health = 2;
+
+        this.maxHealth = 2;
+        this.health = this.maxHealth;
 
         this.spr.setFrame(this.id+1, 0);
     }
