@@ -181,6 +181,14 @@ class Enemy extends GameObject {
 
         // Check hitbox, take damage
         let hbox = pl.getHitbox();
+        // If not active, check special hitbox
+        let isSpc = false;
+        if(!hbox.doesExist()) {
+
+            hbox = pl.getSpcHitbox();
+            isSpc = true;
+        }
+
         if(hbox.doesExist() && hbox.getID() > this.hurtID) {
 
             if(hbox.doesOverlay(this.pos.x-this.dhbox.x/2, 
@@ -209,6 +217,11 @@ class Enemy extends GameObject {
                     this.dying = true;
                     this.spr.setFrame(0, 0);
                 }
+
+                // If special, disable player spin attack
+                // loading
+                if(isSpc)
+                    pl.disableSpinAttack();
             }
         }
 

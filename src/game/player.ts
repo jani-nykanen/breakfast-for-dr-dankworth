@@ -8,7 +8,8 @@
  // Attack type
 enum AtkType {
     Sword = 0,
-    Bow = 1
+    Bow = 1,
+    SpcSword = 2,
 };
 
 
@@ -67,6 +68,8 @@ class Player extends GameObject {
 
     // Hitbox
     private hbox : Hitbox;
+    // Special hitbox
+    private spcHbox : Hitbox;
 
 
     // Constructor
@@ -79,8 +82,9 @@ class Player extends GameObject {
         this.sprSword = new Sprite(24, 24);
         this.sprBow = new Sprite(16, 16);
 
-        // Create hitbox
+        // Create hitboxes
         this.hbox = new Hitbox();
+        this.spcHbox = new Hitbox();
 
         // Dimensions
         this.dim = new Vec2(8, 10);
@@ -290,6 +294,7 @@ class Player extends GameObject {
         const SPIN_CHANGE = 3;
         const BOW_TIME = 30;
         const SWIM_SPEED = 10;
+        const SPC_TIME = 20;
 
         // Update "spin loading"
         if(this.loadingSpin) {
@@ -347,6 +352,17 @@ class Player extends GameObject {
                     this.attacking = false;
                 }
             }
+            // Special sword
+            else if(this.atk == AtkType.SpcSword) {
+
+                this.spr.animate(3+this.dir,3, 4, SPC_TIME, tm);
+                if(this.spr.getFrame() == 4) {
+
+                    this.spr.setFrame(this.dir, 0);
+                    this.attacking = false;
+                }
+                this.sprSword.setFrame(this.dir, 4);
+            }
             // Sword
             else {
 
@@ -364,8 +380,11 @@ class Player extends GameObject {
                     this.spr.setFrame(this.dir, 0);
                     this.attacking = false;
 
+                    // Set spinning attack loading
                     this.spinLoad = 0.0;
                     this.loadingSpin = true;
+                    // Update special hitbox
+                    this.spcHbox.updateID();
                 }
 
             }
@@ -469,6 +488,64 @@ class Player extends GameObject {
     }
 
 
+    // Update special hitbox
+    private updateSpcHitbox() {
+
+        const WIDTH = 16;
+        const HEIGHT = 9;
+        const SPC_DMG = 2;
+
+        let x = this.pos.x;
+        let y = this.pos.y;
+
+        let w = 0;
+        let h = 0;
+
+        switch(this.dir) {
+
+        // Down
+        case 0:
+            x += -8;
+            y += 8;
+            w = HEIGHT;
+            h = WIDTH;
+            break;
+
+        // Up
+        case 1:
+            x += 8;
+            y -= 8 + WIDTH;
+            w = HEIGHT;
+            h = WIDTH;
+            break;
+
+        // Side
+        case 2:
+
+            w = WIDTH;
+            h = HEIGHT;
+            y -= 1;
+
+            if(this.flip == Flip.Horizontal) {
+
+                x -= 8 + WIDTH;
+            }   
+            else {
+
+                x += 8;
+            }
+
+            break;
+
+        default:
+            break;
+        }
+
+        // Set hitbox
+        this.spcHbox.setHitbox(x, y, w, h, SPC_DMG);
+    }
+
+
     // Update hitbox
     private updateHitbox() {
 
@@ -479,6 +556,14 @@ class Player extends GameObject {
         const SWORD_HEIGHT = 12;
         const SWORD_MARGIN = 4;
 
+        this.spcHbox.toggleExistence(this.loadingSpin);
+        // Update special hitbox, if loading a spin attack
+        if(this.loadingSpin) {
+
+            this.updateSpcHitbox();
+        }
+
+        // If not attacking, stop here
         if(!this.attacking && this.spinTimer <= 0.0) {
 
             this.hbox.terminate();
@@ -794,7 +879,7 @@ class Player extends GameObject {
             || this.spinTimer > 0.0) {
 
             // Sword
-            if(this.atk == AtkType.Sword)
+            if(this.atk == AtkType.Sword || this.atk == AtkType.SpcSword)
                 this.drawSword(g, ass);
 
             // Bow
@@ -835,5 +920,23 @@ class Player extends GameObject {
     public getHitbox() : Hitbox {
 
         return this.hbox;
+    }
+
+
+    // Get special hitbox
+    public getSpcHitbox() : Hitbox {
+
+        return this.spcHbox;
+    }
+
+
+    // Disable spin attack
+    public disableSpinAttack() {
+
+        this.spcHbox.toggleExistence(false);
+        this.loadingSpin = false;
+
+        this.atk = AtkType.SpcSword;
+        this.attacking = true;
     }
 }

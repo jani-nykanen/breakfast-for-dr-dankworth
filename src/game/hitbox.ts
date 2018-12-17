@@ -65,6 +65,13 @@ class Hitbox {
     }
 
 
+    // Toggle existence
+    public toggleExistence(state : boolean) {
+
+        this.exist = state;
+    }
+
+
     // Get ID
     public getID() : number {
 
@@ -88,11 +95,28 @@ class Hitbox {
 
 
     // Set hitbox
-    public setHitbox(x : number, y : number, w : number, h : number) {
+    public setHitbox(x : number, y : number, w : number, h : number, dmg = 1) {
 
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+
+        this.dmg = dmg;
+    }
+
+
+    // Set new ID
+    public updateID(id = -1) {
+
+        if(id < 0) {
+
+            ++ _hitID;
+            this.id = _hitID; 
+        }
+        else {
+
+            this.id = id;
+        }
     }
 }
