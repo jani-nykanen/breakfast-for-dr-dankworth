@@ -851,7 +851,7 @@ class Player extends GameObject {
         let frame = 0;
         if(!this.jumping) {
 
-            frame = this.flip == Flip.Horizontal ? 3 : 4;
+            frame = this.dir == 2 ? 3 : 4;
         }
         else {
 
