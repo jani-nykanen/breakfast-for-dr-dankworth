@@ -30,6 +30,8 @@ class Enemy extends GameObject {
     protected maxHealth : number;
     // Damage hitbox
     protected dhbox : Vec2;
+    // Attack power
+    protected power : number;
 
     // Start pos
     protected startPos : Vec2;
@@ -62,11 +64,11 @@ class Enemy extends GameObject {
         // Set defaults
         this.spr = new Sprite(16, 16);
         this.id = 0;
-       // this.spr.setFrame(this.id+1, 0);
         this.flip = Flip.None;
         this.hurtID = -2;
         this.health = 1;
         this.maxHealth = 2;
+        this.power = 1;
 
         this.dying = false;
         this.exist = true;
@@ -267,7 +269,7 @@ class Enemy extends GameObject {
         pl.getHurtCollision(
             px-this.dim.x/2, 
             py-this.dim.y/2,
-            this.dim.x, this.dim.y, 1
+            this.dim.x, this.dim.y, this.power
         );
     }
 
@@ -277,8 +279,9 @@ class Enemy extends GameObject {
 
         const RADIUS = 8;
 
-        if(e == this || !this.exist || !this.inCamera || this.dying ||
-            !e.exist || !e.inCamera || e.dying) return;
+        if(e == this || !this.exist 
+            || !this.inCamera || this.dying || !this.doesTakeCollisions() ||
+            !e.exist || !e.inCamera || e.dying || !e.doesTakeCollisions()) return;
 
         let cx = this.pos.x - e.pos.x;
         let cy = this.pos.y - e.pos.y;

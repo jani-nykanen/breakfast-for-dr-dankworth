@@ -29,6 +29,8 @@ class GameObject {
     protected exist : boolean;
     // Is in camera
     protected inCamera : boolean;
+    // If take collisions
+    protected takeCollision : boolean;
 
 
     // Constructor
@@ -41,6 +43,7 @@ class GameObject {
         this.swimmingSkill = 0;
         this.exist = true;
         this.inCamera = false;
+        this.takeCollision = true;
 
         // Set default dimensions
         this.dim = new Vec2(0, 0);
@@ -227,5 +230,12 @@ class GameObject {
     public getTotalSpeed() : number {
 
         return this.totalSpeed;
+    }
+
+
+    // Does take collisions
+    public doesTakeCollisions() : boolean {
+
+        return this.takeCollision;
     }
 }

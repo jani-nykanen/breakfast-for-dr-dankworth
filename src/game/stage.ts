@@ -126,7 +126,10 @@ class Stage {
         const WATER_MARGIN = 4;
         const LEDGE_MARGIN = 8;
 
-        if(!o.doesExist() || !o.isInCamera()) return;
+        // Check if there is no need to take
+        // collisions
+        if(!o.doesExist() || !o.isInCamera() ||
+            !o.doesTakeCollisions()) return;
 
         // Get position in grid
         let p = o.getPos();
@@ -325,6 +328,16 @@ class Stage {
                 // Chicken
                 case 4:
                     objman.addEnemy(new Chicken(p.x, p.y));
+                    break;
+
+                // Pink
+                case 5:
+                    objman.addEnemy(new Pink(p.x, p.y));
+                    break;
+
+                // Bat
+                case 6:
+                    objman.addEnemy(new Bat(p.x, p.y));
                     break;
 
 

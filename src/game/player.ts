@@ -949,4 +949,11 @@ class Player extends GameObject {
         this.atk = AtkType.SpcSword;
         this.attacking = true;
     }
+
+
+    // Is attacking
+    public isAttacking() : boolean {
+
+        return this.attacking || this.spinTimer > 0 || this.loadingSpin;
+    }
 }

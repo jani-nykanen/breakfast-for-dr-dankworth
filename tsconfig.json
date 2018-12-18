@@ -33,6 +33,8 @@
         "src/game/enemies/elephant.ts",
         "src/game/enemies/snake.ts",
         "src/game/enemies/chicken.ts",
+        "src/game/enemies/pink.ts",
+        "src/game/enemies/bat.ts",
 
         "src/global.ts",
 
