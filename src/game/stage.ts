@@ -233,8 +233,8 @@ class Stage {
         let cp = cam.getVirtualPos();
         let startx = ((cp.x/16) | 0) -1;
         let starty = ((cp.y/16) | 0) -1;
-        let ex = startx + cam.WIDTH / 16 + 2;
-        let ey = starty + cam.HEIGHT / 16 + 2;
+        let ex = startx + ((cam.WIDTH / 16)|0) + 2;
+        let ey = starty + ((cam.HEIGHT / 16)|0) + 2;
 
         // Compute water pos
         let wp = (this.waterPos/WATER_DIV) | 0;
@@ -288,7 +288,7 @@ class Stage {
 
 
     // Parse objects
-    public parseObjects(objman : ObjectManager) {
+    public parseObjects(objman : ObjectManager, cam : Camera) {
 
         let data = this.baseMap.layers[1].data;
         let w = this.baseMap.width;
@@ -309,7 +309,7 @@ class Stage {
                 
                 // Player
                 case 1:
-                    objman.setPlayerLocation(p.x, p.y);
+                    objman.setPlayerLocation(p.x, p.y, cam);
                     break;
 
                 // Elephant

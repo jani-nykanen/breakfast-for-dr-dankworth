@@ -119,4 +119,15 @@ class Camera {
 
         return this.trans;
     }
+
+
+    // Set position (in grid coordinates)
+    public setPos(x : number, y : number) {
+
+        this.pos.x = x;
+        this.pos.y = y;
+
+        this.vpos.x = this.pos.x * this.WIDTH;
+        this.vpos.y = this.pos.y * this.HEIGHT;
+    }
 }

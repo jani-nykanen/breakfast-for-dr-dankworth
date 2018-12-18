@@ -42,7 +42,7 @@ class Game implements Scene {
         // Set map
         this.stage.setMap(this.ass);
         // Parse objects
-        this.stage.parseObjects(this.objMan);
+        this.stage.parseObjects(this.objMan, this.cam);
     }
 
 

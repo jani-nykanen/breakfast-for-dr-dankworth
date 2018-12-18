@@ -414,22 +414,22 @@ class Player extends GameObject {
         let p = cam.getVirtualPos();
 
         // Left
-        if(this.dir == 2 && this.flip == Flip.Horizontal && this.pos.x-8 < p.x) {
+        if(this.target.x < 0 && this.flip == Flip.Horizontal && this.pos.x-8 < p.x) {
 
             cam.move(-1, 0);
         }
         // Right
-        else if(this.dir == 2 && this.flip == Flip.None && this.pos.x+8 > 160+p.x) {
+        else if(this.target.x > 0 && this.flip == Flip.None && this.pos.x+8 > 160+p.x) {
 
             cam.move(1, 0);
         }
         // Top
-        else if(this.dir == 1 && this.pos.y-8 < p.y) {
+        else if(this.target.y < 0 && this.pos.y-8 < p.y) {
 
             cam.move(0, -1);
         }
         // Bottom
-        else if(this.dir == 0 && this.pos.y+8 > 144+p.y -16) {
+        else if(this.target.y > 0 && this.pos.y+8 > 144+p.y -16) {
 
             cam.move(0, 1);
         }

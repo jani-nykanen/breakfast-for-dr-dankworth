@@ -127,8 +127,15 @@ class ObjectManager {
 
 
     // Set player location
-    public setPlayerLocation(x : number, y : number) {
+    public setPlayerLocation(x : number, y : number, cam : Camera) {
 
+        // Set player position
         this.player.setPos(x, y);
+
+        // Set camera position
+        let gx = (x / cam.WIDTH) | 0;
+        let gy = (y / cam.HEIGHT) | 0;
+
+        cam.setPos(gx, gy);
     }
 }
