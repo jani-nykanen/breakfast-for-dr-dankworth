@@ -414,12 +414,12 @@ class Player extends GameObject {
         let p = cam.getVirtualPos();
 
         // Left
-        if(this.target.x < 0 && this.flip == Flip.Horizontal && this.pos.x-8 < p.x) {
+        if(this.target.x < 0 && this.pos.x-8 < p.x) {
 
             cam.move(-1, 0);
         }
         // Right
-        else if(this.target.x > 0 && this.flip == Flip.None && this.pos.x+8 > 160+p.x) {
+        else if(this.target.x > 0  && this.pos.x+8 > 160+p.x) {
 
             cam.move(1, 0);
         }
