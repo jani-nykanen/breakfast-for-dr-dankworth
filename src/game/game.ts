@@ -61,7 +61,8 @@ class Game implements Scene {
     // Update
     public update(tm: number) {      
 
-        if(!this.cam.isMoving()) {
+        let state = this.cam.isMoving();
+        if(!state) {
             
             // Update stage
             this.stage.update(tm);
@@ -75,6 +76,12 @@ class Game implements Scene {
 
         // Update hud
         this.hud.update(tm);
+
+        if(state != this.cam.isMoving() && state == false) {
+
+            // Update map looping
+            this.objMan.handleMapLoop(this.cam, this.stage);
+        }
     }
 
 

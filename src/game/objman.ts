@@ -138,4 +138,37 @@ class ObjectManager {
 
         cam.setPos(gx, gy);
     }
+
+
+    // Handle map loop
+    public handleMapLoop(cam: Camera, stage: Stage) {
+
+        let jumpx = 0;
+        let jumpy = 0;
+        let px = cam.getTarget().x;
+        let py = cam.getTarget().y;
+
+        let jumpw = Math.ceil(stage.getMapSize().x*16 / cam.WIDTH);
+        let jumph = Math.ceil(stage.getMapSize().y*16 / cam.HEIGHT);
+
+        console.log(jumpw);
+        console.log(jumph);
+
+        if(px < 0) jumpx = 1;
+        else if(px >= jumpw) jumpx = -1;
+
+        if(py < 0) jumpy = 1;
+        else if(py >= jumph) jumpy = -1;
+
+        if(jumpx == 0 && jumpy == 0)  return;
+
+        // Update camera position
+        cam.setTarget(jumpx*jumpw, jumpy*jumph);
+
+        // Update player position
+        let p = this.player.getPos();
+        let jw = jumpx * jumpw * cam.WIDTH ;
+        let jh = jumpy * jumph * cam.HEIGHT;
+        this.player.setPos(p.x + jw, p.y + jh);
+    }
 }

@@ -60,12 +60,14 @@ class Stage {
         x |= 0;
         y |= 0;
 
-        // Check if inside the map
-        if(x < 0 || y < 0 
-            || x >= this.baseMap.width || y >= this.baseMap.height) {
+        let w = this.baseMap.width;
+        let h = this.baseMap.height;
 
-            return 0;
-        }
+        // Force back to the map
+        if(x < 0) x += w;
+        else if(x >= w) x -= w;
+        if(y < 0) y += h;
+        else if(y >= h) y -= h;
         
         // Get tile
         return this.mapData[y*this.baseMap.width+x];
@@ -346,5 +348,12 @@ class Stage {
                 }
             }
         }
+    }
+
+
+    // Get map size
+    public getMapSize() : Vec2 {
+
+        return new Vec2(this.baseMap.width, this.baseMap.height);
     }
 }

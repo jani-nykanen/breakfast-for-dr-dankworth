@@ -130,4 +130,29 @@ class Camera {
         this.vpos.x = this.pos.x * this.WIDTH;
         this.vpos.y = this.pos.y * this.HEIGHT;
     }
+
+
+    // Get position
+    public getPos() : Vec2 {
+
+        return this.pos;
+    }
+
+
+    // Get target
+    public getTarget() : Vec2 {
+
+        return this.target;
+    }
+
+
+    // Set target
+    public setTarget(tx : number, ty : number) {
+
+        this.target.x += tx;
+        this.target.y += ty;
+
+        this.pos.x += tx;
+        this.pos.y += ty;
+    }
 }
