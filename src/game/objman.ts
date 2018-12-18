@@ -151,9 +151,6 @@ class ObjectManager {
         let jumpw = Math.ceil(stage.getMapSize().x*16 / cam.WIDTH);
         let jumph = Math.ceil(stage.getMapSize().y*16 / cam.HEIGHT);
 
-        console.log(jumpw);
-        console.log(jumph);
-
         if(px < 0) jumpx = 1;
         else if(px >= jumpw) jumpx = -1;
 
