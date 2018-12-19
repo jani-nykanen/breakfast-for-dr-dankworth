@@ -22,7 +22,7 @@ class Bat extends Enemy {
 
         this.id = 4;
         this.acceleration = 0.1;
-        this.maxHealth = 1;
+        this.maxHealth = 2;
         this.health = this.maxHealth;
 
         // Does not take collisions

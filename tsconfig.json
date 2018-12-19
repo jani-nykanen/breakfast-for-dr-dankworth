@@ -37,6 +37,7 @@
         "src/game/enemies/pink.ts",
         "src/game/enemies/bat.ts",
         "src/game/enemies/wraith.ts",
+        "src/game/enemies/bee.ts",
         // Global
         "src/global.ts",
         "src/main.ts"

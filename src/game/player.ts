@@ -523,7 +523,6 @@ class Player extends GameObject {
 
         // Up
         case 1:
-            x += 8;
             y -= 8 + WIDTH;
             w = HEIGHT;
             h = WIDTH;

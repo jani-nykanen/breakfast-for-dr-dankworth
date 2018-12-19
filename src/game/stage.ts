@@ -419,6 +419,11 @@ class Stage {
                     objman.addEnemy(new Wraith(p.x, p.y));
                     break;
 
+                // Bee
+                case 8:
+                    objman.addEnemy(new Bee(p.x, p.y));
+                    break;
+
                 default:
                     break;
                 }
