@@ -31,6 +31,8 @@ class GameObject {
     protected inCamera : boolean;
     // If take collisions
     protected takeCollision : boolean;
+    // Is projectile
+    protected projectile : boolean;
 
 
     // Constructor
@@ -44,6 +46,7 @@ class GameObject {
         this.exist = true;
         this.inCamera = false;
         this.takeCollision = true;
+        this.projectile = false;
 
         // Set default dimensions
         this.dim = new Vec2(0, 0);
@@ -237,5 +240,12 @@ class GameObject {
     public doesTakeCollisions() : boolean {
 
         return this.takeCollision;
+    }
+
+
+    // Is projectile
+    public isProjectile() : boolean {
+
+        return this.projectile;
     }
 }

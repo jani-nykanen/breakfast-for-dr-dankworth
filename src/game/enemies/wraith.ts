@@ -1,11 +1,11 @@
 /**
- * A bat
+ * A wraith
  * 
  * (c) 2018 Jani Nykänen
  */
 
-// Bat class
-class Bat extends Enemy {
+// Wraith class
+class Wraith extends Enemy {
 
     // Target
     private ptarget : Vec2;
@@ -20,35 +20,33 @@ class Bat extends Enemy {
 
         super(x, y);
 
-        this.id = 4;
+        this.id = 5;
         this.acceleration = 0.1;
-        this.maxHealth = 1;
+        this.maxHealth = 4;
         this.health = this.maxHealth;
-
-        // Does not take collisions
-        this.takeCollision = false;
+        this.power = 2;
 
         this.spr.setFrame(this.id+1, 0);
     
         this.ptarget = new Vec2();
         this.dist = 0;
-        this.moveMode = 2;
+        this.moveMode = 0;
     }
 
 
     // Update AI
     protected updateAI(tm : number) {
 
-        const SPEED = 0.75;
-        const ANIM_SPEED = 8;
-        const ESCAPE_MOD = 0.5;
+        const SPEED = 0.5;
+        const ANIM_SPEED = 7;
+        const ESCAPE_MOD = 2.0;
 
         let px = this.pos.x - this.ptarget.x;
         let py = this.pos.y - this.ptarget.y;
 
         let angle = Math.atan2(py, px);
 
-        let mod = [-1, ESCAPE_MOD, 0] [this.moveMode];
+        let mod = [-1, ESCAPE_MOD] [this.moveMode];
 
         this.target.x = mod* Math.cos(angle) * SPEED;
         this.target.y = mod* Math.sin(angle) * SPEED;
@@ -58,6 +56,9 @@ class Bat extends Enemy {
             // Animate
             this.spr.animate(this.id+1, 1, 2, ANIM_SPEED, tm);
         }
+        
+        // Determine flip
+        this.flip = this.ptarget.x < this.pos.x ? Flip.Horizontal : Flip.None;
     }
 
 
@@ -65,26 +66,32 @@ class Bat extends Enemy {
     protected playerEvent(pl : Player, tm : number) {
 
         const MIN_DIST = 64;
-        const ACTIVE_DIST = 96;
 
         // Compute distance from the target
         let px = this.pos.x - this.ptarget.x;
         let py = this.pos.y - this.ptarget.y;
         this.dist = Math.sqrt(px*px + py*py);
 
-        if(this.moveMode != 2) {
-
-            // Determine the movement direction
-            this.moveMode = this.dist < MIN_DIST && pl.isAttacking() ? 1 : 0;
-        }
-        else if(this.dist < ACTIVE_DIST) {
-
-            this.moveMode = 0;
-        }
+        // Determine the movement direction
+        this.moveMode = this.dist < MIN_DIST && pl.isAttacking(true) ? 1 : 0;
 
         // Store target
         this.ptarget = pl.getPos();
-        
+
+    }
+
+
+    // Collision event
+    protected collisionEvent(x : number, y : number, dir : number) {
+
+        if(dir == 0 || dir == 1) {
+
+            this.speed.y = 0;
+        }
+        else {
+
+            this.speed.x = 0;
+        }
     }
 
 }

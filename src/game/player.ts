@@ -952,8 +952,9 @@ class Player extends GameObject {
 
 
     // Is attacking
-    public isAttacking() : boolean {
+    public isAttacking(ignoreSpin = false) : boolean {
 
-        return this.attacking || this.spinTimer > 0 || this.loadingSpin;
+        return this.attacking || this.spinTimer > 0 || 
+            (!ignoreSpin && this.loadingSpin);
     }
 }

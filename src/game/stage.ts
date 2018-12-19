@@ -16,6 +16,10 @@ class Stage {
     private mapData : Array<number>;
     // Solid data
     private solidData : Array<number>;
+    // Top-left corner
+    private topLeft : Vec2;
+    // Viewport size
+    private view : Vec2;
 
     // Water position
     private waterPos : number;
@@ -29,6 +33,8 @@ class Stage {
 
         // Set defaults
         this.waterPos = 0.0;
+        this.topLeft = new Vec2();
+        this.view = new Vec2();
 
         // Create env.death animation objects
         this.envAnim = new Array<EnvDeath> (this.ENV_COUNT);
@@ -86,6 +92,10 @@ class Stage {
         if( (s == 2 || s == 3) && o != null && 
             o.getSwimmingSkill() < s-1) 
             s = 1;
+        // If special solid and not projectile, consider
+        // solid
+        if(s == 8 && !o.isProjectile())
+            s = 1;
 
         return s;
     }
@@ -118,6 +128,79 @@ class Stage {
 
             this.envAnim[i].update(tm);
         }
+    }
+
+
+    // Is destroyable tile
+    private isDestroyable(t : number) : boolean {
+
+        return t >= 6 && t <= 7;
+    }
+
+
+    // Is solid
+    private isSolid(s : number, o : GameObject) {
+
+        return s == 1 || this.isDestroyable(s) ||
+            (s == 8 && !o.isProjectile());
+    }
+
+
+    // Switch collision
+    private switchCollision() {
+
+        let sx = (this.topLeft.x / 16) | 0;
+        let sy = (this.topLeft.y / 16) | 0;
+        let ex = sx+((this.view.x / 16) | 0);
+        let ey = sy+((this.view.y / 16) | 0);
+
+        for(let y = sy; y <= ey; ++ y) {
+
+            for(let x = sx; x <= ex; ++ x) {
+                
+                if(this.getTile(x, y) == 7*16+4) {
+
+                    this.mapData[y*this.baseMap.width+x] -= 15;
+                }
+            }
+        }
+    }
+
+
+    // Destroyable object collision
+    private destroyableCollision(s : number, x : number, y : number,
+            o :GameObject, hbox : Hitbox) {
+
+         // Check plant collision
+        if( this.isDestroyable(s) && hbox != null && hbox.doesExist()) {
+
+            // If hitbox collides with the plant, destroy
+            if(hbox.doesOverlay(x*16,y*16, 16, 16)) {
+
+                let tile = this.getTile(x, y);
+
+                // TODO: Get tile type
+                if(tile == 6*16+4) {
+
+                    this.switchCollision();
+                }
+                // Set underlying tile
+                // TODO: Better support for more tiles
+                this.mapData[y*this.baseMap.width+x] = (tile == 58 ? 49 : 1);
+                        
+                // Create death animation
+                let row = 0;
+                if(tile == 58)
+                    row = 1;
+                else if(tile == 100)
+                     row = 2;
+                this.createEnvDeath(x*16, y*16, row);
+
+                // Kill if a projectile
+                if(o.kill != null) 
+                    o.kill();
+                }
+        }       
     }
 
 
@@ -155,28 +238,11 @@ class Stage {
                 
                 if(s <= 0) continue;
 
-                // Check plant collision
-                // TODO: Own method for this?
-                if(s == 6 && hbox != null && hbox.doesExist()) {
+                // Destroyable object collision
+                this.destroyableCollision(s, x, y, o, hbox);
 
-                    // If hitbox collides with the plant, destroy
-                    if(hbox.doesOverlay(x*16,y*16, 16, 16)) {
-
-                        let tile = this.getTile(x, y);
-                        // Set underlying tile
-                        this.mapData[y*this.baseMap.width+x] = (tile == 18 ? 1 : 49);
-                        // Create death animation
-                        this.createEnvDeath(x*16, y*16, tile == 18 ? 0 : 1);
-
-                        // Kill if a projectile
-                        if(o.kill != null) 
-                            o.kill();
-                    }
-                }
-
-
-                // Check if solid (or plant)
-                if(s == 1 || s == 6) {
+                // Check if solid
+                if(this.isSolid(s, o)) {
 
                     // If the upper tile not solid
                     if(this.getSolidData(x, y-1, o) != 1) {
@@ -281,6 +347,12 @@ class Stage {
     // Draw
     public draw(g: Graphics, ass : Assets, cam : Camera) {
 
+        // Store viewport info
+        this.topLeft = cam.getVirtualPos().copy();
+        // TODO: Check only once
+        this.view.x = cam.WIDTH;
+        this.view.y = cam.HEIGHT;
+
         // Draw map
         this.drawMap(g, ass, cam);
 
@@ -342,6 +414,10 @@ class Stage {
                     objman.addEnemy(new Bat(p.x, p.y));
                     break;
 
+                // Wraith
+                case 7:
+                    objman.addEnemy(new Wraith(p.x, p.y));
+                    break;
 
                 default:
                     break;

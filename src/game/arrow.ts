@@ -30,6 +30,7 @@ class Arrow extends GameObject {
         this.swimmingSkill = 2;
         this.inCamera = true;
         this.hbox = new Hitbox();
+        this.projectile = true;
 
         // Big enough
         this.acceleration = 10;

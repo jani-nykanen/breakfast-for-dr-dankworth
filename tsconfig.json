@@ -9,6 +9,7 @@
         "rootDir": "./"
     },
     "files": [
+        // Core
         "src/core/assets.ts",
         "src/core/scene.ts",
         "src/core/graphics.ts",
@@ -17,7 +18,7 @@
         "src/core/vpad.ts",
         "src/core/sprite.ts",
         "src/core/vec2.ts",
-
+        // Game
         "src/game/game.ts",
         "src/game/hud.ts",
         "src/game/gameobject.ts",
@@ -28,16 +29,16 @@
         "src/game/stage.ts",
         "src/game/hitbox.ts",
         "src/game/envdeath.ts",
-
+        // Enemies
         "src/game/enemies/enemy.ts",
         "src/game/enemies/elephant.ts",
         "src/game/enemies/snake.ts",
         "src/game/enemies/chicken.ts",
         "src/game/enemies/pink.ts",
         "src/game/enemies/bat.ts",
-
+        "src/game/enemies/wraith.ts",
+        // Global
         "src/global.ts",
-
         "src/main.ts"
     ]
 }
