@@ -37,6 +37,25 @@ class ObjectManager {
     }
 
 
+    // Move enemies
+    private moveEnemies(cam : Camera) {
+
+        let tr = cam.getLoopTransition();
+
+        let e : Enemy;
+        let p : Vec2;
+        for(let i = 0; i < this.enemies.length; ++ i) {
+
+            e = this.enemies[i];
+            if(e.isInCamera()) {
+
+                p = e.getPos();
+                e.setPos(p.x + tr.x, p.y + tr.y);
+            }
+        }
+    }
+
+
     // Update
     public update(vpad : Vpad, cam : Camera, stage : Stage, hud : HUD, tm : number) {
 
@@ -47,6 +66,11 @@ class ObjectManager {
         // Pass data to HUD
         this.player.updateHUDData(hud);
 
+        // If looping, move visible enemies to camera
+        if(cam.isLooping()) {
+
+            this.moveEnemies(cam);
+        }
 
         // Do camera check for enemies
         for(let i = 0; i < this.enemies.length; ++ i) {
@@ -160,7 +184,7 @@ class ObjectManager {
         if(jumpx == 0 && jumpy == 0)  return;
 
         // Update camera position
-        cam.setTarget(jumpx*jumpw, jumpy*jumph);
+        cam.setTarget(jumpx*jumpw, jumpy*jumph, true);
 
         // Update player position
         let p = this.player.getPos();

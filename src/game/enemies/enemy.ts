@@ -246,7 +246,7 @@ class Enemy extends GameObject {
                 // Power mod
                 let pwmod = 1.0 + POWER_MOD*(hbox.getDamage()-1);
 
-                let kb =  this.acceleration / BASE_ACC * KNOCKBACK * pwmod;
+                let kb =  (this.acceleration / BASE_ACC) * KNOCKBACK * pwmod;
                 this.speed.x += Math.cos(angle) * kb;
                 this.speed.y += Math.sin(angle) * kb;
 

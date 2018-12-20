@@ -26,6 +26,10 @@ class Camera {
     private moving : boolean;
     // Move timer
     private moveTimer : number;
+    // Is looping
+    private looping : boolean;
+    // Loop translation
+    private loopTrans : Vec2;
 
 
     // Constructor
@@ -35,9 +39,11 @@ class Camera {
         this.vpos = new Vec2(this.pos.x*this.WIDTH, this.pos.y*this.HEIGHT);
         this.target = this.pos.copy();
         this.trans = new Vec2();
+        this.loopTrans = new Vec2();
 
         this.moveTimer = 0;
         this.moving = false;
+        this.looping = false;
     }
 
 
@@ -53,6 +59,7 @@ class Camera {
             if(this.moveTimer < 0.0) {
 
                 this.moving = false;
+                this.looping = false;
                 this.pos = this.target.copy();
             }
         
@@ -147,12 +154,39 @@ class Camera {
 
 
     // Set target
-    public setTarget(tx : number, ty : number) {
+    public setTarget(tx : number, ty : number, looping = false) {
 
         this.target.x += tx;
         this.target.y += ty;
 
         this.pos.x += tx;
         this.pos.y += ty;
+
+        this.looping = looping;
+        // Store loop transition
+        if(looping) {
+
+            this.loopTrans.x = tx * this.WIDTH;
+            this.loopTrans.y = ty * this.HEIGHT;
+        }
+    }
+
+
+    // Is looping
+    public isLooping() : boolean {
+
+        // Nope: we disable looping flag, do
+        // certain events only happen once
+        let l = this.looping;
+        this.looping = false;
+
+        return l;
+    }
+
+
+    // Get loop transition
+    public getLoopTransition() : Vec2 {
+
+        return this.loopTrans;
     }
 }
