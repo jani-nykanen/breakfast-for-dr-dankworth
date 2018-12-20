@@ -9,6 +9,7 @@ class ObjectManager {
 
     // Constants
     private readonly ARROW_COUNT = 8;
+    private readonly ITEM_COUNT = 16;
 
     // Player
     private player : Player;
@@ -16,6 +17,8 @@ class ObjectManager {
     private arrows : Array<Arrow>;
     // Enemies
     private enemies : Array<Enemy>;
+    // Items
+    private items : Array<Item>;
 
 
     // Constructor
@@ -31,12 +34,19 @@ class ObjectManager {
 
             this.arrows[i] = new Arrow();
         }
+        // Create an array of items
+        if(this.items == null)
+            this.items = new Array<Item> (this.ITEM_COUNT);
+        for(let i = 0; i < this.ITEM_COUNT; ++ i) {
+
+            this.items[i] = new Item();
+        }
 
         // Create an empty array for enemies
         this.enemies = new Array<Enemy> ();
     }
 
-
+    
     // Move enemies
     private moveEnemies(cam : Camera) {
 
@@ -62,7 +72,7 @@ class ObjectManager {
         // Update player
         this.player.update(vpad, cam, this.arrows, tm);
         // Player collision
-        stage.getCollision(this.player, tm);
+        stage.getCollision(this.player, this, tm);
         // Pass data to HUD
         this.player.updateHUDData(hud);
 
@@ -90,7 +100,7 @@ class ObjectManager {
 
                 e.update(cam, tm);
                 e.onPlayerCollision(this.player, tm);
-                stage.getCollision(e, tm);
+                stage.getCollision(e, this, tm);
 
                 if(!e.isDying()) {
 
@@ -108,13 +118,27 @@ class ObjectManager {
                         e.arrowCollision(this.arrows[j]);
                     }
                 }
+                // Create an item if needed
+                else if(e.itemToBeCreated()) {
+
+                    // Create item
+                    let p = e.getPos();
+                    this.createItem(p.x, p.y);
+                }
             }
+        }
+
+        // Update items
+        for(let i = 0; i < this.items.length; ++ i) {
+            
+            this.items[i].getPlayerCollision(this.player);
+            this.items[i].update(tm, cam);
         }
 
         // Update arrows
         for(let i = 0; i < this.ARROW_COUNT; ++ i) {
 
-            stage.getCollision(this.arrows[i], tm);
+            stage.getCollision(this.arrows[i], this, tm);
             this.arrows[i].update(cam, tm);
         }
     }
@@ -125,6 +149,12 @@ class ObjectManager {
 
         // Draw player shadow before other objects
         this.player.drawShadow(g, ass);
+
+        // Draw items
+        for(let i = 0; i < this.items.length; ++ i) {
+            
+            this.items[i].draw(g, ass);
+        }
 
         // Draw enemies
         for(let i = 0; i < this.enemies.length; ++ i) {
@@ -191,5 +221,45 @@ class ObjectManager {
         let jw = jumpx * jumpw * cam.WIDTH ;
         let jh = jumpy * jumph * cam.HEIGHT;
         this.player.setPos(p.x + jw, p.y + jh);
+    }
+
+
+    // Create an item
+    public createItem(x : number, y : number) {
+
+        const BASE_PROB = 0.5;
+        if(Math.random() >= BASE_PROB)
+            return;
+
+        // Get the first item that does not
+        // exist
+        let item : Item;
+        item = null;
+        for(let i = 0; i < this.items.length; ++ i) {
+
+            if(!this.items[i].doesExist()) {
+
+                item = this.items[i];
+                break;
+            }
+        }
+        if(item == null) return;
+
+        // ID probabilities
+        let prob = [0.0, 0.5, 0.7, 1.0];
+
+        // Determine ID
+        let p = Math.random();
+        let id = 0;
+        for(let i = 0; i < prob.length -1; ++ i) {
+
+            if(p >= prob[i] && p <= prob[i+1]) {
+
+                id = i;
+            }
+        }
+
+        // Create an item
+        item.createSelf(x, y, id);
     }
 }

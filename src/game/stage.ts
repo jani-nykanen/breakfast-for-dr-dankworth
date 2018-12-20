@@ -169,7 +169,7 @@ class Stage {
 
     // Destroyable object collision
     private destroyableCollision(s : number, x : number, y : number,
-            o :GameObject, hbox : Hitbox) {
+            o :GameObject, hbox : Hitbox, objMan : ObjectManager) {
 
          // Check plant collision
         if( this.isDestroyable(s) && hbox != null && hbox.doesExist()) {
@@ -196,8 +196,16 @@ class Stage {
                      row = 2;
                 this.createEnvDeath(x*16, y*16, row);
 
-                // Kill if a projectile
+                // Check if a plant
+                if(s == 6) {
+
+                    // Create an item
+                    objMan.createItem(x*16+8, y*16+8);
+                }
+
+                // Kill object if a projectile
                 if(o.kill != null) 
+                
                     o.kill();
                 }
         }       
@@ -205,7 +213,7 @@ class Stage {
 
 
     // Game object collision
-    public getCollision(o : GameObject, tm : number) {
+    public getCollision(o : GameObject, objMan : ObjectManager, tm : number) {
 
         const MARGIN = 2;
         const WATER_MARGIN = 4;
@@ -239,7 +247,7 @@ class Stage {
                 if(s <= 0) continue;
 
                 // Destroyable object collision
-                this.destroyableCollision(s, x, y, o, hbox);
+                this.destroyableCollision(s, x, y, o, hbox, objMan);
 
                 // Check if solid
                 if(this.isSolid(s, o)) {

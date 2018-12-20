@@ -37,6 +37,8 @@ class Enemy extends GameObject {
     protected startPos : Vec2;
     // If repositioned
     protected repositioned : boolean;
+    // Item created
+    protected itemCreated : boolean;
 
 
     // Custom events
@@ -72,6 +74,7 @@ class Enemy extends GameObject {
 
         this.dying = false;
         this.exist = true;
+        this.itemCreated = true;
     }
 
 
@@ -192,14 +195,24 @@ class Enemy extends GameObject {
                 this.health -= hbox.getDamage();
                 if(this.health <= 0) {
 
-                    this.dying = true;
-                    this.spr.setFrame(0, 0);
+                    this.makeDead();
                 }
 
                 // Kill arrow
                 arrow.kill();
             }
         }
+    }
+
+
+    // Die (method name "die" is
+    // already taken)
+    private makeDead() {
+
+        this.dying = true;
+        this.itemCreated = false;
+
+        this.spr.setFrame(0, 0);
     }
 
 
@@ -254,8 +267,7 @@ class Enemy extends GameObject {
                 this.health -= hbox.getDamage();
                 if(this.health <= 0) {
 
-                    this.dying = true;
-                    this.spr.setFrame(0, 0);
+                    this.makeDead();
                 }
 
                 // If special, disable player spin attack
@@ -333,5 +345,18 @@ class Enemy extends GameObject {
     public isDying() {
 
         return this.dying;
+    }
+
+
+    // Is item to be created
+    public itemToBeCreated() : boolean {
+
+        // We set "item created" flag to true to
+        // make sure item is created only once per
+        // dying enemy
+        let b = !this.itemCreated;
+        this.itemCreated = true;
+
+        return b;
     }
 }

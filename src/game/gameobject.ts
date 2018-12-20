@@ -248,4 +248,11 @@ class GameObject {
 
         return this.projectile;
     }
+
+
+    // Get dimensions
+    public getDim() : Vec2 {
+
+        return this.dim;
+    }
 }

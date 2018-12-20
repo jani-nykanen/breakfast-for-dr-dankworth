@@ -956,4 +956,28 @@ class Player extends GameObject {
         return this.attacking || this.spinTimer > 0 || 
             (!ignoreSpin && this.loadingSpin);
     }
+
+
+    // Add gem
+    public addGem() {
+
+        ++ this.gemCount;
+    }
+
+
+    // Add heart
+    public addHeart() {
+
+        this.life += 2;
+        if(this.life > this.MAX_LIFE)
+            this.life = this.MAX_LIFE;
+    }
+
+
+    // Add an arrow
+    public addArrow() {
+
+        if(this.arrowCount < this.ARROW_MAX)
+            ++ this.arrowCount; 
+    }
 }
