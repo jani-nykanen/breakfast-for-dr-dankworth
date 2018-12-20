@@ -323,6 +323,8 @@ class Player extends GameObject {
                     this.flip = Flip.Horizontal;
                 else
                     this.flip = Flip.None;
+
+                this.attacking = false;
             }
             else {
 
@@ -979,5 +981,29 @@ class Player extends GameObject {
 
         if(this.arrowCount < this.ARROW_MAX)
             ++ this.arrowCount; 
+    }
+
+
+    // Obtain an item
+    public obtainItem(id : number, x : number, y : number, w : number, h: number, 
+        dialogue: Dialogue) : boolean {
+
+        // TEMPORARY!
+        let text = "You obtained a\nDUMMY ITEM!\nIt's useless.";
+
+        let px = this.pos.x-this.center.x;
+        let py = this.pos.y-this.center.y;
+        let dw = this.dim.x/2;
+        let dh = this.dim.y/2;
+
+        if(px + dw >= x && px - dw <= x+w
+        && py + dh >= y && py - dh <= y+h) {
+
+            // Activate dialogue
+            dialogue.activate(text);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -19,6 +19,8 @@ class Game implements Scene {
     private cam : Camera;
     // Stage
     private stage : Stage;
+    // Dialogue box
+    private dialogue : Dialogue;
 
 
     // Reset game
@@ -53,6 +55,9 @@ class Game implements Scene {
         this.ass = ass;
         this.vpad = vpad;
 
+        // Create a dialogue box
+        this.dialogue = new Dialogue();
+
         // (Re)set stuff
         this.reset();
     }
@@ -60,6 +65,19 @@ class Game implements Scene {
 
     // Update
     public update(tm: number) {      
+
+        if(this.dialogue.isActive()) {
+
+            // Update dialogue
+            this.dialogue.update(this.vpad, tm);
+            return;
+        }
+        // TEMP
+        else if(this.vpad.getButton("start") == State.Pressed) {
+
+            this.dialogue.activate("You obtained a\nDUMMY ITEM!\nIt's useless.");
+            return;
+        }
 
         let state = this.cam.isMoving();
         if(!state) {
@@ -69,7 +87,8 @@ class Game implements Scene {
         }
 
         // Update objects
-        this.objMan.update(this.vpad, this.cam, this.stage, this.hud, tm);
+        this.objMan.update(this.vpad, this.cam, this.stage, 
+            this.hud, this.dialogue, tm);
 
         // Update camera
         this.cam.update(tm);
@@ -103,6 +122,9 @@ class Game implements Scene {
         // Draw hud
         g.translate();
         this.hud.draw(g, this.ass);
+
+        // Draw dialogue
+        this.dialogue.draw(g, this.ass);
     }
 
 

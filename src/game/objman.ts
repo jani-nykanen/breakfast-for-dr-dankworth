@@ -67,12 +67,13 @@ class ObjectManager {
 
 
     // Update
-    public update(vpad : Vpad, cam : Camera, stage : Stage, hud : HUD, tm : number) {
+    public update(vpad : Vpad, cam : Camera, stage : Stage, 
+        hud : HUD, dialogue: Dialogue, tm : number) {
 
         // Update player
         this.player.update(vpad, cam, this.arrows, tm);
         // Player collision
-        stage.getCollision(this.player, this, tm);
+        stage.getCollision(this.player, this, dialogue, tm);
         // Pass data to HUD
         this.player.updateHUDData(hud);
 
@@ -100,7 +101,7 @@ class ObjectManager {
 
                 e.update(cam, tm);
                 e.onPlayerCollision(this.player, tm);
-                stage.getCollision(e, this, tm);
+                stage.getCollision(e, this, dialogue, tm);
 
                 if(!e.isDying()) {
 
@@ -138,7 +139,7 @@ class ObjectManager {
         // Update arrows
         for(let i = 0; i < this.ARROW_COUNT; ++ i) {
 
-            stage.getCollision(this.arrows[i], this, tm);
+            stage.getCollision(this.arrows[i], this, dialogue, tm);
             this.arrows[i].update(cam, tm);
         }
     }

@@ -107,6 +107,9 @@ class GameObject {
     public getHitbox?() : Hitbox;
     // Kill
     public kill?() : any;
+    // Obtain an item
+    public obtainItem?(id : number, x : number, y : number, w : number, h: number, 
+        dialogue: Dialogue) : boolean;
 
 
     // Wall collision

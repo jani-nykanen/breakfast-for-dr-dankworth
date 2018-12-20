@@ -172,7 +172,7 @@ class Stage {
             o :GameObject, hbox : Hitbox, objMan : ObjectManager) {
 
          // Check plant collision
-        if( this.isDestroyable(s) && hbox != null && hbox.doesExist()) {
+        if( this.isDestroyable(s)) {
 
             // If hitbox collides with the plant, destroy
             if(hbox.doesOverlay(x*16,y*16, 16, 16)) {
@@ -212,8 +212,21 @@ class Stage {
     }
 
 
+    // Obtain an item
+    private obtainItemEvent(o : GameObject, x: number, y: number, id : number, 
+        dialogue : Dialogue) {
+
+        if(o.obtainItem(id, x*16, y*16, 16, 16, dialogue )) {
+
+            // Destroy tile
+            this.mapData[y*this.baseMap.width+x] = 1;
+        }
+    }
+
+
     // Game object collision
-    public getCollision(o : GameObject, objMan : ObjectManager, tm : number) {
+    public getCollision(o : GameObject, objMan : ObjectManager, 
+        dialogue : Dialogue, tm : number) {
 
         const MARGIN = 2;
         const WATER_MARGIN = 4;
@@ -247,7 +260,8 @@ class Stage {
                 if(s <= 0) continue;
 
                 // Destroyable object collision
-                this.destroyableCollision(s, x, y, o, hbox, objMan);
+                if(hbox != null && hbox.doesExist())
+                    this.destroyableCollision(s, x, y, o, hbox, objMan);
 
                 // Check if solid
                 if(this.isSolid(s, o)) {
@@ -289,6 +303,12 @@ class Stage {
 
                         o.getJumpCollision(x*16, y*16+LEDGE_MARGIN, 16, 16-LEDGE_MARGIN);
                     }
+                }
+                // Maybe it's an item
+                else if(s == 9 && o.obtainItem != null) {
+
+                    this.obtainItemEvent(o, x, y, 
+                        this.getTile(x, y)-16*15, dialogue);
                 }
             }
         }
