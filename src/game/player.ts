@@ -988,8 +988,9 @@ class Player extends GameObject {
     public obtainItem(id : number, x : number, y : number, w : number, h: number, 
         dialogue: Dialogue) : boolean {
 
+
         // TEMPORARY!
-        let text = "You obtained a\nDUMMY ITEM!\nIt's useless.";
+        let text = "You obtained a\nCRYSTAL SHARD!\nYou need X more!";
 
         let px = this.pos.x-this.center.x;
         let py = this.pos.y-this.center.y;

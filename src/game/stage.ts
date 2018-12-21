@@ -219,7 +219,7 @@ class Stage {
         if(o.obtainItem(id, x*16, y*16, 16, 16, dialogue )) {
 
             // Destroy tile
-            this.mapData[y*this.baseMap.width+x] = 1;
+            this.mapData[y*this.baseMap.width+x] -= 16;
         }
     }
 
