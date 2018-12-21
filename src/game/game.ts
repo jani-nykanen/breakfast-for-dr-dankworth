@@ -27,7 +27,7 @@ class Game implements Scene {
     private reset() {
 
         // (Re)create objects
-        this.objMan = new ObjectManager();
+        this.objMan = new ObjectManager(this.ass);
         // Create stage
         this.stage = new Stage();
 
@@ -41,10 +41,14 @@ class Game implements Scene {
     // On loaded
     public onLoaded() {
 
+        // (Re)set stuff
+        this.reset();
+
         // Set map
         this.stage.setMap(this.ass);
         // Parse objects
         this.stage.parseObjects(this.objMan, this.cam);
+        
     }
 
 
@@ -57,9 +61,6 @@ class Game implements Scene {
 
         // Create a dialogue box
         this.dialogue = new Dialogue();
-
-        // (Re)set stuff
-        this.reset();
     }
 
 

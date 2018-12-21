@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="30" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="30" height="24" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
  <tileset firstgid="1" source="tileset.tsx"/>
  <tileset firstgid="257" source="objects.tsx"/>
  <tileset firstgid="273" source="solid.tsx"/>
- <layer id="1" name="layer1" width="30" height="24">
+ <layer name="layer1" width="30" height="24">
   <data encoding="csv">
 23,24,8,40,34,34,34,34,56,5,23,24,23,22,17,17,21,24,23,85,108,109,49,45,40,34,34,34,34,56,
 24,23,22,36,49,49,52,49,35,21,22,21,22,18,18,18,18,21,22,30,30,30,30,91,36,49,58,49,51,35,
@@ -31,7 +31,7 @@
 33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,92,93,49,45,21,22,25,33,33,33
 </data>
  </layer>
- <layer id="2" name="objects" width="30" height="24">
+ <layer name="objects" width="30" height="24">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,262,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,258,0,0,

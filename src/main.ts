@@ -28,10 +28,11 @@ let assetInfo = {
         // ...
     },
 
-    docPath: "assets/tilemaps/",
+    docPath: "assets/",
     docs: {
-        map: "map.json",
-        solid: "solid.json",
+        map: "tilemaps/map.json",
+        solid: "tilemaps/solid.json",
+        itemText: "itemtext.json",
     }
 };
 

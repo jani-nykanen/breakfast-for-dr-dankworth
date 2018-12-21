@@ -22,10 +22,10 @@ class ObjectManager {
 
 
     // Constructor
-    public constructor() {
+    public constructor(ass : Assets) {
 
         // Create player
-        this.player = new Player(96, 80);
+        this.player = new Player(96, 80, ass);
 
         // Create an array of arrows
         if(this.arrows == null)

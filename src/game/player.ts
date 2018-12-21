@@ -71,11 +71,17 @@ class Player extends GameObject {
     // Special hitbox
     private spcHbox : Hitbox;
 
+    // Item info
+    private itemInfo : any;
+
 
     // Constructor
-    public constructor(x : number, y: number) {
+    public constructor(x : number, y: number, ass : Assets) {
 
         super(x, y);
+
+        // Store item info
+        this.itemInfo = ass.getDocument("itemText").text;
 
         // Create sprites
         this.spr = new Sprite(16, 16);
@@ -989,9 +995,6 @@ class Player extends GameObject {
         dialogue: Dialogue) : boolean {
 
 
-        // TEMPORARY!
-        let text = "You obtained a\nCRYSTAL SHARD!\nYou need X more!";
-
         let px = this.pos.x-this.center.x;
         let py = this.pos.y-this.center.y;
         let dw = this.dim.x/2;
@@ -1001,7 +1004,7 @@ class Player extends GameObject {
         && py + dh >= y && py - dh <= y+h) {
 
             // Activate dialogue
-            dialogue.activate(text);
+            dialogue.activate(this.itemInfo[id-1]);
             return true;
         }
 
