@@ -11,6 +11,8 @@ class Bee extends Enemy {
     private ptarget : Vec2;
     // Target modification angle
     private angle : number;
+    // Move mode
+    private moveMode : boolean;
 
 
     // Constructor
@@ -19,7 +21,7 @@ class Bee extends Enemy {
         super(x, y);
 
         this.id = 6;
-        this.acceleration = 0.1;
+        this.acceleration = 0.2;
         this.maxHealth = 1;
         this.health = this.maxHealth;
         
@@ -40,7 +42,8 @@ class Bee extends Enemy {
         const SPEED = 1.0;
         const ANIM_SPEED = 3;
         const ANGLE_DELTA = 0.025;
-        const DIST_MOD = 32;
+        const DIST_MOD1 = 32;
+        const DIST_MOD2 = 64;
 
         // Update angle
         this.angle += ANGLE_DELTA * tm;
@@ -48,8 +51,9 @@ class Bee extends Enemy {
             this.angle -= Math.PI*2;
 
         // Calculate modified target
-        let tx = this.ptarget.x + Math.cos(this.angle)*DIST_MOD;
-        let ty = this.ptarget.y + Math.sin(this.angle)*DIST_MOD;
+        let dist = this.moveMode ? DIST_MOD2 : DIST_MOD1;
+        let tx = this.ptarget.x + Math.cos(this.angle)*dist;
+        let ty = this.ptarget.y + Math.sin(this.angle)*dist;
 
         let px = this.pos.x - tx;
         let py = this.pos.y - ty;
@@ -68,6 +72,9 @@ class Bee extends Enemy {
 
         // Store target
         this.ptarget = pl.getPos();
+
+        // Determine move mode
+        this.moveMode = pl.isAttacking();
         
     }
 
