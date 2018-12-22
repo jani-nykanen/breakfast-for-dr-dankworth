@@ -32,7 +32,7 @@ let assetInfo = {
     docs: {
         map: "tilemaps/map.json",
         solid: "tilemaps/solid.json",
-        itemText: "itemtext.json",
+        itemInfo: "iteminfo.json",
     }
 };
 

@@ -9,8 +9,22 @@
         "You obtain a\nPINK SWORD!\nIt can break\nrocks. Somehow.",
         "You find\nPINK ARROWS!\nThey can break\nrocks. Somehow.",
         "You buy an\nEXTRA HEART!\nYou feel so\nvery healthy.",
-        "You buy a\nQUIVER!Now\nyou can carry\nmore arrows.",
-        "You buy a\nMASTER KEY!\nIt opens\nevery lock.",
-        "You buy a pair\nof SPEED\nBOOTS! Gotta\ngo... no."
+        "You buy a\nQUIVER!Now you\ncan carry\nmore arrows.",
+        "You buy a\nMASTER KEY!\nIt opens every\nlock.",
+        "You buy a pair\nof SPEED BOOTS!\nGotta go... no."
+    ],
+    "prices" : [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        5,
+        5,
+        10,
+        10
     ]
 }

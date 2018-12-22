@@ -19,8 +19,8 @@ class Player extends GameObject {
     // Constants
     private readonly ATTACK_SPEED = 5;
     private readonly SPIN_TIME = 28.0;
-    private readonly MAX_LIFE = 6;
-    private readonly ARROW_MAX = 20;
+    private readonly INITIAL_LIFE = 6;
+    private readonly INITIAL_ARROW_MAX = 10;
 
     // Sprite
     private spr : Sprite;
@@ -61,8 +61,12 @@ class Player extends GameObject {
 
     // Life
     private life : number;
+    // Maximum life
+    private maxLife : number;
     // Arrow count
     private arrowCount : number;
+    // Arrow max
+    private arrowMax : number;
     // Gem count
     private gemCount : number;
 
@@ -81,7 +85,7 @@ class Player extends GameObject {
         super(x, y);
 
         // Store item info
-        this.itemInfo = ass.getDocument("itemText").text;
+        this.itemInfo = ass.getDocument("itemInfo");
 
         // Create sprites
         this.spr = new Sprite(16, 16);
@@ -112,9 +116,11 @@ class Player extends GameObject {
         this.stairs = false;
         this.jumping = false;
 
-        this.life = this.MAX_LIFE;
-        this.arrowCount = this.ARROW_MAX;
-        this.gemCount = 0;
+        this.life = this.INITIAL_LIFE;
+        this.maxLife = this.INITIAL_LIFE;
+        this.arrowCount = this.INITIAL_ARROW_MAX;
+        this.arrowMax = this.INITIAL_ARROW_MAX;
+        this.gemCount = 20;
 
         this.inCamera = true;
     }
@@ -909,7 +915,7 @@ class Player extends GameObject {
     // Update HUD data
     public updateHUDData(h : HUD) {
 
-        h.updateData(this.life, this.MAX_LIFE,
+        h.updateData(this.life, this.maxLife,
             this.arrowCount, this.gemCount);
     }
 
@@ -969,7 +975,8 @@ class Player extends GameObject {
     // Add gem
     public addGem() {
 
-        ++ this.gemCount;
+        if(this.gemCount < 99)
+            ++ this.gemCount;
     }
 
 
@@ -977,16 +984,40 @@ class Player extends GameObject {
     public addHeart() {
 
         this.life += 2;
-        if(this.life > this.MAX_LIFE)
-            this.life = this.MAX_LIFE;
+        if(this.life > this.maxLife)
+            this.life = this.maxLife;
     }
 
 
     // Add an arrow
     public addArrow() {
 
-        if(this.arrowCount < this.ARROW_MAX)
+        if(this.arrowCount < this.arrowMax)
             ++ this.arrowCount; 
+    }
+
+
+    // Item effect
+    private itemEffect(id : number) {
+
+        switch(id) {
+
+        
+        // Extra heart
+        case 8:
+            this.maxLife += 2;
+            this.life += 2;
+            break;
+
+        // Quiver
+        case 9:
+            this.arrowMax += 10;
+            this.arrowCount += 10;
+            break;
+
+        default:
+            break;
+        }
     }
 
 
@@ -1000,11 +1031,26 @@ class Player extends GameObject {
         let dw = this.dim.x/2;
         let dh = this.dim.y/2;
 
+        // Check price
+        let price = this.itemInfo.prices[id-1];
+        if(this.gemCount < price) {
+
+            return;
+        }
+
+        // If collide
         if(px + dw >= x && px - dw <= x+w
         && py + dh >= y && py - dh <= y+h) {
 
+            // Reduce gems
+            this.gemCount -= price;
+
             // Activate dialogue
-            dialogue.activate(this.itemInfo[id-1]);
+            dialogue.activate(this.itemInfo.text[id-1]);
+
+            // Item effect
+            this.itemEffect(id-1);
+
             return true;
         }
 

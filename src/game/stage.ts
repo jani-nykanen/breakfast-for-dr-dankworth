@@ -216,10 +216,23 @@ class Stage {
     private obtainItemEvent(o : GameObject, x: number, y: number, id : number, 
         dialogue : Dialogue) {
 
+        const MIN_SHOP_ITEM = 9;
+        const MAX_SHOP_ITEM = MIN_SHOP_ITEM+4;
+
         if(o.obtainItem(id, x*16, y*16, 16, 16, dialogue )) {
 
             // Destroy tile
-            this.mapData[y*this.baseMap.width+x] -= 16;
+            let t = this.mapData[y*this.baseMap.width+x]-16;
+            this.mapData[y*this.baseMap.width+x] = t;
+
+            // If a shop item
+            // TODO: Hard-coding things is the best 
+            // idea ever...
+            if(id >= MIN_SHOP_ITEM && id <= MAX_SHOP_ITEM) {
+
+                // Update the price tile
+                this.mapData[(y+1)*this.baseMap.width+x] = t;
+            }
         }
     }
 

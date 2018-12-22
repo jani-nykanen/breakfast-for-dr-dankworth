@@ -228,7 +228,7 @@ class ObjectManager {
     // Create an item
     public createItem(x : number, y : number) {
 
-        const BASE_PROB = 0.5;
+        const BASE_PROB = 0.60;
         if(Math.random() >= BASE_PROB)
             return;
 
@@ -247,7 +247,7 @@ class ObjectManager {
         if(item == null) return;
 
         // ID probabilities
-        let prob = [0.0, 0.5, 0.7, 1.0];
+        let prob = [0.0, 0.75, 0.90, 1.0];
 
         // Determine ID
         let p = Math.random();
