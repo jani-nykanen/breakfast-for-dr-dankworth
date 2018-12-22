@@ -77,12 +77,16 @@ class Player extends GameObject {
 
     // Item info
     private itemInfo : any;
+    // Skill states
+    private skillStates : Array<number>;
 
 
     // Constructor
     public constructor(x : number, y: number, ass : Assets) {
 
         super(x, y);
+
+        const SKILL_COUNT = 8;
 
         // Store item info
         this.itemInfo = ass.getDocument("itemInfo");
@@ -99,6 +103,13 @@ class Player extends GameObject {
         // Dimensions
         this.dim = new Vec2(8, 10);
         this.center = new Vec2(0, -3);
+
+        // Skill states
+        this.skillStates = new Array<number> (SKILL_COUNT);
+        for(let i = 0; i < SKILL_COUNT; ++ i) {
+
+            this.skillStates[i] = 1;
+        }
 
         // Set defaults
         this.dir = 0;
