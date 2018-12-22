@@ -23,6 +23,8 @@ class Hitbox {
     private id : number;
     // Does exist
     private exist : boolean;
+    // Is boosted
+    private boosted : boolean;
 
 
     // Constructor
@@ -35,7 +37,7 @@ class Hitbox {
 
     
     // Create
-    public createSelf(x : number, y : number, w : number, h : number, dmg = 1) {
+    public createSelf(x : number, y : number, w : number, h : number, dmg = 1, boosted = false) {
 
         this.x = x;
         this.y = y;
@@ -46,7 +48,7 @@ class Hitbox {
 
         ++ _hitID;
         this.id = _hitID;
-
+        this.boosted = boosted;
         this.exist = true;
     }
 
@@ -118,5 +120,12 @@ class Hitbox {
 
             this.id = id;
         }
+    }
+
+
+    // Is boosted
+    public isBoosted() : boolean {
+
+        return this.boosted;
     }
 }

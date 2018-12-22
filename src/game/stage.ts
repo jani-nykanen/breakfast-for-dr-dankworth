@@ -134,7 +134,7 @@ class Stage {
     // Is destroyable tile
     private isDestroyable(t : number) : boolean {
 
-        return t >= 6 && t <= 7;
+        return (t >= 6 && t <= 7) || t == 10;
     }
 
 
@@ -179,14 +179,23 @@ class Stage {
 
                 let tile = this.getTile(x, y);
 
-                // TODO: Get tile type
-                if(tile == 6*16+4) {
+                // Switch collision
+                if(s == 7) {
 
                     this.switchCollision();
                 }
+
+                // Rock collision
+                if(s == 10 && !hbox.isBoosted()) {
+
+                    return;
+                }
+
                 // Set underlying tile
-                // TODO: Better support for more tiles
-                this.mapData[y*this.baseMap.width+x] = (tile == 58 ? 49 : 1);
+                let underlyingTile = 1;
+                if(tile == 58 || tile == 65)
+                    underlyingTile = 49;
+                this.mapData[y*this.baseMap.width+x] = underlyingTile;
                         
                 // Create death animation
                 let row = 0;
@@ -194,6 +203,11 @@ class Stage {
                     row = 1;
                 else if(tile == 100)
                      row = 2;
+                else if(tile == 17)
+                    row = 3;
+                else if(tile == 65)
+                    row = 4;
+
                 this.createEnvDeath(x*16, y*16, row);
 
                 // Check if a plant

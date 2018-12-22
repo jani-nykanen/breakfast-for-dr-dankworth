@@ -59,7 +59,7 @@ class Arrow extends GameObject {
         // Create hitbox
         this.hbox.createSelf(this.pos.x-this.SIZE/2, 
             this.pos.y-this.SIZE/2,
-            this.SIZE, this.SIZE, this.dmg);
+            this.SIZE, this.SIZE, this.dmg, this.dmg > 1);
     } 
 
 

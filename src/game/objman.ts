@@ -228,7 +228,7 @@ class ObjectManager {
     // Create an item
     public createItem(x : number, y : number) {
 
-        const BASE_PROB = 0.60;
+        const BASE_PROB = 0.50;
         if(Math.random() >= BASE_PROB)
             return;
 

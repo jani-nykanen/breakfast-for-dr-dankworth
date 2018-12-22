@@ -52,6 +52,8 @@ class Player extends GameObject {
     private swordLevel : number;
     // Bow level
     private bowLevel : number;
+    // Speed level
+    private speedLevel : number;
 
     // Is swimming
     private swimming : boolean;
@@ -109,6 +111,7 @@ class Player extends GameObject {
         this.swordLevel = 1;
         this.bowLevel = 1;
         this.swimmingSkill = 0;
+        this.speedLevel = 0;
 
         // Set defaults
         this.dir = 0;
@@ -196,6 +199,7 @@ class Player extends GameObject {
         const SWIM_MOD = 0.5;
         const STAIR_MOD = 0.33;
         const PI = Math.PI;
+        const RUN_FACTOR = 1.25;
 
         // Movement
         let s = vpad.getStick();
@@ -304,6 +308,12 @@ class Player extends GameObject {
             -- this.arrowCount;
         }
         
+        // Apply speed factor
+        if(this.speedLevel > 0) {
+
+            this.target.x *= this.speedLevel * RUN_FACTOR;
+            this.target.y *= this.speedLevel * RUN_FACTOR;
+        }
     }
 
 
@@ -618,7 +628,8 @@ class Player extends GameObject {
             this.hbox.createSelf(
                 this.pos.x-SPIN_WIDTH/2, this.pos.y-SPIN_HEIGHT/2,
                 SPIN_WIDTH, SPIN_HEIGHT, 
-                swordPower + 1); // Increased damage
+                swordPower + 1,
+                this.swordLevel >= 2); // Increased damage
         }
         // Sword attack
         else if(this.attacking && this.atk == AtkType.Sword) {
@@ -659,7 +670,8 @@ class Player extends GameObject {
                 h = SWORD_WIDTH;
             }
 
-            this.hbox.createSelf(x, y, w, h, swordPower);
+            this.hbox.createSelf(x, y, w, h, swordPower,
+                this.swordLevel >= 2);
         }
     }
 
@@ -1016,6 +1028,8 @@ class Player extends GameObject {
     // Item effect
     private itemEffect(id : number) {
 
+        const ACC_BONUS = 1.25;
+
         switch(id) {
 
         // Crystal shard
@@ -1063,6 +1077,16 @@ class Player extends GameObject {
         case 9:
             this.arrowMax += 10;
             this.arrowCount += 10;
+            break;
+
+        // Key
+        case 10:
+            break;
+
+        // Speed boots
+        case 11:
+            this.speedLevel = 1;
+            this.acceleration *= ACC_BONUS;
             break;
 
         default:
