@@ -11,8 +11,8 @@ class Arrow extends GameObject {
     // Constants
     private readonly SIZE = 8;
 
-    // Direction
-    private dir : number;
+    // Damage
+    private dmg : number;
     // Flip
     private flip : Flip;
     // Hitbox
@@ -42,10 +42,10 @@ class Arrow extends GameObject {
 
     // Create
     public createSelf(x : number, y : number, 
-        sx : number, sy: number, dir : number, flip = Flip.None) {
+        sx : number, sy: number, dir : number, flip = Flip.None, arrowType = 0) {
 
         this.flip = flip;
-        this.spr.setFrame(1, dir);
+        this.spr.setFrame(1+arrowType, dir);
 
         this.pos = new Vec2(x, y);
         this.speed = new Vec2(sx, sy);
@@ -53,10 +53,13 @@ class Arrow extends GameObject {
 
         this.exist = true;
 
+        // Calculate damage
+        this.dmg = 1 + arrowType;
+
         // Create hitbox
         this.hbox.createSelf(this.pos.x-this.SIZE/2, 
             this.pos.y-this.SIZE/2,
-            this.SIZE, this.SIZE, 1);
+            this.SIZE, this.SIZE, this.dmg);
     } 
 
 
@@ -70,7 +73,7 @@ class Arrow extends GameObject {
         // Set hitbox
         this.hbox.setHitbox(this.pos.x-this.SIZE/2, 
             this.pos.y-this.SIZE/2,
-            this.SIZE, this.SIZE);
+            this.SIZE, this.SIZE, this.dmg);
 
         // Check if outside the camera
         let cx = cam.getVirtualPos().x;

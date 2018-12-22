@@ -48,6 +48,11 @@ class Player extends GameObject {
     // Hurt timer
     private hurtTimer : number;
 
+    // Sword level
+    private swordLevel : number;
+    // Bow level
+    private bowLevel : number;
+
     // Is swimming
     private swimming : boolean;
     // Is climbing stairs
@@ -77,16 +82,12 @@ class Player extends GameObject {
 
     // Item info
     private itemInfo : any;
-    // Skill states
-    private skillStates : Array<number>;
 
 
     // Constructor
     public constructor(x : number, y: number, ass : Assets) {
 
         super(x, y);
-
-        const SKILL_COUNT = 8;
 
         // Store item info
         this.itemInfo = ass.getDocument("itemInfo");
@@ -104,12 +105,10 @@ class Player extends GameObject {
         this.dim = new Vec2(8, 10);
         this.center = new Vec2(0, -3);
 
-        // Skill states
-        this.skillStates = new Array<number> (SKILL_COUNT);
-        for(let i = 0; i < SKILL_COUNT; ++ i) {
-
-            this.skillStates[i] = 1;
-        }
+        // Default skill levels
+        this.swordLevel = 1;
+        this.bowLevel = 1;
+        this.swimmingSkill = 0;
 
         // Set defaults
         this.dir = 0;
@@ -120,8 +119,6 @@ class Player extends GameObject {
         this.spinTimer = 0.0;
         this.atk = AtkType.Sword;
         this.hurtTimer = 0.0;
-
-        this.swimmingSkill = 1;
 
         this.swimming = false;
         this.stairs = false;
@@ -186,7 +183,8 @@ class Player extends GameObject {
         }
 
         // Create arrow
-        a.createSelf(x, y, sx*SPEED, sy*SPEED, this.dir, this.flip);
+        a.createSelf(x, y, sx*SPEED, sy*SPEED, this.dir, this.flip,
+            this.bowLevel == 2 ? 1 : 0);
     }
 
 
@@ -536,6 +534,9 @@ class Player extends GameObject {
         let w = 0;
         let h = 0;
 
+        // Determine damage
+        let dmg = this.swordLevel == 2 ? (SPC_DMG+1) : SPC_DMG;
+
         switch(this.dir) {
 
         // Down
@@ -576,7 +577,7 @@ class Player extends GameObject {
         }
 
         // Set hitbox
-        this.spcHbox.setHitbox(x, y, w, h, SPC_DMG);
+        this.spcHbox.setHitbox(x, y, w, h, dmg);
     }
 
 
@@ -589,6 +590,8 @@ class Player extends GameObject {
         const SWORD_WIDTH = 24;
         const SWORD_HEIGHT = 12;
         const SWORD_MARGIN = 4;
+
+        let swordPower = this.swordLevel == 2 ? 2 : 1;
 
         this.spcHbox.toggleExistence(this.loadingSpin);
         // Update special hitbox, if loading a spin attack
@@ -615,7 +618,7 @@ class Player extends GameObject {
             this.hbox.createSelf(
                 this.pos.x-SPIN_WIDTH/2, this.pos.y-SPIN_HEIGHT/2,
                 SPIN_WIDTH, SPIN_HEIGHT, 
-                2); // Double damage
+                swordPower + 1); // Increased damage
         }
         // Sword attack
         else if(this.attacking && this.atk == AtkType.Sword) {
@@ -656,7 +659,7 @@ class Player extends GameObject {
                 h = SWORD_WIDTH;
             }
 
-            this.hbox.createSelf(x, y, w, h);
+            this.hbox.createSelf(x, y, w, h, swordPower);
         }
     }
 
@@ -827,8 +830,10 @@ class Player extends GameObject {
             by = -20+1;
         }
 
+        // Draw the sprite
         this.sprSword.draw(g, ass.getBitmap("sword"), 
-                this.pos.x + bx, this.pos.y+8 +by, flip);
+                this.pos.x + bx, this.pos.y+8 +by, flip,
+                this.swordLevel == 2 ? 5 : 0);
     }
 
 
@@ -1013,6 +1018,40 @@ class Player extends GameObject {
 
         switch(id) {
 
+        // Crystal shard
+        case 0:
+        case 1:
+            break;
+
+        // Sword
+        case 2:
+            this.swordLevel = 1;
+            break;
+
+        // Bow
+        case 3:
+            this.bowLevel = 1;
+            break;
+
+        // Swimming trunks
+        case 4:
+            this.swimmingSkill = 1;
+            break;
+
+        // Snorkel
+        case 5:
+            this.swimmingSkill = 2;
+            break;
+
+        // Pink sword
+        case 6:
+            this.swordLevel = 2;
+            break;
+
+        // Pink arrows
+        case 7:
+            this.bowLevel = 2;
+            break;
         
         // Extra heart
         case 8:
