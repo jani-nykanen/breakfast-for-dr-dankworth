@@ -17,6 +17,7 @@ let assetInfo = {
         hud: "hud.png",
         bow: "bow.png",
         tileset: "tileset.png",
+        tilesetDark: "tileset_dark.png",
         water: "water.png",
         envdeath: "envdeath.png",
         enemies: "enemies.png",

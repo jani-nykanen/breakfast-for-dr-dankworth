@@ -1154,4 +1154,11 @@ class Player extends GameObject {
 
         return false;
     }
+
+
+    // Is loading spin
+    public isLoadingSpin() : boolean {
+
+        return this.loadingSpin;
+    }
 }

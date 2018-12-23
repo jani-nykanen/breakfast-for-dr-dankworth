@@ -25,6 +25,9 @@ class Game implements Scene {
     // Pause screen
     private pause : Pause;
 
+    // World mode
+    private worldMode : number;
+
 
     // Reset game
     private reset() {
@@ -38,6 +41,9 @@ class Game implements Scene {
         this.hud = new HUD();
         // Create camera
         this.cam = new Camera(0, 0);
+
+        // Set defaults
+        this.worldMode = 0;
 
     }
 
@@ -141,7 +147,7 @@ class Game implements Scene {
         this.cam.useCamera(g);
 
         // Draw stage
-        this.stage.draw(g, this.ass, this.cam);
+        this.stage.draw(g, this.ass, this.cam, this.worldMode);
 
         // Draw objects
         this.objMan.draw(g, this.ass);
@@ -177,6 +183,7 @@ class Game implements Scene {
 
         this.trans.activate(Fade.In, 1.0, () => {
             this.objMan.spcEvent1(this.cam);
+            this.worldMode = 1;
         }, 255, 255, 255);
         
     }

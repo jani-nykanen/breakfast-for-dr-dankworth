@@ -343,11 +343,12 @@ class Stage {
 
 
     // Draw the map
-    public drawMap(g: Graphics, ass : Assets, cam : Camera) {
+    public drawMap(g: Graphics, ass : Assets, cam : Camera, mode = 0) {
 
         const WATER_DIV = 2;
 
-        let bmpTiles = ass.getBitmap("tileset");
+        let bmpTiles = ass.getBitmap(
+            mode ==1 ? "tilesetDark" : "tileset");
         let bmpWater = ass.getBitmap("water");
 
         // Get dimensions
@@ -400,7 +401,7 @@ class Stage {
 
 
     // Draw
-    public draw(g: Graphics, ass : Assets, cam : Camera) {
+    public draw(g: Graphics, ass : Assets, cam : Camera, mode = 0) {
 
         // Store viewport info
         this.topLeft = cam.getVirtualPos().copy();
@@ -409,12 +410,13 @@ class Stage {
         this.view.y = cam.HEIGHT;
 
         // Draw map
-        this.drawMap(g, ass, cam);
+        this.drawMap(g, ass, cam, mode);
 
         // Draw environmental deaths
+        let frameSkip = mode == 1 ? 4 : 0;
         for(let i = 0; i < this.envAnim.length; ++ i) {
 
-            this.envAnim[i].draw(g, ass);
+            this.envAnim[i].draw(g, ass, frameSkip);
         }
     }
 
@@ -477,6 +479,11 @@ class Stage {
                 // Bee
                 case 8:
                     objman.addEnemy(new Bee(p.x, p.y));
+                    break;
+
+                // Flame
+                case 9:
+                    objman.addEnemy(new Flame(p.x, p.y));
                     break;
 
                 default:

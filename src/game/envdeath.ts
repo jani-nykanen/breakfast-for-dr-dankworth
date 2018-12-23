@@ -52,12 +52,14 @@ class EnvDeath {
 
 
     // Draw 
-    public draw(g : Graphics, ass : Assets) {
+    public draw(g : Graphics, ass : Assets, frameSkip = 0) {
 
         if(!this.exist) return;
 
         // Draw sprite
-        this.spr.draw(g, ass.getBitmap("envdeath"), this.pos.x, this.pos.y);
+        this.spr.draw(g, ass.getBitmap("envdeath"), 
+            this.pos.x, this.pos.y, 
+            Flip.None, frameSkip);
     }
 
 
