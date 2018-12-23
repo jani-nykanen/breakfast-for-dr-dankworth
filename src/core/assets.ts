@@ -127,7 +127,7 @@ class Assets {
     // Has loaded
     public hasLoaded() : boolean {
 
-        return this.total == 0 || this.loaded >= this.total;
+        return this.loaded >= this.total;
     }
 
 

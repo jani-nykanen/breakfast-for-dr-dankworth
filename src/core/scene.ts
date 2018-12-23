@@ -7,7 +7,7 @@
 // Scene interface
 interface Scene {
 
-    init(ass : Assets, vpad: Vpad): any
+    init(ass : Assets, vpad: Vpad, evMan: EventMan): any
     update(tm: number): any
     draw(g : Graphics) : any
     changeTo?(): any

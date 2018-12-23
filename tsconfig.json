@@ -18,6 +18,7 @@
         "src/core/vpad.ts",
         "src/core/sprite.ts",
         "src/core/vec2.ts",
+        "src/core/eventman.ts",
         // Game
         "src/game/game.ts",
         "src/game/hud.ts",
@@ -42,6 +43,7 @@
         "src/game/enemies/wraith.ts",
         "src/game/enemies/bee.ts",
         // Global
+        "src/transition.ts",
         "src/global.ts",
         "src/main.ts"
     ]

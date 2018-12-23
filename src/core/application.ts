@@ -18,6 +18,8 @@ class Application {
     private input : InputManager;
     // Virtual gamepad
     private vpad : Vpad;
+    // Event manager
+    private evMan : EventMan;
 
     // Old time
     private oldTime : number;
@@ -50,6 +52,7 @@ class Application {
         this.graph = new Graphics();
         this.scenes = new Array<Scene> ();
         this.input = new InputManager();
+        this.evMan = new EventMan(this);
 
         // Set defaults
         this.oldTime = 0.0;
@@ -177,7 +180,7 @@ class Application {
         let updateCount = 0;
     
         // If loading, draw loading & skip the rest
-        if(this.ass.hasLoaded() == false) {
+        if(!this.ass.hasLoaded()) {
 
             this.drawLoading(this.graph);
         }
@@ -228,7 +231,7 @@ class Application {
         // Initialize every scene
         this.scenes.forEach(e => {
             
-            e.init(this.ass, this.vpad);
+            e.init(this.ass, this.vpad, this.evMan);
         });
 
         // Start main loop
@@ -303,5 +306,12 @@ class Application {
     public eventResize() {
 
         this.graph.centerCanvas(window.innerWidth, window.innerHeight);
+    }
+
+
+    // Get global scene
+    public getGlobalScene() : any {
+
+        return this.globalScene;
     }
 }

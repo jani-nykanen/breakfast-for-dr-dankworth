@@ -10,6 +10,7 @@ class Game implements Scene {
     // Reference to global objects
     private ass : Assets;
     private vpad : Vpad;
+    private trans : Transition;
 
     // Game object manager
     private objMan : ObjectManager;
@@ -37,6 +38,7 @@ class Game implements Scene {
         this.hud = new HUD();
         // Create camera
         this.cam = new Camera(0, 0);
+
     }
 
 
@@ -50,16 +52,24 @@ class Game implements Scene {
         this.stage.setMap(this.ass);
         // Parse objects
         this.stage.parseObjects(this.objMan, this.cam);
-        
+
+        // Update once to get proper
+        // graphics for the fading
+        this.update(0);
+
+        // Set transition
+        this.trans.activate(Fade.Out, 2.0, null);
+
     }
 
 
     // Initialize
-    public init(ass : Assets, vpad: Vpad) {
+    public init(ass : Assets, vpad: Vpad, evMan: EventMan) {
 
         // Store references
         this.ass = ass;
         this.vpad = vpad;
+        this.trans = evMan.getGlobalScene().getTransition();
 
         // Create a dialogue box
         this.dialogue = new Dialogue();
@@ -71,6 +81,7 @@ class Game implements Scene {
     // Update
     public update(tm: number) {      
 
+        if(this.trans.isActive()) return;
 
         // Check dialogue
         if(this.dialogue.isActive()) {
