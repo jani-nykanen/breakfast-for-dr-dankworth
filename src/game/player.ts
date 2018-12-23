@@ -1143,7 +1143,8 @@ class Player extends GameObject {
                     text = this.itemInfo.text[1];
             }
 
-            dialogue.activate(text);
+            dialogue.activate(text, 
+                id == 13 ? 1 : 0); // TODO: Change to more general
 
             // Item effect
             this.itemEffect(id-1);

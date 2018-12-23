@@ -263,4 +263,16 @@ class ObjectManager {
         // Create an item
         item.createSelf(x, y, id);
     }
+
+
+    // Special event 1
+    public spcEvent1(cam : Camera) {
+
+        let x = this.player.getPos().x;
+        let y = this.player.getPos().y;
+        
+        this.setPlayerLocation(x - (x%160) + 80, 
+            y + cam.HEIGHT+16, 
+            cam);
+    }
 }

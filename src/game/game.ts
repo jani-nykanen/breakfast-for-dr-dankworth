@@ -87,7 +87,7 @@ class Game implements Scene {
         if(this.dialogue.isActive()) {
 
             // Update dialogue
-            this.dialogue.update(this.vpad, tm);
+            this.dialogue.update(this.vpad, tm, this);
             return;
         }
 
@@ -169,5 +169,15 @@ class Game implements Scene {
     public getName() {
 
         return "game";
+    }
+
+
+    // Special event 1
+    public spcEvent1() {
+
+        this.trans.activate(Fade.In, 1.0, () => {
+            this.objMan.spcEvent1(this.cam);
+        }, 255, 255, 255);
+        
     }
 }

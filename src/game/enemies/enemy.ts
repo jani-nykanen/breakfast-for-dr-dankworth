@@ -75,6 +75,8 @@ class Enemy extends GameObject {
         this.dying = false;
         this.exist = true;
         this.itemCreated = true;
+
+        this.inCamera = false;
     }
 
 

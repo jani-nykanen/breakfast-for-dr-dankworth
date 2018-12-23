@@ -15,6 +15,8 @@ class Dialogue {
     private text : string;
     // Timer
     private timer : number;
+    // Special event ID
+    private spcEvent : number;
 
 
     // Constructor
@@ -26,16 +28,32 @@ class Dialogue {
 
 
     // Activate
-    public activate(text : string) {
+    public activate(text : string, spcEvent = 0) {
 
         this.text = text;
         this.active = true;
         this.timer = this.APPEAR_TIME;
+        this.spcEvent = spcEvent;
+    }
+
+
+    // Trigger special event
+    private triggerSpcEvent(gameRef : Game) {
+
+        switch(this.spcEvent) {
+
+        case 1:
+            gameRef.spcEvent1();
+            break;
+
+        default:
+            break;
+        }
     }
 
 
     // Update
-    public update(vpad : Vpad, tm : number) {
+    public update(vpad : Vpad, tm : number, gameRef : Game) {
 
         if(!this.active) return;
 
@@ -49,6 +67,10 @@ class Dialogue {
         // Check enter press
         if(vpad.getButton("start") == State.Pressed) {
 
+            // Trigger special event
+            this.triggerSpcEvent(gameRef);
+
+            // Deactivate
             this.active = false;
         }
     } 
