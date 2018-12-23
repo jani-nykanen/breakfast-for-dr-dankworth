@@ -486,6 +486,11 @@ class Stage {
                     objman.addEnemy(new Flame(p.x, p.y));
                     break;
 
+                // Teleporter
+                case 10:
+                    objman.addTeleporter(p.x+8, p.y);
+                    break;
+
                 default:
                     break;
                 }

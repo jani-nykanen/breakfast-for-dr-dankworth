@@ -121,7 +121,7 @@ class Game implements Scene {
 
         // Update objects
         this.objMan.update(this.vpad, this.cam, this.stage, 
-            this.hud, this.dialogue, tm);
+            this.hud, this.dialogue, this.trans, tm);
 
         // Update camera
         this.cam.update(tm);

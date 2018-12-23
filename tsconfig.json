@@ -33,6 +33,7 @@
         "src/game/item.ts",
         "src/game/dialogue.ts",
         "src/game/pause.ts",
+        "src/game/teleporter.ts",
         // Enemies
         "src/game/enemies/enemy.ts",
         "src/game/enemies/elephant.ts",

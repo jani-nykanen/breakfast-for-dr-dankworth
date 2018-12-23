@@ -19,6 +19,11 @@ class ObjectManager {
     private enemies : Array<Enemy>;
     // Items
     private items : Array<Item>;
+    // Teleporter
+    private teleporter : Teleporter;
+
+    // Alternative player position
+    private altPlayerPos : Vec2;
 
 
     // Constructor
@@ -68,7 +73,8 @@ class ObjectManager {
 
     // Update
     public update(vpad : Vpad, cam : Camera, stage : Stage, 
-        hud : HUD, dialogue: Dialogue, tm : number) {
+        hud : HUD, dialogue: Dialogue, trans: Transition,
+        tm : number) {
 
         // Update player
         this.player.update(vpad, cam, this.arrows, tm);
@@ -129,6 +135,17 @@ class ObjectManager {
             }
         }
 
+        // Update teleporter
+        if(this.teleporter != null) {
+
+            this.teleporter.update(tm, cam);
+            // Check collision with the player
+            if(this.teleporter.onPlayerCollision(this.player)) {
+
+                this.spcEvent2(cam, trans);
+            }
+        }
+
         // Update items
         for(let i = 0; i < this.items.length; ++ i) {
             
@@ -147,6 +164,10 @@ class ObjectManager {
 
     // Draw
     public draw(g : Graphics, ass : Assets) {
+
+        // Draw teleporter
+        if(this.teleporter != null)
+            this.teleporter.draw(g, ass);
 
         // Draw player shadow before other objects
         this.player.drawShadow(g, ass);
@@ -181,8 +202,18 @@ class ObjectManager {
     }
 
 
+    // Add a teleporter
+    public addTeleporter(x : number, y: number) {
+
+        this.teleporter = new Teleporter(x, y);
+    }
+
+
     // Set player location
     public setPlayerLocation(x : number, y : number, cam : Camera) {
+
+        if(this.altPlayerPos == null)
+            this.altPlayerPos = new Vec2(x, y);
 
         // Set player position
         this.player.setPos(x, y);
@@ -274,5 +305,29 @@ class ObjectManager {
         this.setPlayerLocation(x - (x%160) + 80, 
             y + cam.HEIGHT+16, 
             cam);
+
+        // Replace enemies with flames
+        let p : Vec2;
+        for(let i = 0; i < this.enemies.length; ++ i) {
+
+            p = this.enemies[i].getPos();
+            this.enemies[i] = new Flame(p.x, p.y);
+        }
+    }
+
+
+    // Special event 2
+    public spcEvent2(cam : Camera, trans : Transition) {
+
+        trans.activate(Fade.In, 1.0, () => {
+
+            // Destroy the teleporter
+            this.teleporter.destroy();
+
+            // Change player location
+            this.setPlayerLocation(this.altPlayerPos.x, 
+                this.altPlayerPos.y, cam);
+
+        }, 255, 255, 255);
     }
 }

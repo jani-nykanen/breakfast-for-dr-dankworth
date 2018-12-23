@@ -210,6 +210,14 @@ class GameObject {
     }
 
 
+    // Get centered pos
+    public getCenteredPos() : Vec2 {
+
+        return new Vec2(this.pos.x-this.center.x,
+            this.pos.y-this.center.y);
+    }
+
+
     // Set position
     public setPos(x : number, y : number) {
 
@@ -257,5 +265,12 @@ class GameObject {
     public getDim() : Vec2 {
 
         return this.dim;
+    }
+
+
+    // "Destroy"
+    public destroy() {
+
+        this.exist = false;
     }
 }

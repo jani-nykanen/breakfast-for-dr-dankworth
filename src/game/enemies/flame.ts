@@ -40,7 +40,7 @@ class Flame extends Enemy {
     // Update AI
     protected updateAI(tm : number) {
 
-        const SPEED = 0.75;
+        const SPEED = 0.5;
         const ANIM_SPEED = 4;
         const ESCAPE_MOD = -1.0;
 
