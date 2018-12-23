@@ -1,7 +1,7 @@
 {
     "text": [
         "You obtain a\nCRYSTAL SHARD!\nYou need X more.",
-        "You obtain a\nCRYSTAL SHARD!\nYou need X more.",
+        "You obtain a\nCRYSTAL SHARD!\nYou have them\nall.",
         "You obtain an\nIRON SWORD!\nPress Z to use\nit.",
         "You obtain a\nWOODEN BOW!\nPress X to shoot\narrows.",
         "You find a pair\nof SWIMMING\nTRUNKS! Now you\ncan swim.",
@@ -11,7 +11,8 @@
         "You buy an\nEXTRA HEART!\nYou feel so\nvery healthy.",
         "You buy a\nQUIVER!Now you\ncan carry\nmore arrows.",
         "You buy a\nMASTER KEY!\nIt opens every\nlock.",
-        "You buy a pair\nof SPEED BOOTS!\nGotta go... no."
+        "You buy a pair\nof SPEED BOOTS!\nGotta go... no.",
+        "You obtain the\nBREAKFAST! Now\ndeliver it!"
     ],
     "prices" : [
         0,
@@ -25,6 +26,7 @@
         5,
         5,
         10,
-        10
+        10,
+        0
     ]
 }

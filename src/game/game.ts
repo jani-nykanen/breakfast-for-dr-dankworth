@@ -21,6 +21,8 @@ class Game implements Scene {
     private stage : Stage;
     // Dialogue box
     private dialogue : Dialogue;
+    // Pause screen
+    private pause : Pause;
 
 
     // Reset game
@@ -61,22 +63,35 @@ class Game implements Scene {
 
         // Create a dialogue box
         this.dialogue = new Dialogue();
+        // Create pause
+        this.pause = new Pause();
     }
 
 
     // Update
     public update(tm: number) {      
 
+
+        // Check dialogue
         if(this.dialogue.isActive()) {
 
             // Update dialogue
             this.dialogue.update(this.vpad, tm);
             return;
         }
-        // TEMP
-        else if(this.vpad.getButton("start") == State.Pressed) {
 
-            this.dialogue.activate("You obtained a\nDUMMY ITEM!\nIt's useless.");
+        // Check pause
+        if(this.pause.isActive()) {
+
+            // Update pause
+            this.pause.update(this.vpad);
+            return;
+        }
+        // Activate pause
+        else if(this.vpad.getButton("start") == State.Pressed ||
+               this.vpad.getButton("cancel") == State.Pressed) {
+
+            this.pause.activate();
             return;
         }
 
@@ -126,6 +141,9 @@ class Game implements Scene {
 
         // Draw dialogue
         this.dialogue.draw(g, this.ass);
+
+        // Draw pause
+        this.pause.draw(g, this.ass);
     }
 
 

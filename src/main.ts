@@ -44,13 +44,15 @@ let gamePad = {
         90,
         88,
         13,
-        16
+        16,
+        27
     ],
     names: [
         "fire1",
         "fire2",
         "start",
-        "select"
+        "select",
+        "cancel",
     ]
 
 }

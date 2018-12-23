@@ -22,6 +22,9 @@ class Player extends GameObject {
     private readonly INITIAL_LIFE = 6;
     private readonly INITIAL_ARROW_MAX = 10;
 
+    // Temporarily here!
+    private readonly CRYSTAL_MAX = 2;
+
     // Sprite
     private spr : Sprite;
     // Sword sprite
@@ -76,6 +79,8 @@ class Player extends GameObject {
     private arrowMax : number;
     // Gem count
     private gemCount : number;
+    // Crystal count
+    private crystalCount : number;
 
     // Hitbox
     private hbox : Hitbox;
@@ -132,6 +137,7 @@ class Player extends GameObject {
         this.arrowCount = this.INITIAL_ARROW_MAX;
         this.arrowMax = this.INITIAL_ARROW_MAX;
         this.gemCount = 20;
+        this.crystalCount = 0;
 
         this.inCamera = true;
     }
@@ -1035,6 +1041,7 @@ class Player extends GameObject {
         // Crystal shard
         case 0:
         case 1:
+            ++ this.crystalCount;
             break;
 
         // Sword
@@ -1105,6 +1112,10 @@ class Player extends GameObject {
         let dw = this.dim.x/2;
         let dh = this.dim.y/2;
 
+        // Make the crystal shards have the
+        // same ID
+        if(id == 2) id = 1;
+
         // Check price
         let price = this.itemInfo.prices[id-1];
         if(this.gemCount < price) {
@@ -1120,7 +1131,19 @@ class Player extends GameObject {
             this.gemCount -= price;
 
             // Activate dialogue
-            dialogue.activate(this.itemInfo.text[id-1]);
+            let text = this.itemInfo.text[id-1];
+            if(id == 1) {
+
+                // Replace X with how many left, or
+                // if them all, use additional text
+                let left = this.CRYSTAL_MAX-(this.crystalCount+1);
+                if(left != 0)
+                    text = text.replace("X", String(left));
+                else
+                    text = this.itemInfo.text[1];
+            }
+
+            dialogue.activate(text);
 
             // Item effect
             this.itemEffect(id-1);
