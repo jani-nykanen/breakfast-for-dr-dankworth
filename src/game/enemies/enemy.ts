@@ -83,6 +83,24 @@ class Enemy extends GameObject {
     }
 
 
+    // Respawn
+    public respawnSelf() {
+
+        // Respawn
+        this.exist = true;
+        this.spr.setFrame(this.id+1, 0);
+        this.dying = false;
+        this.health = this.maxHealth;
+        this.hurtTimer = 0;
+        this.hurtID = -1;
+        this.speed.x = 0;
+        this.speed.y = 0;
+
+        if(this.respawn != null) 
+            this.respawn();
+    }
+
+
     // Perform camera check
     public cameraCheck(cam : Camera) {
 
@@ -104,17 +122,7 @@ class Enemy extends GameObject {
             this.repositioned = true;
 
             // Respawn
-            this.exist = true;
-            this.spr.setFrame(this.id+1, 0);
-            this.dying = false;
-            this.health = this.maxHealth;
-            this.hurtTimer = 0;
-            this.hurtID = -1;
-            this.speed.x = 0;
-            this.speed.y = 0;
-
-            if(this.respawn != null) 
-                this.respawn();
+            this.respawnSelf();
         }
     }
 

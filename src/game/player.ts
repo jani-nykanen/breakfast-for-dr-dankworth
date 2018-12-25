@@ -698,7 +698,7 @@ class Player extends GameObject {
 
 
     // Respawn
-    private respawn(cam : Camera) {
+    public respawn(cam : Camera) {
 
         this.pos = this.checkpoint.copy();
         this.speed.x = 0;
@@ -718,23 +718,20 @@ class Player extends GameObject {
 
 
     // Update death
-    private updateDeath(cam : Camera,  trans : Transition, tm : number) {
+    private updateDeath(cam : Camera,  gameRef : Game, tm : number) {
 
         const DEATH_SPEED = 8;
 
         this.sprDeath.animate(0, 0, 7, DEATH_SPEED, tm);
         if(this.sprDeath.getFrame() == 7) {
 
-            trans.activate(Fade.In, 2.0, () => {
-                // Respawn
-                this.respawn(cam);
-            },0 ,0, 0);
+            gameRef.softReset();
         }
     }
 
 
     // Update
-    public update(vpad : Vpad, cam: Camera, trans: Transition,
+    public update(vpad : Vpad, cam: Camera, gameRef: Game,
          arrows : Array<Arrow>, tm : number) {
 
         // Check camera
@@ -752,7 +749,7 @@ class Player extends GameObject {
         // Update death
         if(this.dying) {
 
-            this.updateDeath(cam, trans, tm);
+            this.updateDeath(cam, gameRef, tm);
             return;
         }
 

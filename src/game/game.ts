@@ -122,7 +122,6 @@ class Game implements Scene {
         // Update objects
         this.objMan.update(this.vpad, this.cam, this.stage, 
             this.hud, this.dialogue, this, this.worldMode != 2,
-            this.trans,
             tm);
 
         // Update camera
@@ -209,5 +208,16 @@ class Game implements Scene {
 
         }, 255, 255, 255);
         
+    }
+
+
+    // Soft reset
+    public softReset() {
+
+        this.trans.activate(Fade.In, 2.0, () => {
+
+            this.objMan.respawn(this.cam);
+        },
+        0,0,0);
     }
 }

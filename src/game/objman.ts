@@ -76,11 +76,10 @@ class ObjectManager {
     // Update
     public update(vpad : Vpad, cam : Camera, stage : Stage, 
         hud : HUD, dialogue: Dialogue, gameRef : Game, stageCollision : boolean,
-        trans : Transition,
         tm : number) {
 
         // Update player
-        this.player.update(vpad, cam, trans, this.arrows, tm);
+        this.player.update(vpad, cam, gameRef, this.arrows, tm);
         // Player collision
         if(stageCollision)
             stage.getCollision(this.player, this, dialogue, tm);
@@ -337,5 +336,20 @@ class ObjectManager {
         // Change player location
         this.setPlayerLocation(this.altPlayerPos.x, 
             this.altPlayerPos.y, cam);
+    }
+
+
+    // Respawn
+    public respawn(cam : Camera) {
+
+        // Respawn player
+        this.player.respawn(cam);
+
+        // Respawn enemies
+        for(let i = 0; i < this.enemies.length; ++ i) {
+
+            this.enemies[i].respawnSelf();
+            this.enemies[i].cameraCheck(cam);
+        }
     }
 }
