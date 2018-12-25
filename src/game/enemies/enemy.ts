@@ -40,6 +40,9 @@ class Enemy extends GameObject {
     // Item created
     protected itemCreated : boolean;
 
+    // Is static
+    protected isStatic : boolean;
+
 
     // Custom events
     protected updateAI?(tm : number) : any;
@@ -135,7 +138,7 @@ class Enemy extends GameObject {
     // Update
     public update(cam : Camera, tm : number) {
 
-        if(!this.exist || !this.inCamera) return;
+        if(!this.exist || !this.inCamera || this.isStatic) return;
 
         this.repositioned = false;
 
@@ -226,6 +229,10 @@ class Enemy extends GameObject {
         const POWER_MOD = 0.5;
 
         if(!this.exist || !this.inCamera || this.dying) return;
+
+        // Make static (=passive) is the player
+        // is dying
+        this.isStatic = pl.isDying();
 
         let px = this.pos.x-this.center.x;
         let py = this.pos.y-this.center.y;

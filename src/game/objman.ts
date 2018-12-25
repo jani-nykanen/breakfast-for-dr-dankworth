@@ -76,10 +76,11 @@ class ObjectManager {
     // Update
     public update(vpad : Vpad, cam : Camera, stage : Stage, 
         hud : HUD, dialogue: Dialogue, gameRef : Game, stageCollision : boolean,
+        trans : Transition,
         tm : number) {
 
         // Update player
-        this.player.update(vpad, cam, this.arrows, tm);
+        this.player.update(vpad, cam, trans, this.arrows, tm);
         // Player collision
         if(stageCollision)
             stage.getCollision(this.player, this, dialogue, tm);
@@ -225,6 +226,8 @@ class ObjectManager {
 
         // Set player position
         this.player.setPos(x, y);
+        // Store checkpoint
+        this.player.setCheckpoint(x, y);
 
         // Set camera position
         let gx = (x / cam.WIDTH) | 0;

@@ -25,12 +25,17 @@ class Player extends GameObject {
     // Temporarily here!
     private readonly CRYSTAL_MAX = 2;
 
+    // Checkpoint
+    private checkpoint : Vec2;
+
     // Sprite
     private spr : Sprite;
     // Sword sprite
     private sprSword : Sprite;
     // Bow sprite
     private sprBow : Sprite;
+    // Death sprite
+    private sprDeath : Sprite;
     // Flip
     private flip : Flip;
 
@@ -50,6 +55,8 @@ class Player extends GameObject {
     private atk : AtkType;
     // Hurt timer
     private hurtTimer : number;
+    // Is dying
+    private dying : boolean;
 
     // Sword level
     private swordLevel : number;
@@ -96,6 +103,9 @@ class Player extends GameObject {
 
         super(x, y);
 
+        // Set checkpoint
+        this.checkpoint = new Vec2(x, y);
+
         // Store item info
         this.itemInfo = ass.getDocument("itemInfo");
 
@@ -103,6 +113,7 @@ class Player extends GameObject {
         this.spr = new Sprite(16, 16);
         this.sprSword = new Sprite(24, 24);
         this.sprBow = new Sprite(16, 16);
+        this.sprDeath = new Sprite(24, 24);
 
         // Create hitboxes
         this.hbox = new Hitbox();
@@ -131,6 +142,7 @@ class Player extends GameObject {
         this.swimming = false;
         this.stairs = false;
         this.jumping = false;
+        this.dying = false;
 
         this.life = this.INITIAL_LIFE;
         this.maxLife = this.INITIAL_LIFE;
@@ -685,8 +697,45 @@ class Player extends GameObject {
     }
 
 
+    // Respawn
+    private respawn(cam : Camera) {
+
+        this.pos = this.checkpoint.copy();
+        this.speed.x = 0;
+        this.speed.y = 0;
+        this.target.x = 0;
+        this.target.y = 0;
+
+        // Set camera
+        let px = (this.pos.x / cam.WIDTH) | 0;
+        let py = (this.pos.y / cam.HEIGHT) | 0;
+        cam.setPos(px, py);
+
+        // Set values
+        this.life = this.maxLife;
+        this.dying = false;
+    }
+
+
+    // Update death
+    private updateDeath(cam : Camera,  trans : Transition, tm : number) {
+
+        const DEATH_SPEED = 8;
+
+        this.sprDeath.animate(0, 0, 7, DEATH_SPEED, tm);
+        if(this.sprDeath.getFrame() == 7) {
+
+            trans.activate(Fade.In, 2.0, () => {
+                // Respawn
+                this.respawn(cam);
+            },0 ,0, 0);
+        }
+    }
+
+
     // Update
-    public update(vpad : Vpad, cam: Camera, arrows : Array<Arrow>, tm : number) {
+    public update(vpad : Vpad, cam: Camera, trans: Transition,
+         arrows : Array<Arrow>, tm : number) {
 
         // Check camera
         this.checkCamera(cam, tm);
@@ -697,6 +746,13 @@ class Player extends GameObject {
 
             this.camMoveEvent(cam, tm);
             this.animate(tm);
+            return;
+        }
+
+        // Update death
+        if(this.dying) {
+
+            this.updateDeath(cam, trans, tm);
             return;
         }
 
@@ -787,7 +843,7 @@ class Player extends GameObject {
         const HURT_TIME = 60.0;
         const KNOCKBACK = 3.75;
 
-        if(this.hurtTimer > 0.0)
+        if(this.hurtTimer > 0.0 || this.dying)
             return;
 
         let px = this.pos.x-this.center.x;
@@ -808,6 +864,14 @@ class Player extends GameObject {
 
             this.speed.x += Math.cos(angle) * KNOCKBACK;
             this.speed.y += Math.sin(angle) * KNOCKBACK;
+
+            if(this.life <= 0) {
+
+                this.life = 0;
+                this.dying = true;
+                this.sprDeath.setFrame(0, 0);
+                this.hurtTimer = 0;
+            }
         }
     }
 
@@ -932,8 +996,22 @@ class Player extends GameObject {
     }
 
 
+    // Draw death
+    private drawDeath(g : Graphics, ass : Assets) {
+
+        this.sprDeath.draw(g, ass.getBitmap("death"), this.pos.x-12, this.pos.y-12);
+    }
+
+
     // Draw
     public draw(g : Graphics, ass : Assets) {
+
+        // Draw death
+        if(this.dying) {
+
+            this.drawDeath(g, ass);
+            return;
+        }
 
         // Determine frameskip
         let frameSkip = 0;
@@ -1179,5 +1257,20 @@ class Player extends GameObject {
     public isLoadingSpin() : boolean {
 
         return this.loadingSpin;
+    }
+
+
+    // Is dying
+    public isDying() : boolean {
+
+        return this.dying;
+    }
+
+
+    // Set checkpoint
+    public setCheckpoint(x : number, y : number) {
+
+        this.checkpoint.x = x;
+        this.checkpoint.y = y;
     }
 }
