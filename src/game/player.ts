@@ -812,6 +812,21 @@ class Player extends GameObject {
     }
 
 
+    // Lock collision
+    public lockCollision(x : number, y : number, w : number, h : number) : boolean {
+
+        const MARGIN = 2;
+
+        let px = this.pos.x-this.center.x;
+        let py = this.pos.y-this.center.y;
+        let dw = this.dim.x/2 + MARGIN;
+        let dh = this.dim.y/2 + MARGIN;
+
+        return px + dw >= x && px - dw <= x+w
+            && py + dh >= y && py - dh <= y+h;
+    }
+
+
     // Draw sword
     private drawSword(g: Graphics, ass: Assets) {
 
@@ -1091,6 +1106,7 @@ class Player extends GameObject {
 
         // Key
         case 10:
+            this.hasKey = true; 
             break;
 
         // Speed boots

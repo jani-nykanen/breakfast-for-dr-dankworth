@@ -33,6 +33,8 @@ class GameObject {
     protected takeCollision : boolean;
     // Is projectile
     protected projectile : boolean;
+    // Does have a key
+    protected hasKey : boolean;
 
 
     // Constructor
@@ -47,6 +49,7 @@ class GameObject {
         this.inCamera = false;
         this.takeCollision = true;
         this.projectile = false;
+        this.hasKey = false;
 
         // Set default dimensions
         this.dim = new Vec2(0, 0);
@@ -110,6 +113,8 @@ class GameObject {
     // Obtain an item
     public obtainItem?(id : number, x : number, y : number, w : number, h: number, 
         dialogue: Dialogue) : boolean;
+    // Lock collection
+    public lockCollision?(x : number, y : number, w : number, h : number) : boolean;
 
 
     // Wall collision
@@ -272,5 +277,12 @@ class GameObject {
     public destroy() {
 
         this.exist = false;
+    }
+
+
+    // Can unlock locks
+    public canUnlockLocks() : boolean {
+
+        return this.hasKey;
     }
 }

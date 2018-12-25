@@ -46,14 +46,14 @@ class Stage {
 
 
     // Create env.death object
-    private createEnvDeath(x : number, y : number, id : number) {
+    private createEnvDeath(x : number, y : number, id : number, speed = 1.0) {
 
         // Get the first non-existent object
         for(let i = 0; i < this.envAnim.length; ++ i) {
 
             if(this.envAnim[i].doesExist() == false) {
 
-                this.envAnim[i].createSelf(x, y, id);
+                this.envAnim[i].createSelf(x, y, id, speed);
                 break;
             }
         }
@@ -142,7 +142,8 @@ class Stage {
     private isSolid(s : number, o : GameObject) {
 
         return s == 1 || this.isDestroyable(s) ||
-            (s == 8 && !o.isProjectile());
+            (s == 8 && !o.isProjectile()) ||
+            (s == 11 && !o.canUnlockLocks());
     }
 
 
@@ -251,6 +252,21 @@ class Stage {
     }
 
 
+    // Lock collision
+    private lockCollision(x : number, y: number, o : GameObject) {
+
+        if(!o.canUnlockLocks()) return;
+
+        // Check if overlay the lock
+        if(o.lockCollision(x*16, y*16, 16, 16)) {
+
+            // Destroy 
+            this.mapData[y*this.baseMap.width+x] = 1;
+            this.createEnvDeath(x*16, y*16, 5, 0.5);
+        }
+    }
+
+
     // Game object collision
     public getCollision(o : GameObject, objMan : ObjectManager, 
         dialogue : Dialogue, tm : number) {
@@ -336,6 +352,11 @@ class Stage {
 
                     this.obtainItemEvent(o, x, y, 
                         this.getTile(x, y)-16*15, dialogue);
+                }
+                // Lock
+                else if(s == 11) {
+
+                    this.lockCollision(x, y, o);
                 }
             }
         }

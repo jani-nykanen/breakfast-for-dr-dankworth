@@ -13,6 +13,8 @@ class EnvDeath {
     private id : number;
     // Sprite
     private spr : Sprite;
+    // Animation speed
+    private speedMod : number;
 
     // Does exist
     private exist : boolean;
@@ -27,11 +29,12 @@ class EnvDeath {
 
 
     // Create self
-    public createSelf(x : number, y : number, id = 0) {
+    public createSelf(x : number, y : number, id = 0, speed = 1.0) {
 
         this.pos = new Vec2(x, y);
         this.id = id;
         this.exist = true;
+        this.speedMod = speed;
 
         this.spr.setFrame(this.id, 0);
     }
@@ -45,7 +48,7 @@ class EnvDeath {
         if(!this.exist) return;
 
         // Animate
-        this.spr.animate(this.id, 0, 4, ANIM_SPEED, tm);
+        this.spr.animate(this.id, 0, 4, ANIM_SPEED*this.speedMod, tm);
         if(this.spr.getFrame() == 4)
             this.exist = false;
     }
