@@ -30,6 +30,8 @@ class Camera {
     private looping : boolean;
     // Loop translation
     private loopTrans : Vec2;
+    // Is movement disabled
+    private movementDisabled : boolean;
 
 
     // Constructor
@@ -44,6 +46,7 @@ class Camera {
         this.moveTimer = 0;
         this.moving = false;
         this.looping = false;
+        this.movementDisabled = false;
     }
 
 
@@ -86,7 +89,7 @@ class Camera {
     // Move
     public move(tx : number, ty : number) {
 
-        if(this.moving) return;
+        if(this.moving || this.movementDisabled) return;
 
         // Store translation
         this.trans.x = tx|0;
@@ -188,5 +191,19 @@ class Camera {
     public getLoopTransition() : Vec2 {
 
         return this.loopTrans;
+    }
+
+
+    // Disable movement
+    public toggleMovement(state : boolean) {
+
+        this.movementDisabled = !state;
+    }
+
+
+    // Can move
+    public canMove() : boolean {
+
+        return !this.movementDisabled;
     }
 }

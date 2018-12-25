@@ -10,6 +10,8 @@ class Teleporter extends GameObject {
 
     // Sprite
     private spr : Sprite;
+    // Mode
+    private mode : number;
 
 
     // Constructor
@@ -19,6 +21,9 @@ class Teleporter extends GameObject {
 
         // Create sprite
         this.spr = new Sprite(32, 32);
+    
+        // Set defaults
+        this.mode = 0;
     }
 
 
@@ -39,7 +44,7 @@ class Teleporter extends GameObject {
             return;
 
         // Animate
-        this.spr.animate(0, 0, 3, 
+        this.spr.animate(this.mode, 0, 3, 
             this.spr.getFrame() == 0 ? ANIM_SPEED2 : ANIM_SPEED1, tm);
     }
 
@@ -70,4 +75,13 @@ class Teleporter extends GameObject {
             this.pos.x-16, this.pos.y-16);
     }
 
+
+    // Transform
+    public transform(tx : number, ty : number) {
+
+        this.pos.x = tx;
+        this.pos.y = ty;
+
+        ++ this.mode;
+    }
 };

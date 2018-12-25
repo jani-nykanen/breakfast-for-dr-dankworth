@@ -121,7 +121,8 @@ class Game implements Scene {
 
         // Update objects
         this.objMan.update(this.vpad, this.cam, this.stage, 
-            this.hud, this.dialogue, this.trans, tm);
+            this.hud, this.dialogue, this, this.worldMode != 2,
+            tm);
 
         // Update camera
         this.cam.update(tm);
@@ -141,13 +142,16 @@ class Game implements Scene {
     public draw(g : Graphics)  {     
 
         // Clear screen
-        g.clearScreen(170, 170, 170);
+        g.clearScreen(0, 0, 0);
 
         // Use camera
         this.cam.useCamera(g);
 
         // Draw stage
-        this.stage.draw(g, this.ass, this.cam, this.worldMode);
+        if(this.worldMode < 2) {
+
+            this.stage.draw(g, this.ass, this.cam, this.worldMode);
+        }
 
         // Draw objects
         this.objMan.draw(g, this.ass);
@@ -182,8 +186,26 @@ class Game implements Scene {
     public spcEvent1() {
 
         this.trans.activate(Fade.In, 1.0, () => {
+
             this.objMan.spcEvent1(this.cam);
             this.worldMode = 1;
+        }, 255, 255, 255);
+        
+    }
+
+
+    // Special event 2
+    public spcEvent2() {
+
+        this.trans.activate(Fade.In, 1.0, () => {
+
+            this.objMan.spcEvent2(this.cam);
+            if(this.worldMode == 1) {
+
+                this.worldMode = 2;
+                this.cam.toggleMovement(false);
+            }
+
         }, 255, 255, 255);
         
     }

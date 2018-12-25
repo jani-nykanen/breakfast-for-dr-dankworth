@@ -24,6 +24,8 @@ class ObjectManager {
 
     // Alternative player position
     private altPlayerPos : Vec2;
+    // Alternative teleporter pos
+    private altTelepPos : Vec2;
 
 
     // Constructor
@@ -73,13 +75,14 @@ class ObjectManager {
 
     // Update
     public update(vpad : Vpad, cam : Camera, stage : Stage, 
-        hud : HUD, dialogue: Dialogue, trans: Transition,
+        hud : HUD, dialogue: Dialogue, gameRef : Game, stageCollision : boolean,
         tm : number) {
 
         // Update player
         this.player.update(vpad, cam, this.arrows, tm);
         // Player collision
-        stage.getCollision(this.player, this, dialogue, tm);
+        if(stageCollision)
+            stage.getCollision(this.player, this, dialogue, tm);
         // Pass data to HUD
         this.player.updateHUDData(hud);
 
@@ -107,7 +110,9 @@ class ObjectManager {
 
                 e.update(cam, tm);
                 e.onPlayerCollision(this.player, tm);
-                stage.getCollision(e, this, dialogue, tm);
+
+                if(stageCollision)
+                    stage.getCollision(e, this, dialogue, tm);
 
                 if(!e.isDying()) {
 
@@ -142,7 +147,7 @@ class ObjectManager {
             // Check collision with the player
             if(this.teleporter.onPlayerCollision(this.player)) {
 
-                this.spcEvent2(cam, trans);
+                gameRef.spcEvent2();
             }
         }
 
@@ -204,6 +209,9 @@ class ObjectManager {
 
     // Add a teleporter
     public addTeleporter(x : number, y: number) {
+
+        if(this.altTelepPos == null)
+            this.altTelepPos = new Vec2(x, y);
 
         this.teleporter = new Teleporter(x, y);
     }
@@ -313,21 +321,18 @@ class ObjectManager {
             p = this.enemies[i].getPos();
             this.enemies[i] = new Flame(p.x, p.y);
         }
+
+        // Change teleport location
+        this.teleporter.transform(this.altTelepPos.x, 
+            this.altTelepPos.y+8);
     }
 
 
     // Special event 2
-    public spcEvent2(cam : Camera, trans : Transition) {
+    public spcEvent2(cam : Camera) {
 
-        trans.activate(Fade.In, 1.0, () => {
-
-            // Destroy the teleporter
-            this.teleporter.destroy();
-
-            // Change player location
-            this.setPlayerLocation(this.altPlayerPos.x, 
-                this.altPlayerPos.y, cam);
-
-        }, 255, 255, 255);
+        // Change player location
+        this.setPlayerLocation(this.altPlayerPos.x, 
+            this.altPlayerPos.y, cam);
     }
 }

@@ -452,27 +452,30 @@ class Player extends GameObject {
 
         let p = cam.getVirtualPos();
 
-        // Left
-        if(this.target.x < 0 && this.pos.x-8 < p.x) {
+        // Move camera if allowed
+        if(cam.canMove()) {
 
-            cam.move(-1, 0);
+            // Left
+            if(this.target.x < 0 && this.pos.x-8 < p.x) {
+
+                cam.move(-1, 0);
+            }
+            // Right
+            else if(this.target.x > 0  && this.pos.x+8 > 160+p.x) {
+
+                cam.move(1, 0);
+            }
+            // Top
+            else if(this.target.y < 0 && this.pos.y-8 < p.y) {
+
+                cam.move(0, -1);
+            }
+            // Bottom
+            else if(this.target.y > 0 && this.pos.y+8 > 144+p.y -16) {
+
+                cam.move(0, 1);
+            }
         }
-        // Right
-        else if(this.target.x > 0  && this.pos.x+8 > 160+p.x) {
-
-            cam.move(1, 0);
-        }
-        // Top
-        else if(this.target.y < 0 && this.pos.y-8 < p.y) {
-
-            cam.move(0, -1);
-        }
-        // Bottom
-        else if(this.target.y > 0 && this.pos.y+8 > 144+p.y -16) {
-
-            cam.move(0, 1);
-        }
-
 
         if(!cam.isMoving()) {
 
