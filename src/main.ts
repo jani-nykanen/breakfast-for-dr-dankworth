@@ -28,7 +28,8 @@ let assetInfo = {
 
     audioPath: "assets/audio/",
     audio: {
-        // ...
+        theme1: "theme1.ogg",
+        theme2: "theme2.ogg",
     },
 
     docPath: "assets/",

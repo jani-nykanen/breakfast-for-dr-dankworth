@@ -11,6 +11,7 @@ class Game implements Scene {
     private ass : Assets;
     private vpad : Vpad;
     private trans : Transition;
+    private audio : AudioPlayer;
 
     // Game object manager
     private objMan : ObjectManager;
@@ -68,16 +69,20 @@ class Game implements Scene {
         // Set transition
         this.trans.activate(Fade.Out, 2.0, null);
 
+        // Play music
+        this.audio.fadeInMusic(this.ass.getSample("theme1"), 0.35, 1000);
+
     }
 
 
     // Initialize
-    public init(ass : Assets, vpad: Vpad, evMan: EventMan) {
+    public init(ass : Assets, vpad: Vpad, evMan: EventMan, audio: AudioPlayer) {
 
         // Store references
         this.ass = ass;
         this.vpad = vpad;
         this.trans = evMan.getGlobalScene().getTransition();
+        this.audio = audio;
 
         // Create a dialogue box
         this.dialogue = new Dialogue();
@@ -191,6 +196,8 @@ class Game implements Scene {
 
             this.objMan.spcEvent1(this.cam);
             this.worldMode = 1;
+
+            this.audio.playSample(this.ass.getSample("theme2"), 0.5);
         }, 255, 255, 255);
         
     }
@@ -199,6 +206,8 @@ class Game implements Scene {
     // Special event 2
     public spcEvent2() {
 
+        this.audio.stopMusic();
+        
         this.trans.activate(Fade.In, 1.0, () => {
 
             this.objMan.spcEvent2(this.cam);

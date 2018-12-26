@@ -19,6 +19,7 @@
         "src/core/sprite.ts",
         "src/core/vec2.ts",
         "src/core/eventman.ts",
+        "src/core/audio.ts",
         // Game
         "src/game/game.ts",
         "src/game/hud.ts",

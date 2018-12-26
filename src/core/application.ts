@@ -20,6 +20,8 @@ class Application {
     private vpad : Vpad;
     // Event manager
     private evMan : EventMan;
+    // Audio player
+    private audio : AudioPlayer;
 
     // Old time
     private oldTime : number;
@@ -53,6 +55,7 @@ class Application {
         this.scenes = new Array<Scene> ();
         this.input = new InputManager();
         this.evMan = new EventMan(this);
+        this.audio = new AudioPlayer();
 
         // Set defaults
         this.oldTime = 0.0;
@@ -231,7 +234,7 @@ class Application {
         // Initialize every scene
         this.scenes.forEach(e => {
             
-            e.init(this.ass, this.vpad, this.evMan);
+            e.init(this.ass, this.vpad, this.evMan, this.audio);
         });
 
         // Start main loop

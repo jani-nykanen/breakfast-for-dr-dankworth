@@ -4,6 +4,8 @@
  * (c) 2018 Jani Nykänen
  */
 
+declare var Howl : any;
+
 // Reference to assets
 let _assRef : Assets;
 
@@ -83,6 +85,14 @@ class Assets {
         // "Load" sample
         this.increaseLoaded();
         this.samples[name] = null;
+
+        this.samples[name] = new Howl({
+            src: [url],
+            onload: function() {
+
+                _assRef.increaseLoaded();
+            }
+        });
     }
 
 
@@ -144,6 +154,13 @@ class Assets {
     public getBitmap(name : string) : any {
 
         return this.bitmaps[name];
+    }
+
+
+    // Get sample
+    public getSample(name : string) : any {
+
+        return this.samples[name];
     }
 
 
