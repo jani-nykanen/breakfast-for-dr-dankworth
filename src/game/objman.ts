@@ -53,6 +53,13 @@ class ObjectManager {
         this.enemies = new Array<Enemy> ();
     }
 
+
+    // On loaded
+    public onLoaded(stage : Stage) {
+
+        this.player.setCrystalMax(stage.calculateCrystalShards());
+    }
+
     
     // Move enemies
     private moveEnemies(cam : Camera) {

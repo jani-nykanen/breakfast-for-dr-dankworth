@@ -58,6 +58,8 @@ class Game implements Scene {
         this.stage.setMap(this.ass);
         // Parse objects
         this.stage.parseObjects(this.objMan, this.cam);
+        // Pass stage data to the game objects
+        this.objMan.onLoaded(this.stage);
 
         // Update once to get proper
         // graphics for the fading

@@ -22,9 +22,6 @@ class Player extends GameObject {
     private readonly INITIAL_LIFE = 6;
     private readonly INITIAL_ARROW_MAX = 10;
 
-    // Temporarily here!
-    private readonly CRYSTAL_MAX = 2;
-
     // Checkpoint
     private checkpoint : Vec2;
 
@@ -88,6 +85,8 @@ class Player extends GameObject {
     private gemCount : number;
     // Crystal count
     private crystalCount : number;
+    // Crystal max
+    private crystalMax : number;
 
     // Hitbox
     private hbox : Hitbox;
@@ -150,6 +149,7 @@ class Player extends GameObject {
         this.arrowMax = this.INITIAL_ARROW_MAX;
         this.gemCount = 20;
         this.crystalCount = 0;
+        this.crystalMax = 0;
 
         this.inCamera = true;
     }
@@ -1230,7 +1230,7 @@ class Player extends GameObject {
 
                 // Replace X with how many left, or
                 // if them all, use additional text
-                let left = this.CRYSTAL_MAX-(this.crystalCount+1);
+                let left = this.crystalMax-(this.crystalCount+1);
                 if(left != 0)
                     text = text.replace("X", String(left));
                 else
@@ -1269,5 +1269,19 @@ class Player extends GameObject {
 
         this.checkpoint.x = x;
         this.checkpoint.y = y;
+    }
+
+
+    // Set crystal max
+    public setCrystalMax(c : number) {
+
+        this.crystalMax = c;
+    }
+
+
+    // Get remaining crystals
+    public getRemainingCrystals() : number {
+
+        return Math.max(0, this.crystalMax - this.crystalCount);
     }
 }

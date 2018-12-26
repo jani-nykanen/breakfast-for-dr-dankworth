@@ -13,6 +13,9 @@ class Teleporter extends GameObject {
     // Mode
     private mode : number;
 
+    // Is active
+    private active : boolean;
+
 
     // Constructor
     public constructor(x : number, y : number) {
@@ -24,6 +27,7 @@ class Teleporter extends GameObject {
     
         // Set defaults
         this.mode = 0;
+        this.active = false;
     }
 
 
@@ -44,8 +48,15 @@ class Teleporter extends GameObject {
             return;
 
         // Animate
-        this.spr.animate(this.mode, 0, 3, 
-            this.spr.getFrame() == 0 ? ANIM_SPEED2 : ANIM_SPEED1, tm);
+        if(this.active) {
+
+            this.spr.animate(this.mode, 0, 3, 
+                this.spr.getFrame() == 0 ? ANIM_SPEED2 : ANIM_SPEED1, tm);
+        }
+        else {
+
+            this.spr.setFrame(this.mode, 4);
+        }
     }
 
 
@@ -55,6 +66,9 @@ class Teleporter extends GameObject {
         const RADIUS = 12;
 
         if(!this.exist || !this.inCamera) return false;
+
+        this.active = pl.getRemainingCrystals() <= 0;
+        if(!this.active) return false;
 
         let p = pl.getCenteredPos();
         let px = p.x - this.pos.x;
