@@ -9,6 +9,7 @@ class Enemy extends GameObject {
 
     // Constants
     protected readonly HURT_TIME = 30;
+    protected readonly HIT_VOL = 0.5;
 
     // Sprite
     protected spr : Sprite;
@@ -187,7 +188,7 @@ class Enemy extends GameObject {
 
 
     // Arrow collision
-    public arrowCollision(arrow: Arrow) {
+    public arrowCollision(arrow: Arrow, audio : AudioPlayer, ass : Assets) {
 
         if(!this.exist || !this.inCamera || this.dying ||
             arrow.doesExist() == false) return;
@@ -213,6 +214,9 @@ class Enemy extends GameObject {
 
                 // Kill arrow
                 arrow.kill();
+
+                // Hit sound
+                audio.playSample(ass.getSample("hit"), this.HIT_VOL);
             }
         }
     }
@@ -230,7 +234,8 @@ class Enemy extends GameObject {
 
 
     // Player collision
-    public onPlayerCollision(pl : Player, tm : number) {
+    public onPlayerCollision(pl : Player, audio : AudioPlayer, ass : Assets, 
+        tm : number) {
 
         const KNOCKBACK = 5.0;
         const BASE_ACC = 0.2;
@@ -286,6 +291,9 @@ class Enemy extends GameObject {
 
                     this.makeDead();
                 }
+
+                // Hit sound
+                audio.playSample(ass.getSample("hit"), this.HIT_VOL);
 
                 // If special, disable player spin attack
                 // loading

@@ -30,6 +30,16 @@ let assetInfo = {
     audio: {
         theme1: "theme1.ogg",
         theme2: "theme2.ogg",
+        hit: "hit.wav",
+        hurt: "hurt.wav",
+        sword: "sword.wav",
+        death: "death.wav",
+        sword2: "sword2.wav",
+        arrow: "arrow.wav",
+        gem: "gem.wav",
+        health: "health.wav",
+        arrowPick: "arrow_pick.wav",
+        break: "break.wav",
     },
 
     docPath: "assets/",

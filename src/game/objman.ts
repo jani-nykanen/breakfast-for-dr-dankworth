@@ -83,13 +83,14 @@ class ObjectManager {
     // Update
     public update(vpad : Vpad, cam : Camera, stage : Stage, 
         hud : HUD, dialogue: Dialogue, gameRef : Game, stageCollision : boolean,
+        audio : AudioPlayer, ass : Assets,
         tm : number) {
 
         // Update player
-        this.player.update(vpad, cam, gameRef, this.arrows, tm);
+        this.player.update(vpad, cam, gameRef, this.arrows, audio, tm);
         // Player collision
         if(stageCollision)
-            stage.getCollision(this.player, this, dialogue, tm);
+            stage.getCollision(this.player, this, dialogue,audio,ass, tm);
         // Pass data to HUD
         this.player.updateHUDData(hud);
 
@@ -116,10 +117,10 @@ class ObjectManager {
                     continue;
 
                 e.update(cam, tm);
-                e.onPlayerCollision(this.player, tm);
+                e.onPlayerCollision(this.player, audio, ass, tm);
 
                 if(stageCollision)
-                    stage.getCollision(e, this, dialogue, tm);
+                    stage.getCollision(e, this, dialogue,audio,ass, tm);
 
                 if(!e.isDying()) {
 
@@ -134,7 +135,7 @@ class ObjectManager {
                     // Enemy-to-arrow collisions
                     for(let j = 0; j < this.ARROW_COUNT; ++ j) {
 
-                        e.arrowCollision(this.arrows[j]);
+                        e.arrowCollision(this.arrows[j], audio, ass);
                     }
                 }
                 // Create an item if needed
@@ -161,14 +162,14 @@ class ObjectManager {
         // Update items
         for(let i = 0; i < this.items.length; ++ i) {
             
-            this.items[i].getPlayerCollision(this.player);
+            this.items[i].getPlayerCollision(this.player, audio);
             this.items[i].update(tm, cam);
         }
 
         // Update arrows
         for(let i = 0; i < this.ARROW_COUNT; ++ i) {
 
-            stage.getCollision(this.arrows[i], this, dialogue, tm);
+            stage.getCollision(this.arrows[i], this, dialogue, audio, ass, tm);
             this.arrows[i].update(cam, tm);
         }
     }

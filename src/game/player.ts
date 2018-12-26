@@ -96,11 +96,40 @@ class Player extends GameObject {
     // Item info
     private itemInfo : any;
 
+    // Lying timer
+    private lieTimer : number;
+
+    // Is the death sound played
+    private deathSoundPlayed : boolean;
+    // Is the hurt sound played
+    private hurtSoundPlayed : boolean;
+
+    // Sounds
+    private sDeath : any;
+    private sHurt : any;
+    private sSword : any;
+    private sSword2 : any;
+    private sArrow : any;
+    private sGem : any;
+    private sHealth : any;
+    private sArrowPick : any;
+
 
     // Constructor
     public constructor(x : number, y: number, ass : Assets) {
 
         super(x, y);
+
+        // Get samples
+        this.sDeath = ass.getSample("death");
+        this.sHurt = ass.getSample("hurt");
+        this.sSword = ass.getSample("sword");
+        this.sSword2 = ass.getSample("sword2");
+        this.sArrow = ass.getSample("arrow");
+        this.sGem = ass.getSample("gem");
+        this.sHealth = ass.getSample("health");
+        this.sArrowPick = ass.getSample("arrowPick");
+
 
         // Set checkpoint
         this.checkpoint = new Vec2(x, y);
@@ -110,9 +139,11 @@ class Player extends GameObject {
 
         // Create sprites
         this.spr = new Sprite(16, 16);
+        this.spr.setFrame(7, 2);
         this.sprSword = new Sprite(24, 24);
         this.sprBow = new Sprite(16, 16);
         this.sprDeath = new Sprite(24, 24);
+        this.lieTimer = 1;
 
         // Create hitboxes
         this.hbox = new Hitbox();
@@ -150,6 +181,9 @@ class Player extends GameObject {
         this.gemCount = 20;
         this.crystalCount = 0;
         this.crystalMax = 0;
+
+        this.deathSoundPlayed = false;
+        this.hurtSoundPlayed = true;
 
         this.inCamera = true;
     }
@@ -210,7 +244,7 @@ class Player extends GameObject {
 
 
     // Control
-    private control(vpad : Vpad, arrows : Array<Arrow>, tm : number) {
+    private control(vpad : Vpad, arrows : Array<Arrow>, audio : AudioPlayer, tm : number) {
 
         const DELTA = 0.01;
         const SPEED = 1.0;
@@ -289,6 +323,9 @@ class Player extends GameObject {
             this.startRow = [0, 2, 3] [this.dir];
             if(this.flip == Flip.Horizontal)
                 this.startRow = 1;
+
+            // Play sound
+            audio.playSample(this.sSword2, 0.5);
         }
         // Check sword attack
         else if(!this.attacking && s1 == State.Pressed) {
@@ -298,6 +335,10 @@ class Player extends GameObject {
 
             this.spr.setFrame(3 + this.dir, 0);
             this.sprSword.setFrame(this.dir,0);
+
+            // Sword sound
+            audio.playSample(this.sSword, 0.5);
+            
         }
         // Release attack
         else if(this.attacking 
@@ -324,6 +365,9 @@ class Player extends GameObject {
             // Shoot arrow
             this.shootArrow(arrows);
             -- this.arrowCount;
+
+            // Play sound
+            audio.playSample(this.sArrow, 0.5);
         }
         
         // Apply speed factor
@@ -714,13 +758,31 @@ class Player extends GameObject {
         // Set values
         this.life = this.maxLife;
         this.dying = false;
+        this.attacking = false;
+        this.loadingSpin = false;
+        this.spinTimer = 0.0;
+
+        this.spr.setFrame(7, 2);
+        this.lieTimer = 1;
+
+        this.deathSoundPlayed = false;
+        this.hurtSoundPlayed = true;
     }
 
 
     // Update death
-    private updateDeath(cam : Camera,  gameRef : Game, tm : number) {
+    private updateDeath(audio : AudioPlayer,  gameRef : Game, tm : number) {
 
         const DEATH_SPEED = 8;
+
+        // Play death sound
+        if(!this.deathSoundPlayed) {
+
+            audio.stopSample();
+            audio.playSample(this.sDeath, 0.50);
+        
+            this.deathSoundPlayed = true;
+        }
 
         this.sprDeath.animate(0, 0, 7, DEATH_SPEED, tm);
         if(this.sprDeath.getFrame() == 7) {
@@ -732,7 +794,16 @@ class Player extends GameObject {
 
     // Update
     public update(vpad : Vpad, cam: Camera, gameRef: Game,
-         arrows : Array<Arrow>, tm : number) {
+         arrows : Array<Arrow>, audio : AudioPlayer, 
+         tm : number) {
+
+        // Lie without moving for one frame
+        if(this.lieTimer > 0) {
+
+            this.lieTimer -= 1.0 *tm;
+            this.spr.setFrame(7, 2);
+            return;
+        }
 
         // Check camera
         this.checkCamera(cam, tm);
@@ -749,13 +820,22 @@ class Player extends GameObject {
         // Update death
         if(this.dying) {
 
-            this.updateDeath(cam, gameRef, tm);
+            this.updateDeath(audio, gameRef, tm);
             return;
         }
 
         // Update hurt timer
-        if(this.hurtTimer > 0.0)
+        if(this.hurtTimer > 0.0) {
+
+            // Play hurt sound
+            if(!this.hurtSoundPlayed) {
+
+                audio.playSample(this.sHurt, 0.40);
+                this.hurtSoundPlayed = true;
+            }
+
             this.hurtTimer -= 1.0 * tm;
+        }
 
         // Jump
         if(this.jumping) {
@@ -765,7 +845,7 @@ class Player extends GameObject {
         }
 
         // Control
-        this.control(vpad, arrows, tm);
+        this.control(vpad, arrows, audio, tm);
         // Move
         this.move(tm);
         // Animate
@@ -853,6 +933,7 @@ class Player extends GameObject {
 
             this.life -= dmg;
             this.hurtTimer = HURT_TIME;
+            this.hurtSoundPlayed = false;
 
             // Knockback
             let cx = this.pos.x - (x+w/2);
@@ -1003,6 +1084,8 @@ class Player extends GameObject {
     // Draw
     public draw(g : Graphics, ass : Assets) {
 
+        const LIE_BONUS = 4;
+
         // Draw death
         if(this.dying) {
 
@@ -1020,8 +1103,9 @@ class Player extends GameObject {
             frameSkip = 4;
         
         // Draw sprite
+        let ty = this.lieTimer > 0 ? LIE_BONUS : 0;
         this.spr.draw(g, ass.getBitmap("player"), 
-            this.pos.x-8, this.pos.y-8, this.flip, frameSkip);
+            this.pos.x-8, this.pos.y-8 + ty, this.flip, frameSkip);
 
         // Draw weapon
         if(this.attacking 
@@ -1100,27 +1184,37 @@ class Player extends GameObject {
 
 
     // Add gem
-    public addGem() {
+    public addGem(audio: AudioPlayer) {
 
         if(this.gemCount < 99)
             ++ this.gemCount;
+
+        // Play sound
+        audio.playSample(this.sGem, 0.5);
+        
     }
 
 
     // Add heart
-    public addHeart() {
+    public addHeart(audio : AudioPlayer) {
 
         this.life += 2;
         if(this.life > this.maxLife)
             this.life = this.maxLife;
+
+        // Play sound
+        audio.playSample(this.sHealth, 0.5);
     }
 
 
     // Add an arrow
-    public addArrow() {
+    public addArrow(audio : AudioPlayer) {
 
         if(this.arrowCount < this.arrowMax)
             ++ this.arrowCount; 
+
+        // Play sound
+        audio.playSample(this.sArrowPick, 0.5);
     }
 
 
@@ -1200,7 +1294,6 @@ class Player extends GameObject {
     public obtainItem(id : number, x : number, y : number, w : number, h: number, 
         dialogue: Dialogue) : boolean {
 
-
         let px = this.pos.x-this.center.x;
         let py = this.pos.y-this.center.y;
         let dw = this.dim.x/2;
@@ -1242,6 +1335,9 @@ class Player extends GameObject {
 
             // Item effect
             this.itemEffect(id-1);
+
+            // Set new checkpoint
+            this.checkpoint = new Vec2(x+8, y+8);
 
             return true;
         }

@@ -7,6 +7,10 @@
 // Game class
 class Game implements Scene {
 
+    // Constants
+    private readonly VOLUME1 = 0.30;
+    private readonly VOLUME2 = 0.35;
+
     // Reference to global objects
     private ass : Assets;
     private vpad : Vpad;
@@ -70,7 +74,7 @@ class Game implements Scene {
         this.trans.activate(Fade.Out, 2.0, null);
 
         // Play music
-        this.audio.fadeInMusic(this.ass.getSample("theme1"), 0.35, 1000);
+        this.audio.playSample(this.ass.getSample("theme1"), this.VOLUME1, true);
 
     }
 
@@ -129,6 +133,7 @@ class Game implements Scene {
         // Update objects
         this.objMan.update(this.vpad, this.cam, this.stage, 
             this.hud, this.dialogue, this, this.worldMode != 2,
+            this.audio, this.ass,
             tm);
 
         // Update camera
@@ -197,7 +202,8 @@ class Game implements Scene {
             this.objMan.spcEvent1(this.cam);
             this.worldMode = 1;
 
-            this.audio.playSample(this.ass.getSample("theme2"), 0.5);
+            this.audio.playSample(this.ass.getSample("theme2"), 
+                this.VOLUME2, true);
         }, 255, 255, 255);
         
     }
@@ -206,7 +212,10 @@ class Game implements Scene {
     // Special event 2
     public spcEvent2() {
 
-        this.audio.stopMusic();
+        if(this.worldMode == 0)
+            this.audio.stopSample(this.ass.getSample("theme1"));
+        else 
+            this.audio.stopSample(this.ass.getSample("theme2"));
         
         this.trans.activate(Fade.In, 1.0, () => {
 
@@ -228,6 +237,12 @@ class Game implements Scene {
         this.trans.activate(Fade.In, 2.0, () => {
 
             this.objMan.respawn(this.cam);
+
+            let s = ["theme1", "theme2"] [this.worldMode];
+            let vol = [this.VOLUME1, this.VOLUME2] [this.worldMode];
+
+            // Re-play music
+            this.audio.playSample(this.ass.getSample(s), vol, true);
         },
         0,0,0);
     }

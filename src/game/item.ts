@@ -63,7 +63,7 @@ class Item {
 
 
     // Player collision
-    public getPlayerCollision(pl : Player) {
+    public getPlayerCollision(pl : Player, audio : AudioPlayer) {
 
         const DIM = 8;
 
@@ -88,15 +88,15 @@ class Item {
             // Death event
             if(this.id == 0) {
 
-                pl.addGem();
+                pl.addGem(audio);
             }
             else if(this.id == 1) {
 
-                pl.addHeart();
+                pl.addHeart(audio);
             }
             else {
 
-                pl.addArrow();
+                pl.addArrow(audio);
             }
         }
     }

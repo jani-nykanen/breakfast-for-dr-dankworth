@@ -170,7 +170,8 @@ class Stage {
 
     // Destroyable object collision
     private destroyableCollision(s : number, x : number, y : number,
-            o :GameObject, hbox : Hitbox, objMan : ObjectManager) {
+            o :GameObject, hbox : Hitbox, audio : AudioPlayer, ass : Assets,
+             objMan : ObjectManager) {
 
          // Check plant collision
         if( this.isDestroyable(s)) {
@@ -210,6 +211,9 @@ class Stage {
                     row = 4;
 
                 this.createEnvDeath(x*16, y*16, row);
+
+                // Play sound
+                audio.playSample(ass.getSample("break"), 0.40);
 
                 // Check if a plant
                 if(s == 6) {
@@ -253,7 +257,8 @@ class Stage {
 
 
     // Lock collision
-    private lockCollision(x : number, y: number, o : GameObject) {
+    private lockCollision(x : number, y: number, 
+        audio : AudioPlayer, ass : Assets, o : GameObject) {
 
         if(!o.canUnlockLocks()) return;
 
@@ -269,7 +274,8 @@ class Stage {
 
     // Game object collision
     public getCollision(o : GameObject, objMan : ObjectManager, 
-        dialogue : Dialogue, tm : number) {
+        dialogue : Dialogue, audio: AudioPlayer, ass : Assets,
+         tm : number) {
 
         const MARGIN = 2;
         const WATER_MARGIN = 4;
@@ -304,7 +310,7 @@ class Stage {
 
                 // Destroyable object collision
                 if(hbox != null && hbox.doesExist())
-                    this.destroyableCollision(s, x, y, o, hbox, objMan);
+                    this.destroyableCollision(s, x, y, o, hbox, audio, ass, objMan);
 
                 // Check if solid
                 if(this.isSolid(s, o)) {
@@ -356,7 +362,7 @@ class Stage {
                 // Lock
                 else if(s == 11) {
 
-                    this.lockCollision(x, y, o);
+                    this.lockCollision(x, y, audio, ass, o);
                 }
             }
         }

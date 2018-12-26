@@ -83,9 +83,6 @@ class Assets {
         ++ this.total;
 
         // "Load" sample
-        this.increaseLoaded();
-        this.samples[name] = null;
-
         this.samples[name] = new Howl({
             src: [url],
             onload: function() {
@@ -101,7 +98,7 @@ class Assets {
 
         ++ this.total;
 
-        var xobj = new XMLHttpRequest();
+        let xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
         xobj.open("GET", url, true);
 
