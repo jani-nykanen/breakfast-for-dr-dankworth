@@ -31,6 +31,7 @@ let assetInfo = {
     audio: {
         theme1: "theme1.ogg",
         theme2: "theme2.ogg",
+        theme3: "theme3.ogg",
         hit: "hit.wav",
         hurt: "hurt.wav",
         sword: "sword.wav",
@@ -52,6 +53,7 @@ let assetInfo = {
         map: "tilemaps/map.json",
         solid: "tilemaps/solid.json",
         itemInfo: "iteminfo.json",
+        dialogue: "dialogue.json",
     }
 };
 

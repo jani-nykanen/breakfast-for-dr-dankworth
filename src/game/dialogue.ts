@@ -87,6 +87,7 @@ class Dialogue {
         const YOFF = 8;
         const CENTER_X = 80;
         const CENTER_Y = YOFF + HEIGHT/2;
+        const DELTA = 0.01;
 
         const TEXT_X = -2;
         const TEXT_Y = 0;
@@ -94,7 +95,7 @@ class Dialogue {
         const TEXT_XOFF = -8;
         const TEXT_YOFF = -4;
 
-        if(!this.active) return;
+        if(!this.active || this.timer >= this.APPEAR_TIME-DELTA) return;
 
         // Compute scale
         let s = 1.0 - Math.max(0, this.timer) / this.APPEAR_TIME;

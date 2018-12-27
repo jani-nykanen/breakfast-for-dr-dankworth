@@ -247,6 +247,7 @@ class Enemy extends GameObject {
 
 
     // Player collision
+    protected hurtEvent?(angle : number) : void;
     public onPlayerCollision(pl : Player, audio : AudioPlayer, ass : Assets, 
         tm : number) {
 
@@ -283,9 +284,6 @@ class Enemy extends GameObject {
                 this.pos.y-this.dhbox.y/2, 
                 this.dhbox.x, this.dhbox.y)) {
 
-                this.hurtID = hbox.getID();
-                this.hurtTimer = this.HURT_TIME;
-
                 // Knockback
                 let cx = this.pos.x - pl.getPos().x;
                 let cy = this.pos.y - pl.getPos().y;
@@ -302,6 +300,14 @@ class Enemy extends GameObject {
                     this.target.x = this.speed.x;
                     this.target.y = this.speed.y;
                 }
+
+                // Hurt event
+                if(this.hurtEvent != null)
+                    this.hurtEvent(angle);
+                    
+                // Set to the hurt state
+                this.hurtID = hbox.getID();
+                this.hurtTimer = this.HURT_TIME;
 
                 // Decrease health
                 this.health -= hbox.getDamage();

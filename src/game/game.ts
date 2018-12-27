@@ -8,8 +8,10 @@
 class Game implements Scene {
 
     // Constants
+    // TODO: Put into an array
     private readonly VOLUME1 = 0.30;
     private readonly VOLUME2 = 0.40;
+    private readonly VOLUME3 = 0.50;
 
     // Reference to global objects
     private ass : Assets;
@@ -228,6 +230,14 @@ class Game implements Scene {
 
                 this.worldMode = 2;
                 this.cam.toggleMovement(false);
+
+                this.audio.playSample(this.ass.getSample("theme3"), 
+                    this.VOLUME3, true);
+
+                // Set dialogue
+                this.dialogue.activate(
+                   this.ass.getDocument("dialogue").boss1
+                );
             }
 
         }, 255, 255, 255);
@@ -242,8 +252,8 @@ class Game implements Scene {
 
             this.objMan.respawn(this.cam);
 
-            let s = ["theme1", "theme2", null] [this.worldMode];
-            let vol = [this.VOLUME1, this.VOLUME2] [this.worldMode];
+            let s = ["theme1", "theme2", "theme3"] [this.worldMode];
+            let vol = [this.VOLUME1, this.VOLUME2, this.VOLUME3] [this.worldMode];
 
             // Re-play music
             if(s != null)
