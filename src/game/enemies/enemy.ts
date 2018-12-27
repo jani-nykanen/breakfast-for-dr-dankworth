@@ -43,6 +43,8 @@ class Enemy extends GameObject {
 
     // Is static
     protected isStatic : boolean;
+    // Is boss
+    protected isBoss : boolean;
 
 
     // Custom events
@@ -75,12 +77,14 @@ class Enemy extends GameObject {
         this.health = 1;
         this.maxHealth = 2;
         this.power = 1;
+        this.hurtTimer = 0;
 
         this.dying = false;
         this.exist = true;
         this.itemCreated = true;
 
         this.inCamera = false;
+        this.isBoss = false;
     }
 
 
@@ -108,10 +112,12 @@ class Enemy extends GameObject {
         if(!this.exist && this.repositioned) return;
 
         let p = cam.getVirtualPos();
+        let w = this.spr.getWidth()/2;
+        let h = this.spr.getHeight()/2;
 
         // Check if in camera
-        this.inCamera = this.pos.x+8 >= p.x && this.pos.x-8 <= p.x+cam.WIDTH
-            && this.pos.y+8 >= p.y && this.pos.y-8 <= p.y+cam.HEIGHT;
+        this.inCamera = this.pos.x+w >= p.x && this.pos.x-w <= p.x+cam.WIDTH
+            && this.pos.y+h >= p.y && this.pos.y-h <= p.y+cam.HEIGHT;
 
         // Move back to the original position if outside the camera
         // (and camera not moving!)
@@ -163,13 +169,20 @@ class Enemy extends GameObject {
 
                 this.hurtTimer -= 1.0 * tm;
 
-                // Set target speed to zero
-                this.target.x = 0;
-                this.target.y = 0;
+                if(!this.isBoss) {
+
+                    // Set target speed to zero
+                    this.target.x = 0;
+                    this.target.y = 0;
+                }
             }
+
             // Update AI
-            else if(this.updateAI != null)
+            if( (this.hurtTimer <= 0.0 || this.isBoss)
+                && this.updateAI != null) {
+
                 this.updateAI(tm);
+            }
 
         }
 
@@ -281,9 +294,14 @@ class Enemy extends GameObject {
                 // Power mod
                 let pwmod = 1.0 + POWER_MOD*(hbox.getDamage()-1);
 
-                let kb =  (this.acceleration / BASE_ACC) * KNOCKBACK * pwmod;
-                this.speed.x += Math.cos(angle) * kb;
-                this.speed.y += Math.sin(angle) * kb;
+                if(!this.isBoss) {
+                    
+                    let kb =  (this.acceleration / BASE_ACC) * KNOCKBACK * pwmod;
+                    this.speed.x += Math.cos(angle) * kb;
+                    this.speed.y += Math.sin(angle) * kb;
+                    this.target.x = this.speed.x;
+                    this.target.y = this.speed.y;
+                }
 
                 // Decrease health
                 this.health -= hbox.getDamage();
@@ -347,10 +365,19 @@ class Enemy extends GameObject {
 
 
     // Draw 
+    public overrideDraw?(g : Graphics, ass : Assets) : void;
     public draw(g : Graphics, ass : Assets) {
 
         if(!this.exist || !this.inCamera) 
             return;
+
+        // Call overriden drawing function
+        // if defined
+        if(this.overrideDraw != null) {
+
+            this.overrideDraw(g, ass);
+            return;
+        }
 
         let b = ass.getBitmap("enemies");
 
@@ -362,7 +389,10 @@ class Enemy extends GameObject {
             frameSkip = 4;
 
         // Draw sprite
-        this.spr.draw(g, b, this.pos.x-8,this.pos.y-8, this.flip, frameSkip);
+        this.spr.draw(g, b, 
+            this.pos.x-this.spr.getWidth()/2,
+            this.pos.y-this.spr.getHeight()/2, 
+            this.flip, frameSkip);
     }
 
 

@@ -45,6 +45,7 @@
         "src/game/enemies/wraith.ts",
         "src/game/enemies/bee.ts",
         "src/game/enemies/flame.ts",
+        "src/game/enemies/face.ts",
         // Global
         "src/transition.ts",
         "src/global.ts",

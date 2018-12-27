@@ -65,9 +65,12 @@ class AudioPlayer {
 
         if(sound == null) {
 
+            if(this.loopingSample == null)
+                return;
+
             sound = this.loopingSample;
         }
-
+        
         // Remove reference to the looped sample
         if(sound == null || this.loopingSample == sound) {
 

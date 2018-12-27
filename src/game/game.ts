@@ -242,11 +242,12 @@ class Game implements Scene {
 
             this.objMan.respawn(this.cam);
 
-            let s = ["theme1", "theme2"] [this.worldMode];
+            let s = ["theme1", "theme2", null] [this.worldMode];
             let vol = [this.VOLUME1, this.VOLUME2] [this.worldMode];
 
             // Re-play music
-            this.audio.playSample(this.ass.getSample(s), vol, true);
+            if(s != null)
+                this.audio.playSample(this.ass.getSample(s), vol, true);
         },
         0,0,0);
     }

@@ -99,6 +99,13 @@ class Sprite {
     }
 
 
+    // Get row
+    public getRow() : number {
+
+        return this.row;
+    }
+
+
     // Set frame
     public setFrame(row : number, frame : number) {
 
@@ -111,5 +118,19 @@ class Sprite {
     public getFrameTimer() : number {
 
         return this.count;
+    }
+
+
+    // Get width
+    public getWidth() : number {
+
+        return this.width;
+    }
+
+
+    // Get height
+    public getHeight() : number {
+
+        return this.height;
     }
 }

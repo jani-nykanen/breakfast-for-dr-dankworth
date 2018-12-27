@@ -21,6 +21,8 @@ class ObjectManager {
     private items : Array<Item>;
     // Teleporter
     private teleporter : Teleporter;
+    // Final boss
+    private fboss : Face;
 
     // Alternative player position
     private altPlayerPos : Vec2;
@@ -80,6 +82,13 @@ class ObjectManager {
     }
 
 
+    // Create final boss
+    private createFinalBoss(x : number, y : number) {
+
+        this.fboss = new Face(x, y);
+    }
+
+
     // Update
     public update(vpad : Vpad, cam : Camera, stage : Stage, 
         hud : HUD, dialogue: Dialogue, gameRef : Game, stageCollision : boolean,
@@ -104,6 +113,19 @@ class ObjectManager {
         for(let i = 0; i < this.enemies.length; ++ i) {
 
             this.enemies[i].cameraCheck(cam);
+        }
+
+        // Update final boss
+        if(this.fboss != null) {
+
+            this.fboss.update(cam, tm);
+            this.fboss.onPlayerCollision(this.player, audio, ass, tm);
+
+            // Enemy-to-arrow collisions
+            for(let j = 0; j < this.ARROW_COUNT; ++ j) {
+
+                this.fboss.arrowCollision(this.arrows[j], audio, ass);
+            }
         }
 
         if(!cam.isMoving()) {
@@ -195,6 +217,12 @@ class ObjectManager {
         for(let i = 0; i < this.enemies.length; ++ i) {
 
             this.enemies[i].draw(g, ass);
+        }
+
+        // Draw final boss
+        if(this.fboss != null) {
+
+            this.fboss.draw(g, ass);
         }
 
         // Draw player
@@ -350,10 +378,13 @@ class ObjectManager {
             let py = (this.altPlayerPos.y / cam.HEIGHT) | 0;
 
             px = px*cam.WIDTH + cam.WIDTH/2;
-            py = py*cam.HEIGHT + cam.HEIGHT/2 + YPLUS;
+            py = py*cam.HEIGHT + cam.HEIGHT/2;
 
-            this.setPlayerLocation(px, py, cam);
+            this.setPlayerLocation(px, py+YPLUS, cam);
             this.player.setDir(1);
+
+            // Create final boss
+            this.createFinalBoss(px, py-YPLUS);
         }
         else {
 
@@ -375,5 +406,9 @@ class ObjectManager {
             this.enemies[i].respawnSelf();
             this.enemies[i].cameraCheck(cam);
         }
+
+        // Respawn final boss
+        if(this.fboss != null)
+            this.fboss.respawnSelf();
     }
 }

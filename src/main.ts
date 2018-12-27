@@ -24,6 +24,7 @@ let assetInfo = {
         items: "items.png",
         teleporter: "teleporter.png",
         death: "death.png",
+        face: "face.png",
     },
 
     audioPath: "assets/audio/",
