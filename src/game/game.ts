@@ -147,6 +147,14 @@ class Game implements Scene {
             // Update map looping
             this.objMan.handleMapLoop(this.cam, this.stage);
         }
+
+
+        // TEMP!
+        if(this.vpad.getButton("debug1") == State.Pressed) {
+
+            this.worldMode = 1;
+            this.spcEvent2();
+        }
     }
 
 
@@ -212,14 +220,10 @@ class Game implements Scene {
     // Special event 2
     public spcEvent2() {
 
-        if(this.worldMode == 0)
-            this.audio.stopSample(this.ass.getSample("theme1"));
-        else 
-            this.audio.stopSample(this.ass.getSample("theme2"));
-        
+        this.audio.stopSample();
         this.trans.activate(Fade.In, 1.0, () => {
 
-            this.objMan.spcEvent2(this.cam);
+            this.objMan.spcEvent2(this.cam, this.worldMode == 1);
             if(this.worldMode == 1) {
 
                 this.worldMode = 2;

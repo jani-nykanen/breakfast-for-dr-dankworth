@@ -1342,7 +1342,7 @@ class Player extends GameObject {
             // Pausem usic
             audio.pauseLoopedSample();
             // Play sound
-            audio.playSample(ass.getSample("item"), 0.45);
+            audio.playSample(ass.getSample("item"), 0.35);
 
             return true;
         }
@@ -1384,5 +1384,18 @@ class Player extends GameObject {
     public getRemainingCrystals() : number {
 
         return Math.max(0, this.crystalMax - this.crystalCount);
+    }
+
+
+    // Set direction
+    public setDir(dir : number) {
+
+        this.dir = dir;
+        this.speed.x = 0;
+        this.speed.y = 0;
+
+        this.attacking = false;
+        this.spinTimer = 0;
+        this.loadingSpin = false;
     }
 }

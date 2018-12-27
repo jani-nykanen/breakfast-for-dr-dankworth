@@ -339,11 +339,27 @@ class ObjectManager {
 
 
     // Special event 2
-    public spcEvent2(cam : Camera) {
+    public spcEvent2(cam : Camera, center = false) {
 
-        // Change player location
-        this.setPlayerLocation(this.altPlayerPos.x, 
-            this.altPlayerPos.y, cam);
+        let YPLUS = 40;
+
+        // Change player location 
+        if(center) {
+
+            let px = (this.altPlayerPos.x / cam.WIDTH) | 0;
+            let py = (this.altPlayerPos.y / cam.HEIGHT) | 0;
+
+            px = px*cam.WIDTH + cam.WIDTH/2;
+            py = py*cam.HEIGHT + cam.HEIGHT/2 + YPLUS;
+
+            this.setPlayerLocation(px, py, cam);
+            this.player.setDir(1);
+        }
+        else {
+
+            this.setPlayerLocation(this.altPlayerPos.x, 
+                this.altPlayerPos.y, cam);    
+        }
     }
 
 
