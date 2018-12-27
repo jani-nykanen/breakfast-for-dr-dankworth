@@ -8,6 +8,9 @@
 // TODO: A base menu class for this and the dialogue?
 class Pause {
 
+    // Constants
+    private readonly SOUND_VOL = 0.50;
+
     // Is active
     private active : boolean;
 
@@ -20,14 +23,18 @@ class Pause {
 
 
     // Activate
-    public activate() {
+    public activate(audio: AudioPlayer, ass: Assets) {
 
         this.active = true;
+
+        // Play sound & suspend music
+        audio.pauseLoopedSample();
+        audio.playSample(ass.getSample("pause"), this.SOUND_VOL);
     }
 
 
     // Update
-    public update(vpad: Vpad) {
+    public update(vpad: Vpad, audio: AudioPlayer, ass: Assets) {
 
         if(!this.active) return;
 
@@ -35,6 +42,10 @@ class Pause {
            vpad.getButton("cancel") == State.Pressed) {
 
             this.active = false;
+
+            // Play sound & resume music
+            audio.playSample(ass.getSample("pause"), this.SOUND_VOL);
+            audio.resumeLoopedSample();
         }
     }
 

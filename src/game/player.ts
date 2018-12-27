@@ -1292,7 +1292,7 @@ class Player extends GameObject {
 
     // Obtain an item
     public obtainItem(id : number, x : number, y : number, w : number, h: number, 
-        dialogue: Dialogue) : boolean {
+        dialogue: Dialogue, audio : AudioPlayer, ass : Assets) : boolean {
 
         let px = this.pos.x-this.center.x;
         let py = this.pos.y-this.center.y;
@@ -1338,6 +1338,11 @@ class Player extends GameObject {
 
             // Set new checkpoint
             this.checkpoint = new Vec2(x+8, y+8);
+
+            // Pausem usic
+            audio.pauseLoopedSample();
+            // Play sound
+            audio.playSample(ass.getSample("item"), 0.45);
 
             return true;
         }

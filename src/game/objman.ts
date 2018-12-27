@@ -153,7 +153,7 @@ class ObjectManager {
 
             this.teleporter.update(tm, cam);
             // Check collision with the player
-            if(this.teleporter.onPlayerCollision(this.player)) {
+            if(this.teleporter.onPlayerCollision(this.player, audio, ass)) {
 
                 gameRef.spcEvent2();
             }

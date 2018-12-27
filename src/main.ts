@@ -40,6 +40,10 @@ let assetInfo = {
         health: "health.wav",
         arrowPick: "arrow_pick.wav",
         break: "break.wav",
+        item: "item.wav",
+        teleport: "teleport.wav",
+        unlock: "unlock.wav",
+        pause: "pause.wav",
     },
 
     docPath: "assets/",

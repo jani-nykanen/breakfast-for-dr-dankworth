@@ -9,7 +9,7 @@ class Game implements Scene {
 
     // Constants
     private readonly VOLUME1 = 0.30;
-    private readonly VOLUME2 = 0.35;
+    private readonly VOLUME2 = 0.40;
 
     // Reference to global objects
     private ass : Assets;
@@ -104,7 +104,7 @@ class Game implements Scene {
         if(this.dialogue.isActive()) {
 
             // Update dialogue
-            this.dialogue.update(this.vpad, tm, this);
+            this.dialogue.update(this.vpad, tm, this, this.audio);
             return;
         }
 
@@ -112,14 +112,14 @@ class Game implements Scene {
         if(this.pause.isActive()) {
 
             // Update pause
-            this.pause.update(this.vpad);
+            this.pause.update(this.vpad, this.audio, this.ass);
             return;
         }
         // Activate pause
         else if(this.vpad.getButton("start") == State.Pressed ||
                this.vpad.getButton("cancel") == State.Pressed) {
 
-            this.pause.activate();
+            this.pause.activate(this.audio, this.ass);
             return;
         }
 

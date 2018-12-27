@@ -112,7 +112,7 @@ class GameObject {
     public kill?() : any;
     // Obtain an item
     public obtainItem?(id : number, x : number, y : number, w : number, h: number, 
-        dialogue: Dialogue) : boolean;
+        dialogue: Dialogue, audio : AudioPlayer, ass : Assets) : boolean;
     // Lock collection
     public lockCollision?(x : number, y : number, w : number, h : number) : boolean;
 

@@ -61,7 +61,7 @@ class Teleporter extends GameObject {
 
 
     // Player collision
-    public onPlayerCollision(pl : Player) : boolean {
+    public onPlayerCollision(pl : Player, audio : AudioPlayer, ass : Assets) : boolean {
 
         const RADIUS = 12;
 
@@ -75,6 +75,12 @@ class Teleporter extends GameObject {
         let py = p.y - this.pos.y;
 
         let dist = Math.sqrt(px*px + py*py);
+        // Play sound
+        if(dist < RADIUS) {  
+
+            audio.playSample(ass.getSample("teleport"), 0.50);
+        }
+
         return dist < RADIUS;
     }
 

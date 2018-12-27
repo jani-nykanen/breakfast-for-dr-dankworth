@@ -63,11 +63,35 @@ class AudioPlayer {
     // Stop a sample
     public stopSample(sound?: any) {
 
-        if(sound == null)
+        if(sound == null) {
+
             sound = this.loopingSample;
+        }
+
+        // Remove reference to the looped sample
+        if(sound == null || this.loopingSample == sound) {
+
+            this.loopingSample = null;
+        }
 
         if(!sound.playID) return;
         sound.stop(sound.playID);
+    }
+
+
+    // Pause looped sample
+    public pauseLoopedSample() {
+
+        if(this.loopingSample != null)
+            this.loopingSample.pause(this.loopingSample.playID);
+    }
+
+
+    // Resume looped sample
+    public resumeLoopedSample() {
+
+        if(this.loopingSample != null)
+            this.loopingSample.play(this.loopingSample.playID);
     }
 
 }

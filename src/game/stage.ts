@@ -213,7 +213,7 @@ class Stage {
                 this.createEnvDeath(x*16, y*16, row);
 
                 // Play sound
-                audio.playSample(ass.getSample("break"), 0.40);
+                audio.playSample(ass.getSample("break"), 0.50);
 
                 // Check if a plant
                 if(s == 6) {
@@ -233,12 +233,12 @@ class Stage {
 
     // Obtain an item
     private obtainItemEvent(o : GameObject, x: number, y: number, id : number, 
-        dialogue : Dialogue) {
+        dialogue : Dialogue, audio : AudioPlayer, ass : Assets) {
 
         const MIN_SHOP_ITEM = 9;
         const MAX_SHOP_ITEM = MIN_SHOP_ITEM+4;
 
-        if(o.obtainItem(id, x*16, y*16, 16, 16, dialogue )) {
+        if(o.obtainItem(id, x*16, y*16, 16, 16, dialogue, audio, ass )) {
 
             // Destroy tile
             let t = this.mapData[y*this.baseMap.width+x]-16;
@@ -268,6 +268,9 @@ class Stage {
             // Destroy 
             this.mapData[y*this.baseMap.width+x] = 1;
             this.createEnvDeath(x*16, y*16, 5, 0.5);
+
+            // Play sound
+            audio.playSample(ass.getSample("unlock"), 0.50);
         }
     }
 
@@ -357,7 +360,8 @@ class Stage {
                 else if(s == 9 && o.obtainItem != null) {
 
                     this.obtainItemEvent(o, x, y, 
-                        this.getTile(x, y)-16*15, dialogue);
+                        this.getTile(x, y)-16*15, dialogue,
+                        audio, ass);
                 }
                 // Lock
                 else if(s == 11) {

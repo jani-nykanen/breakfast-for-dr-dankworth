@@ -53,7 +53,7 @@ class Dialogue {
 
 
     // Update
-    public update(vpad : Vpad, tm : number, gameRef : Game) {
+    public update(vpad : Vpad, tm : number, gameRef : Game, audio : AudioPlayer) {
 
         if(!this.active) return;
 
@@ -69,9 +69,11 @@ class Dialogue {
 
             // Trigger special event
             this.triggerSpcEvent(gameRef);
-
             // Deactivate
             this.active = false;
+
+            // Resume music
+            audio.resumeLoopedSample();
         }
     } 
 
