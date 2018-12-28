@@ -63,6 +63,8 @@ class AudioPlayer {
     // Stop a sample
     public stopSample(sound?: any) {
 
+        if(!this.enabled) return;
+
         if(sound == null) {
 
             if(this.loopingSample == null)
@@ -85,6 +87,8 @@ class AudioPlayer {
     // Pause looped sample
     public pauseLoopedSample() {
 
+        if(!this.enabled) return;
+
         if(this.loopingSample != null)
             this.loopingSample.pause(this.loopingSample.playID);
     }
@@ -92,6 +96,8 @@ class AudioPlayer {
 
     // Resume looped sample
     public resumeLoopedSample() {
+
+        if(!this.enabled) return;
 
         if(this.loopingSample != null)
             this.loopingSample.play(this.loopingSample.playID);

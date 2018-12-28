@@ -72,9 +72,6 @@ class Game implements Scene {
         // Update once to get proper
         // graphics for the fading
         this.update(0);
-
-        // Set transition
-        this.trans.activate(Fade.Out, 2.0, null);
     }
 
 

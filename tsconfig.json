@@ -47,6 +47,8 @@
         "src/game/enemies/flame.ts",
         "src/game/enemies/face.ts",
         // Global
+        "src/intro.ts",
+        "src/startup.ts",
         "src/ending.ts",
         "src/title.ts",
         "src/transition.ts",

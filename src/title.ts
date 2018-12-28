@@ -44,9 +44,7 @@ class TitleScreen implements Scene {
     // On loaded
     public onLoaded() {
 
-        const MUSIC_VOL = 0.50;
-
-        this.audio.playSample(this.ass.getSample("theme0"), MUSIC_VOL, true);
+        // ...
     }
 
 
@@ -140,7 +138,10 @@ class TitleScreen implements Scene {
     // Change to
     public changeTo() {      
 
-        // ...
+        const MUSIC_VOL = 0.50;
+        
+        // Play music
+        this.audio.playSample(this.ass.getSample("theme0"), MUSIC_VOL, true);
     }
 
     
