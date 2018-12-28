@@ -25,6 +25,7 @@ let assetInfo = {
         teleporter: "teleporter.png",
         death: "death.png",
         face: "face.png",
+        ending: "ending.png",
     },
 
     audioPath: "assets/audio/",
@@ -89,6 +90,7 @@ function main() {
 
     // Add scenes
     app.addScene(new Global(), true, false);
+    app.addScene(new Ending());
     app.addScene(new Game(), false, true);
 
     // Create gamepad

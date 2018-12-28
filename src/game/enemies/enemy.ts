@@ -420,4 +420,5 @@ class Enemy extends GameObject {
 
         return b;
     }
+
 }

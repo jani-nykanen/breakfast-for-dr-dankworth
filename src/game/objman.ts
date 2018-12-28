@@ -126,6 +126,13 @@ class ObjectManager {
 
                 this.fboss.arrowCollision(this.arrows[j], audio, ass);
             }
+
+            // If dead
+            if(this.fboss.isDying()) {
+
+                gameRef.finalEvent1();
+                return;
+            }
         }
 
         if(!cam.isMoving()) {

@@ -18,11 +18,15 @@ class Face extends Enemy {
     // Respawn
     protected respawn() {
 
+        let dir = Math.random() * Math.PI * 2;
+
         this.spr.setFrame(0, 0);
         this.secSpr.setFrame(0, 0);
 
         // Set default speed
-        this.target.y = this.DEFAULT_SPEED;
+        this.target.x = Math.cos(dir)* this.DEFAULT_SPEED;
+        this.target.y = Math.sin(dir)* this.DEFAULT_SPEED;
+        this.speed.x = 0;
         this.speed.y = 0;
 
         this.pos = this.startPos.copy();
@@ -38,7 +42,7 @@ class Face extends Enemy {
 
         this.id = 0;
         this.acceleration = 0.1;
-        this.maxHealth = 30;
+        this.maxHealth = 40;
         this.power = 2;
         this.health = this.maxHealth;
 

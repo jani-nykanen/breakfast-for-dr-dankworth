@@ -285,4 +285,5 @@ class GameObject {
 
         return this.hasKey;
     }
+    
 }

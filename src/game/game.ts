@@ -18,6 +18,7 @@ class Game implements Scene {
     private vpad : Vpad;
     private trans : Transition;
     private audio : AudioPlayer;
+    private evman : EventMan;
 
     // Game object manager
     private objMan : ObjectManager;
@@ -89,6 +90,7 @@ class Game implements Scene {
         this.vpad = vpad;
         this.trans = evMan.getGlobalScene().getTransition();
         this.audio = audio;
+        this.evman = evMan;
 
         // Create a dialogue box
         this.dialogue = new Dialogue();
@@ -99,6 +101,9 @@ class Game implements Scene {
 
     // Update
     public update(tm: number) {      
+
+        // Update shaking camera
+        this.cam.updateShake(tm);
 
         if(this.trans.isActive()) return;
 
@@ -242,6 +247,34 @@ class Game implements Scene {
 
         }, 255, 255, 255);
         
+    }
+
+
+    // Final event 1
+    public finalEvent1() {
+
+        this.dialogue.activate(
+            this.ass.getDocument("dialogue").boss2, 2
+         ); 
+
+        // Shake camera
+        this.cam.toggleShake(true);
+    }
+
+
+    // Final event 2
+    public finalEvent2() {
+
+        // Fade in
+        this.trans.activate(Fade.In, 0.5, () => {
+            
+            // Stop music
+            this.audio.stopSample();
+
+            // Change to the ending scene
+            this.evman.changeScene("ending");
+
+        }, 255, 255, 255);
     }
 
 

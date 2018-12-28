@@ -32,11 +32,16 @@ class Camera {
     private loopTrans : Vec2;
     // Is movement disabled
     private movementDisabled : boolean;
+    // Shake
+    private shake : boolean;
+    // Shake amount
+    private shakeAmount : Vec2;
 
 
     // Constructor
     public constructor(x : number, y: number) {
 
+        this.shakeAmount = new Vec2();
         this.pos = new Vec2(x|0, y|0);
         this.vpos = new Vec2(this.pos.x*this.WIDTH, this.pos.y*this.HEIGHT);
         this.target = this.pos.copy();
@@ -82,7 +87,8 @@ class Camera {
     // Use camera
     public useCamera(g : Graphics) {
 
-        g.translate(-this.vpos.x|0, -this.vpos.y|0);
+        g.translate( (-this.vpos.x+this.shakeAmount.x)|0, 
+            (-this.vpos.y+this.shakeAmount.y)|0);
     }
 
 
@@ -194,10 +200,22 @@ class Camera {
     }
 
 
-    // Disable movement
+    // Toggle movement
     public toggleMovement(state : boolean) {
 
         this.movementDisabled = !state;
+    }
+
+
+    // Toggle shaking
+    public toggleShake(state : boolean) {
+
+        this.shake = state;
+        if(!state) {
+
+            this.shakeAmount.x = 0;
+            this.shakeAmount.y = 0;
+        }
     }
 
 
@@ -205,5 +223,19 @@ class Camera {
     public canMove() : boolean {
 
         return !this.movementDisabled;
+    }
+
+
+    // Update shake
+    public updateShake(tm : number) {
+
+        const SHAKE = 4;
+
+        if(!this.shake) {
+            return;
+        }
+
+        this.shakeAmount.x = (Math.random() * 2 - 1) * SHAKE;
+        this.shakeAmount.y = (Math.random() * 2 - 1) * SHAKE;
     }
 }

@@ -24,4 +24,11 @@ class EventMan {
         return this.appRef.getGlobalScene();
     }
 
+
+    // Change scene
+    public changeScene(sceneName : string) {
+
+        this.appRef.changeScene(sceneName);
+    }
+
 }

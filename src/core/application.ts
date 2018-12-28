@@ -262,7 +262,7 @@ class Application {
 
 
     // Add a scene
-    public addScene(scene : Scene, global : boolean, active : boolean) {
+    public addScene(scene : Scene, global=false, active=false) {
 
         this.scenes.push(scene);
     

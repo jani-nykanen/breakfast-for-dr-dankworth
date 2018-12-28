@@ -46,6 +46,10 @@ class Dialogue {
             gameRef.spcEvent1();
             break;
 
+        case 2:
+            gameRef.finalEvent2();
+            break;
+
         default:
             break;
         }
