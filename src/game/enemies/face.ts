@@ -114,7 +114,7 @@ class Face extends Enemy {
     // Hurt event
     protected hurtEvent(angle : number) {
 
-        if(this.hurtTimer > 0) return;
+        // if(this.hurtTimer > 0) return;
 
         // Compute speed
         let tspeed = this.DEFAULT_SPEED + 

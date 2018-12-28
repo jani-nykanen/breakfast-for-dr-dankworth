@@ -75,10 +75,6 @@ class Game implements Scene {
 
         // Set transition
         this.trans.activate(Fade.Out, 2.0, null);
-
-        // Play music
-        this.audio.playSample(this.ass.getSample("theme1"), this.VOLUME1, true);
-
     }
 
 
@@ -198,7 +194,8 @@ class Game implements Scene {
     // Change to
     public changeTo() {      
 
-        // ...
+        // Play music
+        this.audio.playSample(this.ass.getSample("theme1"), this.VOLUME1, true);
     }
 
     
@@ -294,4 +291,5 @@ class Game implements Scene {
         },
         0,0,0);
     }
+
 }

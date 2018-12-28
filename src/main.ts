@@ -26,6 +26,7 @@ let assetInfo = {
         death: "death.png",
         face: "face.png",
         ending: "ending.png",
+        title: "title.png",
     },
 
     audioPath: "assets/audio/",
@@ -91,7 +92,8 @@ function main() {
     // Add scenes
     app.addScene(new Global(), true, false);
     app.addScene(new Ending());
-    app.addScene(new Game(), false, true);
+    app.addScene(new Game());
+    app.addScene(new TitleScreen(), false, true);
 
     // Create gamepad
     app.createVirtualGamepad(gamePad.keys, gamePad.names);
