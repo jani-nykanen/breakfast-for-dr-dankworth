@@ -52,6 +52,14 @@ class Transition {
     }
 
 
+    // Deactivate
+    public deactivate() {
+
+        this.active = false;
+        this.timer = 0;
+    }
+
+
     // Update
     public update(tm : number) {
 

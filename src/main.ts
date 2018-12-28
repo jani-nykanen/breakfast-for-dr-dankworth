@@ -31,6 +31,7 @@ let assetInfo = {
 
     audioPath: "assets/audio/",
     audio: {
+        theme0: "theme0.ogg",
         theme1: "theme1.ogg",
         theme2: "theme2.ogg",
         theme3: "theme3.ogg",
