@@ -253,10 +253,11 @@ class ObjectManager {
     // Add a teleporter
     public addTeleporter(x : number, y: number) {
 
-        if(this.altTelepPos == null)
-            this.altTelepPos = new Vec2(x, y);
+        if(this.teleporter == null)
+            this.teleporter = new Teleporter(x, y);
 
-        this.teleporter = new Teleporter(x, y);
+        else if(this.altTelepPos == null)
+            this.altTelepPos = new Vec2(x, y);
     }
 
 
@@ -265,6 +266,13 @@ class ObjectManager {
 
         if(this.altPlayerPos == null)
             this.altPlayerPos = new Vec2(x, y);
+
+        else {
+
+            // Translate to the middle
+            x -= 8;
+            y -= 8;
+        }
 
         // Set player position
         this.player.setPos(x, y);

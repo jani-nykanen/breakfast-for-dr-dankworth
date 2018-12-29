@@ -266,7 +266,7 @@ class Stage {
         if(o.lockCollision(x*16, y*16, 16, 16)) {
 
             // Destroy 
-            this.mapData[y*this.baseMap.width+x] = 1;
+            this.mapData[y*this.baseMap.width+x] = 49;
             this.createEnvDeath(x*16, y*16, 5, 0.5);
 
             // Play sound

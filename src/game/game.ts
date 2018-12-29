@@ -150,11 +150,12 @@ class Game implements Scene {
 
 
         // TEMP!
-        if(this.vpad.getButton("debug1") == State.Pressed) {
+        /*if(this.vpad.getButton("debug1") == State.Pressed) {
 
             this.worldMode = 1;
             this.spcEvent2();
         }
+        */
     }
 
 

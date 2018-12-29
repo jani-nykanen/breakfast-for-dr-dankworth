@@ -154,8 +154,8 @@ class Player extends GameObject {
         this.center = new Vec2(0, -3);
 
         // Default skill levels
-        this.swordLevel = 1;
-        this.bowLevel = 1;
+        this.swordLevel = 0;
+        this.bowLevel = 0;
         this.swimmingSkill = 0;
         this.speedLevel = 0;
 
@@ -176,9 +176,9 @@ class Player extends GameObject {
 
         this.life = this.INITIAL_LIFE;
         this.maxLife = this.INITIAL_LIFE;
-        this.arrowCount = this.INITIAL_ARROW_MAX;
+        this.arrowCount = 0;
         this.arrowMax = this.INITIAL_ARROW_MAX;
-        this.gemCount = 20;
+        this.gemCount = 0;
         this.crystalCount = 0;
         this.crystalMax = 0;
 
@@ -328,7 +328,7 @@ class Player extends GameObject {
             audio.playSample(this.sSword2, 0.5);
         }
         // Check sword attack
-        else if(!this.attacking && s1 == State.Pressed) {
+        else if(this.swordLevel > 0 && !this.attacking && s1 == State.Pressed) {
 
             this.attacking = true;
             this.atk = AtkType.Sword;
@@ -351,6 +351,7 @@ class Player extends GameObject {
         }
         // Check bow attack
         else if(!this.attacking 
+            && this.bowLevel > 0
             && !this.loadingSpin 
             && this.spinTimer <= 0.0 
             && s2 == State.Pressed
@@ -1239,6 +1240,7 @@ class Player extends GameObject {
         // Bow
         case 3:
             this.bowLevel = 1;
+            this.arrowCount = this.arrowMax;
             break;
 
         // Swimming trunks
@@ -1259,6 +1261,7 @@ class Player extends GameObject {
         // Pink arrows
         case 7:
             this.bowLevel = 2;
+            this.arrowCount = this.arrowMax;
             break;
         
         // Extra heart

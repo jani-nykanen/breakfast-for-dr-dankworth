@@ -100,6 +100,10 @@ class TitleScreen implements Scene {
     public draw(g : Graphics)  {     
 
         const TEXT_Y = 96;
+        const STORY_X = 8;
+        const STORY_Y = 24;
+        const STORY_YOFF = 0;
+        const STORY_XOFF = -8;
 
         let b = this.ass.getBitmap("title");
 
@@ -130,7 +134,7 @@ class TitleScreen implements Scene {
             g.clearScreen(255, 255, 255);
 
             g.drawText(this.ass.getBitmap("font"), str.substr(0, t),
-                8, 16, -8, 2);
+                STORY_X, STORY_Y, STORY_XOFF, STORY_YOFF);
         }
     }
 

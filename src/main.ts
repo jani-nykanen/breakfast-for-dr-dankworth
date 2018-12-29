@@ -71,7 +71,7 @@ let gamePad = {
         13,
         16,
         27,
-        112,
+        //112,
     ],
     names: [
         "fire1",
@@ -79,7 +79,7 @@ let gamePad = {
         "start",
         "select",
         "cancel",
-        "debug1",
+        //"debug1",
     ]
 
 }
