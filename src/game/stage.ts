@@ -235,10 +235,14 @@ class Stage {
     private obtainItemEvent(o : GameObject, x: number, y: number, id : number, 
         dialogue : Dialogue, audio : AudioPlayer, ass : Assets) {
 
+        const ITEM_W = 12;
+        const ITEM_H = 12;
+
         const MIN_SHOP_ITEM = 9;
         const MAX_SHOP_ITEM = MIN_SHOP_ITEM+4;
 
-        if(o.obtainItem(id, x*16, y*16, 16, 16, dialogue, audio, ass )) {
+        if(o.obtainItem(id, x*16 + (16-ITEM_W), y*16 + (16-ITEM_H), 
+            ITEM_W, ITEM_H, dialogue, audio, ass )) {
 
             // Destroy tile
             let t = this.mapData[y*this.baseMap.width+x]-16;
