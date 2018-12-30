@@ -104,6 +104,7 @@ class TitleScreen implements Scene {
         const STORY_Y = 24;
         const STORY_YOFF = 0;
         const STORY_XOFF = -8;
+        const VERSION_XOFF = -10;
 
         let b = this.ass.getBitmap("title");
 
@@ -119,6 +120,11 @@ class TitleScreen implements Scene {
 
                 g.drawBitmapRegion(b, 0, 144,160, 16, 0, TEXT_Y);
             }
+
+            // Draw version
+            g.drawText(this.ass.getBitmap("font"),
+                "v."+this.ass.getDocument("version").version,
+                -1,-1,VERSION_XOFF, 0);
 
         }
         // Phase 1

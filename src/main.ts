@@ -59,6 +59,7 @@ let assetInfo = {
         solid: "tilemaps/solid.json",
         itemInfo: "iteminfo.json",
         dialogue: "dialogue.json",
+        version: "version.json",
     }
 };
 

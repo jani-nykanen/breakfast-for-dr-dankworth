@@ -7,4 +7,4 @@ git add index.html
 git add style.css
 git add assets
 git add dev
-
+git add dist.sh
