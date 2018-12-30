@@ -50,6 +50,7 @@ let assetInfo = {
         teleport: "teleport.wav",
         unlock: "unlock.wav",
         pause: "pause.wav",
+        jump: "jump.wav",
     },
 
     docPath: "assets/",

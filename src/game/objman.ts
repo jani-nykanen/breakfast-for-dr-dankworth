@@ -264,10 +264,12 @@ class ObjectManager {
     // Set player location
     public setPlayerLocation(x : number, y : number, cam : Camera) {
 
-        if(this.altPlayerPos == null)
-            this.altPlayerPos = new Vec2(x, y);
+        if(this.altPlayerPos == null) {
 
-        else {
+            this.altPlayerPos = new Vec2(x, y);
+            return;
+        }
+        else  {
 
             // Translate to the middle
             x -= 8;
@@ -339,7 +341,7 @@ class ObjectManager {
         if(item == null) return;
 
         // ID probabilities
-        let prob = [0.0, 0.75, 0.90, 1.0];
+        let prob = [0.0, 0.5, 0.70, 1.0];
 
         // Determine ID
         let p = Math.random();
@@ -360,11 +362,9 @@ class ObjectManager {
     // Special event 1
     public spcEvent1(cam : Camera) {
 
-        let x = this.player.getPos().x;
-        let y = this.player.getPos().y;
-        
-        this.setPlayerLocation(x - (x%160) + 80, 
-            y + cam.HEIGHT+16, 
+        let tp = this.teleporter.getPos();
+        this.setPlayerLocation(tp.x,
+            tp.y, 
             cam);
 
         // Replace enemies with flames
@@ -395,7 +395,7 @@ class ObjectManager {
             px = px*cam.WIDTH + cam.WIDTH/2;
             py = py*cam.HEIGHT + cam.HEIGHT/2;
 
-            this.setPlayerLocation(px, py+YPLUS, cam);
+            this.setPlayerLocation(px +8, py+YPLUS +8, cam);
             this.player.setDir(1);
 
             // Create final boss
@@ -403,8 +403,8 @@ class ObjectManager {
         }
         else {
 
-            this.setPlayerLocation(this.altPlayerPos.x, 
-                this.altPlayerPos.y, cam);    
+            this.setPlayerLocation(this.altPlayerPos.x +8, 
+                this.altPlayerPos.y +8, cam);    
         }
     }
 

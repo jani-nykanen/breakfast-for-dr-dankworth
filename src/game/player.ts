@@ -113,6 +113,7 @@ class Player extends GameObject {
     private sGem : any;
     private sHealth : any;
     private sArrowPick : any;
+    private sJump : any;
 
 
     // Constructor
@@ -129,7 +130,7 @@ class Player extends GameObject {
         this.sGem = ass.getSample("gem");
         this.sHealth = ass.getSample("health");
         this.sArrowPick = ass.getSample("arrowPick");
-
+        this.sJump = ass.getSample("jump");
 
         // Set checkpoint
         this.checkpoint = new Vec2(x, y);
@@ -893,7 +894,7 @@ class Player extends GameObject {
 
 
     // Get jump (=ledge) collision
-    public getJumpCollision(x : number, y : number, w : number, h : number) {
+    public getJumpCollision(x : number, y : number, w : number, h : number, audio: AudioPlayer) {
 
         if(this.jumping) return;
 
@@ -911,6 +912,9 @@ class Player extends GameObject {
             this.jumpTarget = this.pos.y+ (32 - (this.pos.y%16));
             this.gravity = -JUMP;
             this.jumping = true;
+
+            // Play sound
+            audio.playSample(this.sJump, 0.40);
         }
     }
 

@@ -105,7 +105,7 @@ class GameObject {
     public getSlowingCollision?(x : number, y : number, 
         w : number, h : number, stairs : boolean) : any;
     // Jump collision
-    public getJumpCollision?(x : number, y : number, w : number, h : number) : any;
+    public getJumpCollision?(x : number, y : number, w : number, h : number, audio?: AudioPlayer) : any;
     // Get hitbox
     public getHitbox?() : Hitbox;
     // Kill

@@ -353,7 +353,7 @@ class Stage {
 
                     if(o.getJumpCollision != null) {
 
-                        o.getJumpCollision(x*16, y*16+LEDGE_MARGIN, 16, 16-LEDGE_MARGIN);
+                        o.getJumpCollision(x*16, y*16+LEDGE_MARGIN, 16, 16-LEDGE_MARGIN, audio);
                     }
                 }
                 // Maybe it's an item
