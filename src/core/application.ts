@@ -134,19 +134,19 @@ class Application {
         let t = this.ass.getPercentage();
 
         let csize = g.getCanvasSize();
-        let x = csize[0]-WIDTH/2;
-        let y = csize[1]-HEIGHT/2;
+        let x = csize[0]/2 - WIDTH/2;
+        let y = csize[1]/2 - HEIGHT/2;
     
         // Draw outlines
-        g.setColor(255, 255, 255);
+        g.setColor(255, 255, 255, 1);
         g.fillRect(x-2, y-2, WIDTH+4, HEIGHT+4);
         
-        g.setColor(0, 0, 0);
+        g.setColor(0, 0, 0, 1);
         g.fillRect(x-1, y-1, WIDTH+2, HEIGHT+2);
     
         // Draw bar
         let w = (WIDTH*t) | 0;
-        g.setColor(255, 255, 255);
+        g.setColor(255, 255, 255, 1);
         g.fillRect(x, y, w, HEIGHT);
     }
 

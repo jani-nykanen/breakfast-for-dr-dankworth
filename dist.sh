@@ -5,7 +5,7 @@
 tsc
 
 # Remove existing distribution package
-rm dist.tar.gz
+rm dist.zip
 
 # Create package
-tar -zcvf dist.tar.gz assets out.js style.css index.html
+zip -r dist.zip assets out.js style.css lib index.html
