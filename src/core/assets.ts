@@ -111,8 +111,9 @@ class Assets {
                 
                     _assRef.addDocument(name, xobj.responseText);
                 }
+                _assRef.increaseLoaded();
             }
-            _assRef.increaseLoaded();
+            
         };
         xobj.send(null);  
     }
